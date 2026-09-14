@@ -578,7 +578,7 @@ const C = {
   success:'#2F8F6E', warning:'#C58B2A', danger:'#B33A3A',
   axis:'rgba(224,238,231,0.4)', grid:'rgba(224,238,231,0.07)',
   mintFade:'rgba(224,238,231,0.12)', dangerFade:'rgba(179,58,58,0.15)',
-  chart:'#3F598C', chartFade:'rgba(63,89,140,0.45)'
+  chart:'#7FA0DC', chartFade:'rgba(127,160,220,0.30)'
 };
 
 // selectedMonths: array de índices (0-11) dos meses selecionados
@@ -814,8 +814,7 @@ function slug(s){
 
 // PERÍODO — 1ª metade: Ano completo · 2ª metade: meses individuais (redesign, mesma lógica visual nas duas)
 const RANGES = [
-  { lbl:'Ano completo', idxs: null },
-  { lbl:'Últimos 3 meses', dyn:'u3' },   // janela móvel: os 3 meses até o último com lançamento
+  { lbl:'Período Completo', dyn:'pc' },   // todos os meses com lançamento (v49)
 ];
 
 function initPeriod(){
@@ -830,8 +829,8 @@ function initPeriod(){
     b.dataset.range = r.lbl;
     b.addEventListener('click', () => {
       let novo;
-      if(r.dyn === 'u3'){
-        novo = ultimos3Meses();
+      if(r.dyn === 'pc'){
+        novo = periodoCompleto();
         if(!novo) return;    // planilha ainda não carregou: não mexe em nada
       } else if(r.idxs === null){
         novo = [0,1,2,3,4,5,6,7,8,9,10,11];   // Ano completo
@@ -884,9 +883,8 @@ function updateChips(){
   document.querySelectorAll('[data-range]').forEach(b => {
     const r = RANGES.find(r => r.lbl === b.dataset.range);
     if(!r) return;
-    if(r.dyn === 'u3'){
-      const u = ultimos3Meses();
-      b.classList.toggle('active', !!u && u.length === sel.length && u.every(i => sel.includes(i)));
+    if(r.dyn === 'pc'){
+      b.classList.toggle('active', ehPeriodoCompleto(sel));
     } else if(r.idxs === null){
       // "Ano completo" ativo quando todos 12 meses selecionados
       b.classList.toggle('active', sel.length === 12);
@@ -898,10 +896,12 @@ function updateChips(){
 
   // Label no header e no summary
   let lbl;
-  if(sel.length === 12){
-    lbl = 'Ano completo';
-  } else if(sel.length === 1){
+  if(sel.length === 1){
     lbl = MESES[sel[0]];
+  } else if(ehPeriodoCompleto(sel)){
+    lbl = 'Período completo';
+  } else if(sel.length === 12){
+    lbl = 'Ano completo';
   } else {
     const idxs = [...sel].sort((a,b)=>a-b);
     // Verifica se é contíguo
@@ -920,7 +920,7 @@ function updateChips(){
   if(sumEl){
     sumEl.innerHTML = sel.length === 1
       ? '<strong>' + MESES[sel[0]] + '</strong> selecionado'
-      : '<strong>' + (sel.length===12?'Ano completo':sel.length+' meses') + '</strong> · ' + MESES[sel[0]] + ' → ' + MESES[sel[sel.length-1]];
+      : '<strong>' + (ehPeriodoCompleto(sel)?'Período completo':sel.length===12?'Ano completo':sel.length+' meses') + '</strong> · ' + MESES[sel[0]] + ' → ' + MESES[sel[sel.length-1]];
   }
 }
 
@@ -952,19 +952,67 @@ function ultimoMesComDado(areaId){
   return null;
 }
 
-// Janela dos 3 meses que terminam no último mês COM LANÇAMENTO (mesmo limiar de 20% do
-// ultimoMesComDado). Prioriza a aba ativa; cai para o global se a aba não tiver nada.
-// Devolve null enquanto a planilha não chegou — o chamador decide o que fazer.
-function ultimos3Meses(){
+// PERÍODO COMPLETO — todos os meses que já têm lançamento. Substituiu "Ano completo" e
+// "Últimos 3 meses" (v49): enquanto a planilha tem 3 meses, comparar com um trimestre
+// anterior que não existe só produz travessão.
+// Prioriza a aba ativa; cai para o global quando a aba não tem nada.
+function mesesLancados(areaId){
   if(!ST.data) return null;
-  let fim = null;
-  if(ST.tab && ST.tab !== 'capa') fim = ultimoMesComDado(ST.tab);
-  if(fim === null) fim = ultimoMesComDado(null);
-  if(fim === null) return null;
-  const ini = Math.max(0, fim - 2);
+  let ids = null;
+  if(areaId && areaId !== 'capa'){
+    const a = AREAS.find(x => x.id === areaId);
+    if(a) ids = a.indicadores.map(i => i.id);
+  }
+  const cont = new Array(12).fill(0);
+  Object.keys(ST.data).forEach(k => {
+    if(ids && ids.indexOf(k) < 0) return;
+    const ms = ST.data[k].meses || [];
+    for(let i = 0; i < 12; i++){
+      if(ms[i] !== null && ms[i] !== undefined && !isNaN(ms[i])) cont[i]++;
+    }
+  });
+  const max = Math.max.apply(null, cont);
+  if(max === 0) return null;
+  // mesmo limiar de 20% do ultimoMesComDado: uma célula solta não vira "mês lançado"
+  const limiar = Math.max(1, Math.ceil(max * 0.2));
   const out = [];
-  for(let i = ini; i <= fim; i++) out.push(i);
+  for(let i = 0; i < 12; i++) if(cont[i] >= limiar) out.push(i);
+  return out.length ? out : null;
+}
+
+function periodoCompleto(){
+  let out = null;
+  if(ST.tab && ST.tab !== 'capa') out = mesesLancados(ST.tab);
+  if(!out) out = mesesLancados(null);
   return out;
+}
+
+function ehPeriodoCompleto(sel){
+  const pc = periodoCompleto();
+  if(!pc || !sel || pc.length !== sel.length) return false;
+  return pc.every(i => sel.includes(i));
+}
+
+// A seleção cobre TODOS os meses lançados DESTE indicador? Só então o card pode usar o
+// CONSOLIDADO da central (coluna Q), que traz o regime certo definido na planilha da área
+// (soma, média, último, ou soma dos numeradores ÷ soma dos denominadores). Fora disso, o
+// card faz média simples dos meses — e diz "média" no rótulo, para não passar por oficial.
+function cobreTudo(d, sel){
+  if(!d || !d.meses || !sel) return false;
+  let algum = false;
+  for(let i = 0; i < 12; i++){
+    const v = d.meses[i];
+    if(v === null || v === undefined || isNaN(v)) continue;
+    algum = true;
+    if(sel.indexOf(i) < 0) return false;
+  }
+  return algum;
+}
+
+function corDelta(dt){
+  return (dt.better===null || (dt.pct!==null && Math.abs(dt.pct)<=5))
+    ? 'var(--warning)'
+    : (dt.better ? 'var(--success)' : 'var(--danger)');
 }
 
 function ajustarMesAutomatico(){
@@ -1073,7 +1121,8 @@ function htmlCapa(){
   const piores=[...sorted].reverse().slice(0,3);
 
   let lbl;
-  if(sel.length===12) lbl='Ano completo';
+  if(ehPeriodoCompleto(sel)&&sel.length>1) lbl='Período completo';
+  else if(sel.length===12) lbl='Ano completo';
   else if(sel.length===1) lbl=MESES[sel[0]];
   else lbl=MESES[sel[0]]+' – '+MESES[sel[sel.length-1]];
 
@@ -1139,7 +1188,8 @@ function htmlCapa(){
 function htmlArea(area){
   const sel = getMesesSelecionados();
   let lbl;
-  if(sel.length===12) lbl='Ano completo';
+  if(ehPeriodoCompleto(sel)&&sel.length>1) lbl='Período completo';
+  else if(sel.length===12) lbl='Ano completo';
   else if(sel.length===1) lbl=MESES[sel[0]];
   else {
     const contiguo = sel.every((v,i)=>i===0||v===sel[i-1]+1);
@@ -1280,7 +1330,7 @@ function mesesComDado(d){
 // A linha tracejada do gráfico continua sendo a meta MENSAL — o gráfico é mês a mês.
 function metaEfetiva(ind, d, sel){
   if(!d || d.meta===null || d.meta===undefined) return null;
-  if(!sel || sel.length!==12) return d.meta;
+  if(!sel || !cobreTudo(d,sel)) return d.meta;
   if(ind.tipo==='Taxa/%') return d.meta;          // consolidado de % já é média
   const n = mesesComDado(d);
   if(n<=1 || d.cons===null || d.cons===undefined || isNaN(d.cons)) return d.meta;
@@ -1306,10 +1356,11 @@ function calcAtt(cur, meta){
 
 function calcCurVal(d, sel){
   if(!d) return null;
-  if(!sel || sel.length===12) return d.cons; // ano completo → consolidado
+  if(!sel || sel.length===12) return d.cons;
   if(sel.length===1) return d.meses[sel[0]];
-  // Média dos meses selecionados
-  const vals = sel.map(i=>d.meses[i]).filter(v=>v!==null);
+  // Seleção cobrindo tudo que está lançado → CONSOLIDADO da central, não média do navegador.
+  if(cobreTudo(d,sel) && d.cons!==null && d.cons!==undefined && !isNaN(d.cons)) return d.cons;
+  const vals = sel.map(i=>d.meses[i]).filter(v=>v!==null && v!==undefined && !isNaN(v));
   if(vals.length===0) return null;
   return vals.reduce((a,b)=>a+b,0)/vals.length;
 }
@@ -1379,7 +1430,8 @@ function htmlCard(ind){
   } else {
     const contig = sel.every((v,i)=>i===0||v===sel[i-1]+1);
     const lbl2 = contig ? MESES[sel[0]]+'–'+MESES[sel[sel.length-1]] : sel.length+' meses';
-    momH=`<div class="ic-delta neu"><span class="dl">Período</span>${lbl2} (média)</div>`;
+    const suf = (d && cobreTudo(d,sel)) ? ' (consolidado)' : ' (média)';
+    momH=`<div class="ic-delta neu"><span class="dl">Período</span>${lbl2}${suf}</div>`;
   }
 
   // Bloco de valor duplo — v48: vale para QUALQUER seleção (antes, só com 2 meses).
@@ -1394,59 +1446,52 @@ function htmlCard(ind){
     labelStyleAttr = ` style="${mintStyle}"`;
     const contiguo = sel.every((v,i)=>i===0||v===sel[i-1]+1);
 
-    let vEsq=null, vDir=cur, lblEsq='—', lblDir='', avgH='';
+    // PROGRESSÃO DO PERÍODO (v49): os meses do próprio período, um após o outro, com o
+    // último — o mês corrente — em corpo maior. À direita, o consolidado do período.
+    let dualNums = '', dualSub = '', avgH = '';
 
     if(sel.length===1){
-      vEsq   = sel[0]>0 ? d.meses[sel[0]-1] : null;
-      lblEsq = sel[0]>0 ? MESES[sel[0]-1] : '—';
-      lblDir = MESES[sel[0]];
-    } else if(sel.length===2){
-      vEsq = d.meses[sel[0]]; vDir = d.meses[sel[1]];
-      lblEsq = MESES[sel[0]]; lblDir = MESES[sel[1]];
-      avgH = `<div class="ic-dual-avg">
-      <div class="ic-avg-label" style="${mintStyle}">média</div>
-      <div class="ic-avg-value">${vFmt}</div>
-    </div>`;
+      const vEsq   = sel[0]>0 ? d.meses[sel[0]-1] : null;
+      const lblEsq = sel[0]>0 ? MESES[sel[0]-1] : '—';
+      const eF = fmtVal(vEsq, ind), dF = fmtVal(cur, ind);
+      dualNums = `<span class="ic-dual-prev ${eF?'':'vazio'}">${eF||'&mdash;'}</span>
+        <span class="ic-dual-arrow">→</span>
+        <span class="ic-dual-cur ${dF?'':'vazio'}">${dF||'&mdash;'}</span>`;
+      const dt1 = deltaTxt(vEsq, cur, ind);
+      dualSub = `${lblEsq} → ${MESES[sel[0]]}` +
+        (dt1 ? ` <span class="ic-dual-delta" style="color:${corDelta(dt1)}">${dt1.arrow} ${dt1.txt}</span>` : '');
     } else {
-      // 3+ meses: direita = média do período; esquerda = média da janela anterior de mesmo tamanho
-      const n = sel.length, iniAnt = sel[0]-n;
-      if(contiguo && iniAnt>=0){
-        const valsAnt=[];
-        for(let i=iniAnt;i<sel[0];i++){
-          const v=d.meses[i];
-          if(v!==null && v!==undefined && !isNaN(v)) valsAnt.push(v);
-        }
-        if(valsAnt.length){
-          vEsq = valsAnt.reduce((a,b)=>a+b,0)/valsAnt.length;
-          lblEsq = MESES[iniAnt]+'–'+MESES[sel[0]-1];
-        } else {
-          lblEsq = MESES[iniAnt]+'–'+MESES[sel[0]-1];
-        }
+      // só os meses selecionados QUE TÊM lançamento entram na progressão
+      const pts = sel.filter(i => d.meses[i]!==null && d.meses[i]!==undefined && !isNaN(d.meses[i]));
+      if(pts.length===0){
+        dualNums = `<span class="ic-dual-cur vazio">&mdash;</span>`;
+        dualSub  = contiguo ? MESES[sel[0]]+' → '+MESES[sel[sel.length-1]] : sel.length+' meses';
+      } else {
+        // acima de 6 pontos a progressão não cabe no card fechado: primeiro … último
+        const vis = pts.length<=6 ? pts : [pts[0], null, pts[pts.length-1]];
+        const partes = vis.map((i,k)=>{
+          if(i===null) return `<span class="ic-dual-arrow">…</span>`;
+          const f = fmtVal(d.meses[i], ind);
+          const cls = (k===vis.length-1) ? 'ic-dual-cur' : 'ic-dual-prev';
+          return `<span class="${cls} ${f?'':'vazio'}">${f||'&mdash;'}</span>`;
+        });
+        dualNums = partes.join('<span class="ic-dual-arrow">→</span>');
+        const dtP = deltaTxt(d.meses[pts[0]], d.meses[pts[pts.length-1]], ind);
+        const nomes = (pts.length<=6 ? pts.map(i=>MESES[i])
+                                     : [MESES[pts[0]], '…', MESES[pts[pts.length-1]]]).join(' → ');
+        dualSub = nomes +
+          (dtP ? ` <span class="ic-dual-delta" style="color:${corDelta(dtP)}">${dtP.arrow} ${dtP.txt}</span>` : '');
       }
-      lblDir = contiguo ? MESES[sel[0]]+'–'+MESES[sel[sel.length-1]] : sel.length+' meses';
-    }
-
-    const vEsqFmt = fmtVal(vEsq, ind), vDirFmt = fmtVal(vDir, ind);
-
-    // Variação: amarelo se |m|<=5%; acima disso, verde/vermelho conforme melhora ou piora (respeita invertido).
-    // Base zero → diferença absoluta (p.p. ou valor), nunca percentual.
-    let deltaH = '';
-    const dt = deltaTxt(vEsq, vDir, ind);
-    if(dt){
-      const deltaColor = (dt.better===null || (dt.pct!==null && Math.abs(dt.pct)<=5))
-        ? 'var(--warning)'
-        : (dt.better ? 'var(--success)' : 'var(--danger)');
-      deltaH = ` <span class="ic-dual-delta" style="color:${deltaColor}">${dt.arrow} ${dt.txt}</span>`;
+      avgH = `<div class="ic-dual-avg">
+      <div class="ic-avg-label" style="${mintStyle}">${cobreTudo(d,sel)?'consolidado':'média'}</div>
+      <div class="ic-avg-value">${vFmt||'&mdash;'}</div>
+    </div>`;
     }
 
     dualH = `<div class="ic-value-dual">
     <div class="ic-dual-left">
-      <div class="ic-dual-nums">
-        <span class="ic-dual-prev ${vEsqFmt?'':'vazio'}">${vEsqFmt||'&mdash;'}</span>
-        <span class="ic-dual-arrow">→</span>
-        <span class="ic-dual-cur ${vDirFmt?'':'vazio'}">${vDirFmt||'&mdash;'}</span>
-      </div>
-      <div class="ic-dual-sub">${lblEsq} → ${lblDir}${deltaH}</div>
+      <div class="ic-dual-nums">${dualNums}</div>
+      <div class="ic-dual-sub">${dualSub}</div>
     </div>
     ${avgH}
   </div>`;
@@ -1457,8 +1502,8 @@ function htmlCard(ind){
   // Quando a meta foi acumulada, o rodapé explica a conta em vez de mostrar um número solto.
   const nAcum = (meta!==null && metaMes!==null && meta!==metaMes) ? Math.round(meta/metaMes) : 1;
   const consTip = ind.tipo==='Taxa/%'
-    ? 'Consolidado do ano: média dos meses lançados'
-    : 'Consolidado do ano: soma dos meses lançados — a meta ao lado foi acumulada pelo mesmo número de meses';
+    ? 'Consolidado do período: vem da coluna CONSOLIDADO da central (média dos meses lançados)'
+    : 'Consolidado do período: vem da coluna CONSOLIDADO da central (soma dos meses lançados) — a meta ao lado foi acumulada pelo mesmo número de meses';
   const metaFootD = nAcum>1
     ? `${metaD} <span style="opacity:.55;font-weight:400">(${metaMesD}/mês × ${nAcum})</span>`
     : metaD;
@@ -1564,13 +1609,13 @@ function htmlCard(ind){
   <div class="ic-head">
     <div class="ic-label"${labelStyleAttr}>${ind.label}</div>
     <div style="display:flex;align-items:center;gap:6px;">
-      ${sel.length===12 ? '<span class="cons-badge" title="'+consTip+'">ANO</span>' : ''}
+      ${(d && sel.length>1 && cobreTudo(d,sel)) ? '<span class="cons-badge" title="'+consTip+'">'+(sel.length===12?'ANO':'PERÍODO')+'</span>' : ''}
       <div class="semaforo ${sc}" title="${sc||'sem meta'}"></div>
     </div>
   </div>
   ${dualH || `<div class="ic-value ${vFmt?'':'vazio'}">${vFmt||'Aguardando dados'}</div>`}
   ${dualH ? '' : `<div class="ic-deltas">${momH}</div>`}
-  ${metaMes!==null?`<div class="ic-chartcap"><span class="ic-cap-dash"></span>${refLbl} ${metaMesD}${sel.length===12&&ind.tipo!=='Taxa/%'?' / mês':''}</div>`:''}
+  ${metaMes!==null?`<div class="ic-chartcap"><span class="ic-cap-dash"></span>${refLbl} ${metaMesD}${(meta!==null&&metaMes!==null&&meta!==metaMes)?' / mês':''}</div>`:''}
   ${realCount===0
     ? `<div class="ic-chart ic-chart-single"><div class="ic-single-note">Aguardando o primeiro lançamento.</div></div>`
     : `<div class="ic-chart"><canvas id="ch_${ind.id}"></canvas></div>`
@@ -1646,14 +1691,9 @@ function buildOneChart(ind, expanded){
     borderDash:[5,4],
     pointRadius:0,pointHoverRadius:0,
     fill:false,tension:0,spanGaps:true,clip:false,type:'line',
-    // Identifica a tracejada dentro do gráfico (antes ela só era nomeada na legenda acima do card).
-    datalabels:{
-      display:(c)=> c.dataIndex === c.dataset.data.length-1,
-      anchor:'end', align:'bottom', offset:2, clamp:true,
-      color:'rgba(168,204,168,0.75)',
-      font:{size:9.5,weight:'700',family:'Montserrat'},
-      formatter:()=> (ind.invertido?'Limite ':'Meta ')+fmtVal(metaVal,ind)
-    }
+    // Dentro do gráfico só entram os valores do próprio dado. A tracejada é nomeada na
+    // legenda acima do gráfico e o número aparece no rodapé — repetir aqui polui a plotagem (v49).
+    datalabels:{display:false}
   }] : [];
 
   // Escala Y com números redondos (nice numbers) — sempre começando em 0, exceto quando o
@@ -1693,7 +1733,7 @@ function buildOneChart(ind, expanded){
               if(!chartArea) return colFade;
               const g = cx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
               g.addColorStop(0, colFade);
-              g.addColorStop(1, 'rgba(63,89,140,0.02)');
+              g.addColorStop(1, 'rgba(127,160,220,0.02)');
               return g;
             }
           : bgColors,
