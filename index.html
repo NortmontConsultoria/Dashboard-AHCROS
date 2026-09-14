@@ -46,7 +46,10 @@ body{
   background:var(--bg-page);
   color:var(--ink-page);
   font-size:14px;line-height:1.55;
+  /* 'clip' em vez de 'hidden': hidden transforma o body em contêiner de rolagem e quebra
+     o position:sticky do cabeçalho. 'clip' corta o transbordo horizontal sem criar rolagem. */
   overflow-x:hidden;
+  overflow-x:clip;
 }
 
 /* LOGIN */
@@ -108,15 +111,19 @@ body{
 #app.authed{display:block;}
 
 /* HEADER */
+/* Cabeçalho: as três faixas vivem dentro de um único bloco sticky. Antes cada uma era
+   position:fixed e o topo do period-bar era calculado por JS no boot — qualquer mudança de
+   altura depois da medição (fonte carregando, scrollbar do tabs, resize) abria uma fresta
+   transparente entre as abas e o período, por onde o conteúdo aparecia. Com sticky a pilha
+   ocupa espaço no fluxo e não há mais o que medir. */
+.topo-fixo{position:sticky;top:0;z-index:100;background:var(--bg-page);}
 .top-bar{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  background:var(--bg-page);
-  padding:0 32px;height:56px;
+  padding:0 32px;height:44px;
   display:flex;align-items:center;justify-content:space-between;
 }
 .brand{display:flex;align-items:center;gap:14px;}
 .brand-nortmont{display:flex;align-items:center;}
-.brand-nortmont-logo{height:26px;width:auto;display:block;color:var(--mint);filter:drop-shadow(0 0 5px rgba(168,204,168,.65)) drop-shadow(0 0 12px rgba(168,204,168,.3));}
+.brand-nortmont-logo{height:22px;width:auto;display:block;color:var(--mint);filter:drop-shadow(0 0 5px rgba(168,204,168,.65)) drop-shadow(0 0 12px rgba(168,204,168,.3));}
 .brand-divider{width:1px;height:22px;background:var(--rule-page);}
 .brand-client{font-size:10px;color:var(--ink-page-muted);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;}
 .brand-client strong{color:var(--ink-page);}
@@ -125,17 +132,16 @@ body{
 
 /* ABAS */
 .tabs-nav{
-  position:fixed;top:56px;left:0;right:0;z-index:99;
   background:var(--bg-page);
   overflow-x:auto;scrollbar-width:thin;
 }
 .tabs-nav::-webkit-scrollbar{height:3px;}
 .tabs-nav::-webkit-scrollbar-thumb{background:rgba(224,238,231,.25);}
-.tabs-list{display:flex;gap:3px;padding:7px 28px;min-width:max-content;}
+.tabs-list{display:flex;gap:3px;padding:0 28px 6px;min-width:max-content;}
 .tab-btn{
   background:transparent;outline:none;cursor:pointer;
   color:var(--ink-page-muted);font-family:inherit;font-size:10.5px;font-weight:500;
-  padding:7px 12px;border-radius:20px;
+  padding:5px 11px;border-radius:20px;
   transition:all .18s;white-space:nowrap;border:1px solid var(--rule-page);
 }
 .tab-btn:hover{color:var(--ink-page);background:rgba(224,238,231,.07);border-color:rgba(224,238,231,.3);}
@@ -147,14 +153,12 @@ body{
 
 /* PERÍODO */
 .period-bar{
-  position:fixed;top:0;left:0;right:0;z-index:98;
   background:var(--bg-page);
   border-bottom:1px solid var(--rule-page);
   box-shadow:0 3px 12px rgba(1,30,60,.07);
-  padding:10px 28px;
+  padding:7px 28px 8px;
   display:flex;align-items:center;gap:16px;
   flex-wrap:wrap;
-  visibility:hidden;
 }
 .period-label{
   font-size:10px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;
@@ -166,7 +170,7 @@ body{
 .period-chip{
   background:rgba(224,238,231,.88);border:1px solid rgba(224,238,231,.88);
   color:var(--navy);font-family:inherit;font-size:10.5px;font-weight:600;
-  padding:6px 12px;border-radius:50px;cursor:pointer;letter-spacing:.4px;
+  padding:5px 11px;border-radius:50px;cursor:pointer;letter-spacing:.4px;
   transition:all .15s;white-space:nowrap;
 }
 .period-chip:hover{background:#fff;border-color:#fff;}
@@ -187,7 +191,7 @@ body{
 .period-summary strong{color:var(--ink-page);font-weight:600;}
 
 /* MAIN */
-main{padding-top:160px;}
+main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
 .tab-panel{display:none;}
 .tab-panel.active{display:block;animation:fadeInPanel .18s ease both;}
 @keyframes fadeInPanel{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -263,6 +267,36 @@ main{padding-top:160px;}
 
 /* ÁREA */
 .area-wrap{padding:44px 40px 80px;}
+
+/* RESUMO DA ABA + FILTRO POR SINALEIRA */
+.aba-resumo{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 26px;}
+.ar-card{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 15px;border-radius:9px;cursor:pointer;
+  background:var(--bg-card);border:1px solid var(--border-dark);
+  font-family:inherit;color:var(--ink-page);
+  transition:border-color .2s,background .2s,opacity .2s;
+}
+.ar-card:hover{background:var(--surface-hover);}
+.ar-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.ar-num{font-size:16px;font-weight:700;line-height:1;}
+.ar-lbl{font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink-page-muted);}
+.ar-card.verde .ar-dot{background:var(--ok-page);box-shadow:0 0 7px var(--ok-page);}
+.ar-card.amarelo .ar-dot{background:var(--warn-page);box-shadow:0 0 7px var(--warn-page);}
+.ar-card.vermelho .ar-dot{background:var(--bad-page);box-shadow:0 0 7px var(--bad-page);}
+.ar-card.sem .ar-dot{background:rgba(224,238,231,.25);}
+.ar-card.verde.ativo{border-color:var(--ok-page);background:rgba(47,143,110,.18);}
+.ar-card.amarelo.ativo{border-color:var(--warn-page);background:rgba(197,139,42,.18);}
+.ar-card.vermelho.ativo{border-color:var(--bad-page);background:rgba(179,58,58,.18);}
+.ar-card.sem.ativo{border-color:var(--ink-page-muted);background:rgba(224,238,231,.08);}
+.ar-card.zero{opacity:.38;cursor:default;}
+.ar-limpar{
+  background:none;border:1px solid var(--rule-page);border-radius:50px;
+  padding:7px 14px;font-size:10px;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--ink-page-muted);cursor:pointer;font-family:inherit;
+}
+.ar-limpar:hover{color:var(--ink-page);border-color:var(--accent-page);}
+.ar-vazio{padding:44px 0;text-align:center;color:var(--ink-page-muted);font-size:13px;}
 .area-head{margin-bottom:36px;}
 .area-pill{
   display:inline-flex;align-items:center;gap:7px;
@@ -441,7 +475,7 @@ main{padding-top:160px;}
   .tabs-list{padding:7px 16px;}
 }
 @media print{
-  .top-bar,.tabs-nav,.period-bar{display:none;}
+  .topo-fixo,.top-bar,.tabs-nav,.period-bar{display:none;}
   main{padding-top:0;}
   .tab-panel{display:block!important;page-break-after:always;}
 }
@@ -489,6 +523,7 @@ main{padding-top:160px;}
 
 <!-- APP -->
 <div id="app">
+<div class="topo-fixo">
   <div class="top-bar">
     <div class="brand">
       <!-- Logo original (base64 PNG) estava com o IDAT corrompido — CRC inválido, zlib não decodifica.
@@ -523,6 +558,7 @@ main{padding-top:160px;}
     <div class="period-chips" id="periodChips"></div>
     <span class="period-summary" id="periodSummary"></span>
   </div>
+</div>
 
   <main id="mainContent"></main>
 </div>
@@ -532,7 +568,7 @@ main{padding-top:160px;}
 Chart.register(ChartDataLabels);
 const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 const MESES_FULL = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-const AREAS = [{"id":"recepcao","num":"01","label":"Recepção","responsavel":"Carla","indicadores":[{"id":"taxa_de_cadastros_incorretos","label":"Taxa de cadastros incorretos (%)","tipo":"Taxa/%","invertido":true},{"id":"tempo_medio_de_espera_medico_emergencia_min","label":"Tempo Médio de Espera — Médico (Emergência) (min)","tipo":"Valor/Qtd","invertido":true},{"id":"taxa_de_confirmacao_no_1_contato","label":"Taxa de Confirmação no 1º Contato (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_desistencia_na_fila_emergencia","label":"Taxa de Desistência na Fila (Emergência) (%)","tipo":"Taxa/%","invertido":true},{"id":"volume_de_atendimento_turno_da_manha","label":"Volume de Atendimento — Turno da Manhã","tipo":"Valor/Qtd","invertido":false},{"id":"volume_de_atendimento_turno_da_tarde","label":"Volume de Atendimento — Turno da Tarde","tipo":"Valor/Qtd","invertido":false},{"id":"volume_de_atendimento_consultorio_externo","label":"Volume de Atendimento — Consultório Externo","tipo":"Valor/Qtd","invertido":false},{"id":"consultas_particulares_agendadas_recepcao_principal","label":"Consultas Particulares Agendadas — Recepção Principal","tipo":"Valor/Qtd","invertido":false},{"id":"n_de_exames_agendados_recepcao_centro_de_diagnostico","label":"N° de Exames Agendados — Recepção Centro de Diagnóstico","tipo":"Valor/Qtd","invertido":false},{"id":"atendimentos_por_convenio_sus","label":"% Atendimentos por Convênio — SUS (%)","tipo":"Taxa/%","invertido":false},{"id":"atendimentos_por_convenio_particular","label":"% Atendimentos por Convênio — Particular (%)","tipo":"Taxa/%","invertido":false},{"id":"atendimentos_por_convenio_outros_convenios","label":"% Atendimentos por Convênio — Outros Convênios (%)","tipo":"Taxa/%","invertido":false}]},{"id":"enfermagem","num":"02","label":"Enfermagem","responsavel":"Jaíne","indicadores":[{"id":"n_de_reclamacoes_formais","label":"Nº de reclamações formais","tipo":"Valor/Qtd","invertido":true},{"id":"taxa_de_erros_de_medicacao_na_internacao","label":"Taxa de erros de medicação na internação (%)","tipo":"Taxa/%","invertido":true},{"id":"taxa_de_iras","label":"Taxa de IRAS (%)","tipo":"Taxa/%","invertido":true},{"id":"taxa_de_lesoes_por_pressao","label":"Taxa de lesões por pressão (%)","tipo":"Taxa/%","invertido":true},{"id":"taxa_de_quedas","label":"Taxa de quedas (%)","tipo":"Taxa/%","invertido":true}]},{"id":"sanificacao","num":"03","label":"Sanificação","responsavel":"Equipe","indicadores":[{"id":"equipe_treinada","label":"% equipe treinada (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_nao_conformidades_ccih","label":"Taxa de não conformidades CCIH (%)","tipo":"Taxa/%","invertido":true},{"id":"custo_por_dia_limpeza_r","label":"Custo por Dia — Limpeza (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"custo_por_dia_lavanderia_r","label":"Custo por Dia — Lavanderia (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"custo_por_dia_total_do_setor_higienizacao_e_lavanderia_hospitalar_r","label":"Custo por Dia — Total do Setor Higienização e Lavanderia Hospitalar (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"custo_limpeza","label":"% Custo Limpeza (%)","tipo":"Taxa/%","invertido":true},{"id":"custo_lavanderia","label":"% Custo Lavanderia (%)","tipo":"Taxa/%","invertido":true},{"id":"custo_total_do_setor_de_higienizacao_e_lavanderia_hospitalar_r","label":"Custo Total do Setor de Higienização e Lavanderia Hospitalar (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"conformidade_de_periodicidade_area_critica_limpeza_concorrente","label":"Conformidade de Periodicidade — Área Crítica / Limpeza Concorrente (%)","tipo":"Taxa/%","invertido":false},{"id":"conformidade_de_periodicidade_area_critica_limpeza_terminal","label":"Conformidade de Periodicidade — Área Crítica / Limpeza Terminal (%)","tipo":"Taxa/%","invertido":false},{"id":"conformidade_de_periodicidade_area_semicritica_limpeza_concorrente","label":"Conformidade de Periodicidade — Área Semicrítica / Limpeza Concorrente (%)","tipo":"Taxa/%","invertido":false},{"id":"conformidade_de_periodicidade_area_semicritica_limpeza_terminal","label":"Conformidade de Periodicidade — Área Semicrítica / Limpeza Terminal (%)","tipo":"Taxa/%","invertido":false},{"id":"conformidade_de_periodicidade_area_nao_critica_limpeza_concorrente","label":"Conformidade de Periodicidade — Área Não Crítica / Limpeza Concorrente (%)","tipo":"Taxa/%","invertido":false},{"id":"conformidade_de_periodicidade_area_nao_critica_limpeza_terminal","label":"Conformidade de Periodicidade — Área Não Crítica / Limpeza Terminal (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_cumprimento_do_cronograma_de_limpezas","label":"Taxa de Cumprimento do Cronograma de Limpezas (%)","tipo":"Taxa/%","invertido":false}]},{"id":"farmacia","num":"04","label":"Farmácia","responsavel":"Valquíria","indicadores":[{"id":"itens_fora_dos_niveis","label":"% itens fora dos níveis (%)","tipo":"Taxa/%","invertido":true},{"id":"perdas_vencimento_extravios","label":"% perdas vencimento/extravios (%)","tipo":"Taxa/%","invertido":true},{"id":"acuracia_de_estoque","label":"Acurácia de estoque (%)","tipo":"Taxa/%","invertido":false},{"id":"giro_de_estoque_vezes","label":"Giro de estoque (vezes)","tipo":"Valor/Qtd","invertido":false},{"id":"taxa_ajustes_negativos","label":"Taxa ajustes negativos (%)","tipo":"Taxa/%","invertido":true},{"id":"de_atendimentos_com_erro_no_lancamento","label":"% de Atendimentos com erro no lançamento (%)","tipo":"Taxa/%","invertido":true},{"id":"contas_sem_divergencia","label":"% contas sem divergência (%)","tipo":"Taxa/%","invertido":false},{"id":"perdas_por_nao_lancamentos_r","label":"Perdas por não lançamentos (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"valor_total_estoque_r","label":"Valor total estoque (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"valor_total_de_notas_r","label":"Valor total de notas (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true}]},{"id":"faturamento","num":"05","label":"Faturamento","responsavel":"Carla","indicadores":[{"id":"metas_sus_atingidas","label":"% metas SUS atingidas (%)","tipo":"Taxa/%","invertido":false},{"id":"faturamentos_no_prazo","label":"% faturamentos no prazo (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_glosa_inicial","label":"Taxa de Glosa Inicial (%)","tipo":"Taxa/%","invertido":true},{"id":"valor_financeiro_glosado_r","label":"Valor Financeiro Glosado (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"de_aihs_canceladas","label":"% de AIHs Canceladas (%)","tipo":"Taxa/%","invertido":true},{"id":"de_servicos_pactuados_abaixo_da_meta_leitura_trimestral","label":"% de Serviços Pactuados Abaixo da Meta — leitura trimestral (%)","tipo":"Taxa/%","invertido":true}]},{"id":"nutricao","num":"06","label":"Nutrição","responsavel":"Eucléia","indicadores":[{"id":"amostras_microbiologicas_ok","label":"% Amostras microbiológicas OK (%)","tipo":"Taxa/%","invertido":false},{"id":"itens_vencidos_sobre_estoque","label":"% Itens vencidos sobre estoque (%)","tipo":"Taxa/%","invertido":true},{"id":"custo_compras_nutricao_r","label":"Custo Compras Nutrição (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"custo_por_paciente_alimentacao_r","label":"Custo por paciente / alimentação (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"custo_de_refeicoes_sobre_compras","label":"% Custo de Refeições sobre Compras (%)","tipo":"Taxa/%","invertido":true},{"id":"custo_por_refeicao_r","label":"Custo por refeição (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"n_refeicoes_pacientes","label":"Nº Refeições Pacientes","tipo":"Valor/Qtd","invertido":false},{"id":"perdas_por_vencimento_r","label":"Perdas por Vencimento (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true}]},{"id":"radiologia","num":"07","label":"Radiologia","responsavel":"Daiane","indicadores":[{"id":"laudos_dentro_do_sla","label":"% Laudos dentro do SLA (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_retrabalho","label":"Taxa de Retrabalho (%)","tipo":"Taxa/%","invertido":true},{"id":"tat_medio_exame_laudo_horas","label":"TAT médio exame → laudo (horas)","tipo":"Valor/Qtd","invertido":true},{"id":"valor_horas_extras_radiologia_r","label":"Valor Horas Extras Radiologia (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"produtividade_por_equipamento_exames_equip","label":"Produtividade por Equipamento (exames/equip.)","tipo":"Valor/Qtd","invertido":false},{"id":"receita_por_exame_ticket_medio_r","label":"Receita por Exame — Ticket Médio (R$)","tipo":"Valor/Qtd","invertido":false,"moeda":true},{"id":"taxa_de_utilizacao_da_capacidade_de_exames","label":"Taxa de Utilização da Capacidade de Exames (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_cancelamento_por_preparo_inadequado","label":"Taxa de Cancelamento por Preparo Inadequado (%)","tipo":"Taxa/%","invertido":true}]},{"id":"rh","num":"08","label":"RH","responsavel":"Andrégis","indicadores":[{"id":"taxa_de_absenteismo","label":"Taxa de Absenteísmo (%)","tipo":"Taxa/%","invertido":true},{"id":"custo_absenteismo_r","label":"Custo Absenteísmo (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"n_de_admissoes","label":"Nº de Admissões","tipo":"Valor/Qtd","invertido":false},{"id":"n_de_desligamentos","label":"Nº de Desligamentos","tipo":"Valor/Qtd","invertido":true},{"id":"taxa_afastamentos_saude","label":"Taxa Afastamentos Saúde (%)","tipo":"Taxa/%","invertido":true},{"id":"taxa_de_turnover","label":"Taxa de Turnover (%)","tipo":"Taxa/%","invertido":true},{"id":"rotatividade_voluntaria","label":"Rotatividade Voluntária (%)","tipo":"Taxa/%","invertido":true},{"id":"participacao_amb_indigena","label":"% Participação — Amb. Indígena (%)","tipo":"Taxa/%","invertido":false},{"id":"participacao_dermatologia","label":"% Participação — Dermatologia (%)","tipo":"Taxa/%","invertido":false},{"id":"participacao_emergencia","label":"% Participação — Emergência (%)","tipo":"Taxa/%","invertido":false},{"id":"participacao_internacoes","label":"% Participação — Internações (%)","tipo":"Taxa/%","invertido":false},{"id":"participacao_neurologia","label":"% Participação — Neurologia (%)","tipo":"Taxa/%","invertido":false},{"id":"satisfacao_emergencia_media","label":"Satisfação Emergência (média)","tipo":"Valor/Qtd","invertido":false},{"id":"satisfacao_internacao_media","label":"Satisfação Internação (média)","tipo":"Valor/Qtd","invertido":false},{"id":"satisfacao_treinamentos_media_1_5","label":"Satisfação Treinamentos (média 1-5)","tipo":"Valor/Qtd","invertido":false},{"id":"satisfacao_enfermagem_media","label":"Satisfação Enfermagem (média)","tipo":"Valor/Qtd","invertido":false},{"id":"respondentes_enfermagem","label":"% Respondentes — Enfermagem (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_participacao_capacitacoes","label":"Taxa Participação Capacitações (%)","tipo":"Taxa/%","invertido":false},{"id":"satisfacao_nutricao_media","label":"Satisfação Nutrição (média)","tipo":"Valor/Qtd","invertido":false},{"id":"nps_nutricao_prom_detr","label":"NPS Nutrição (% prom − % detr)","tipo":"Valor/Qtd","invertido":false}]},{"id":"gestao","num":"09","label":"Gestão","responsavel":"Janis","indicadores":[{"id":"projetos_aprovados","label":"% Projetos aprovados (%)","tipo":"Taxa/%","invertido":false},{"id":"n_projetos_aprovados","label":"Nº Projetos Aprovados","tipo":"Valor/Qtd","invertido":false},{"id":"n_projetos_submetidos","label":"Nº Projetos Submetidos","tipo":"Valor/Qtd","invertido":false},{"id":"n_especialidades_medicas_ativas","label":"Nº Especialidades Médicas Ativas","tipo":"Valor/Qtd","invertido":false},{"id":"colaboradores_treinados_lgpd","label":"% Colaboradores treinados LGPD (%)","tipo":"Taxa/%","invertido":false},{"id":"valor_investido_equipamentos_r","label":"Valor Investido Equipamentos (R$)","tipo":"Valor/Qtd","invertido":false,"moeda":true}]},{"id":"producao","num":"10","label":"Produção","responsavel":"Janis","indicadores":[{"id":"utilizacao_bloco_cirurgico","label":"% Utilização Bloco Cirúrgico (%)","tipo":"Taxa/%","invertido":false},{"id":"participacao_regional","label":"Participação Regional (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_no_shows","label":"Taxa de No-Shows (%)","tipo":"Taxa/%","invertido":true},{"id":"taxa_de_ocupacao_dos_leitos","label":"Taxa de Ocupação dos Leitos (%)","tipo":"Taxa/%","invertido":false},{"id":"tmp_dias","label":"TMP (dias)","tipo":"Valor/Qtd","invertido":false},{"id":"vidas_unicas_atendidas","label":"Vidas Únicas Atendidas","tipo":"Valor/Qtd","invertido":false},{"id":"taxa_ocupacao_agenda_cardiologia","label":"Taxa Ocupação Agenda — Cardiologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_psicologia","label":"Taxa Ocupação Agenda — Psicologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_dermatologia_1","label":"Taxa Ocupação Agenda — Dermatologia 1 (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_dermatologia_2","label":"Taxa Ocupação Agenda — Dermatologia 2 (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_vascular","label":"Taxa Ocupação Agenda — Vascular (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_eletroneuromiografia","label":"Taxa Ocupação Agenda — Eletroneuromiografia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_fonoaudiologia","label":"Taxa Ocupação Agenda — Fonoaudiologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_otorrinolaringologia","label":"Taxa Ocupação Agenda — Otorrinolaringologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_urologia","label":"Taxa Ocupação Agenda — Urologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_reumatologia","label":"Taxa Ocupação Agenda — Reumatologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_psiquiatria","label":"Taxa Ocupação Agenda — Psiquiatria (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_traumatologia_1","label":"Taxa Ocupação Agenda — Traumatologia 1 (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_traumatologia_2","label":"Taxa Ocupação Agenda — Traumatologia 2 (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_neurologia","label":"Taxa Ocupação Agenda — Neurologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_pediatria","label":"Taxa Ocupação Agenda — Pediatria (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_oftalmologia","label":"Taxa Ocupação Agenda — Oftalmologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_geriatria","label":"Taxa Ocupação Agenda — Geriatria (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_global","label":"Taxa Ocupação Agenda Global (%)","tipo":"Taxa/%","invertido":false}]}];
+const AREAS = [{"id":"recepcao","num":"01","label":"Recepção","responsavel":"Carla","indicadores":[{"id":"taxa_de_cadastros_incorretos","label":"Taxa de cadastros incorretos (%)","tipo":"Taxa/%","invertido":true},{"id":"tempo_medio_de_espera_medico_emergencia_min","label":"Tempo Médio de Espera — Médico (Emergência) (min)","tipo":"Valor/Qtd","invertido":true},{"id":"taxa_de_confirmacao_no_1_contato","label":"Taxa de Confirmação no 1º Contato (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_desistencia_na_fila_emergencia","label":"Taxa de Desistência na Fila (Emergência) (%)","tipo":"Taxa/%","invertido":true},{"id":"volume_de_atendimento_turno_da_manha","label":"Volume de Atendimento — Turno da Manhã","tipo":"Valor/Qtd","invertido":false},{"id":"volume_de_atendimento_turno_da_tarde","label":"Volume de Atendimento — Turno da Tarde","tipo":"Valor/Qtd","invertido":false},{"id":"volume_de_atendimento_consultorio_externo","label":"Volume de Atendimento — Consultório Externo","tipo":"Valor/Qtd","invertido":false},{"id":"consultas_particulares_agendadas_recepcao_principal","label":"Consultas Particulares Agendadas — Recepção Principal","tipo":"Valor/Qtd","invertido":false},{"id":"n_de_exames_agendados_recepcao_centro_de_diagnostico","label":"N° de Exames Agendados — Recepção Centro de Diagnóstico","tipo":"Valor/Qtd","invertido":false},{"id":"atendimentos_por_convenio_sus","label":"% Atendimentos por Convênio — SUS (%)","tipo":"Taxa/%","invertido":false},{"id":"atendimentos_por_convenio_particular","label":"% Atendimentos por Convênio — Particular (%)","tipo":"Taxa/%","invertido":false},{"id":"atendimentos_por_convenio_outros_convenios","label":"% Atendimentos por Convênio — Outros Convênios (%)","tipo":"Taxa/%","invertido":false}]},{"id":"enfermagem","num":"02","label":"Enfermagem","responsavel":"Jaíne","indicadores":[{"id":"n_de_reclamacoes_formais","label":"Nº de reclamações formais","tipo":"Valor/Qtd","invertido":true},{"id":"taxa_de_erros_de_medicacao_na_internacao","label":"Taxa de erros de medicação na internação (%)","tipo":"Taxa/%","invertido":true},{"id":"taxa_de_iras","label":"Taxa de IRAS (%)","tipo":"Taxa/%","invertido":true},{"id":"taxa_de_lesoes_por_pressao","label":"Taxa de lesões por pressão (%)","tipo":"Taxa/%","invertido":true},{"id":"taxa_de_quedas","label":"Taxa de quedas (%)","tipo":"Taxa/%","invertido":true}]},{"id":"sanificacao","num":"03","label":"Sanificação","responsavel":"Equipe","indicadores":[{"id":"equipe_treinada","label":"% equipe treinada (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_nao_conformidades_ccih","label":"Taxa de não conformidades CCIH (%)","tipo":"Taxa/%","invertido":true},{"id":"conformidade_de_periodicidade_area_critica_limpeza_concorrente","label":"Conformidade de Periodicidade — Área Crítica / Limpeza Concorrente (%)","tipo":"Taxa/%","invertido":false},{"id":"conformidade_de_periodicidade_area_critica_limpeza_terminal","label":"Conformidade de Periodicidade — Área Crítica / Limpeza Terminal (%)","tipo":"Taxa/%","invertido":false},{"id":"conformidade_de_periodicidade_area_semicritica_limpeza_concorrente","label":"Conformidade de Periodicidade — Área Semicrítica / Limpeza Concorrente (%)","tipo":"Taxa/%","invertido":false},{"id":"conformidade_de_periodicidade_area_semicritica_limpeza_terminal","label":"Conformidade de Periodicidade — Área Semicrítica / Limpeza Terminal (%)","tipo":"Taxa/%","invertido":false},{"id":"conformidade_de_periodicidade_area_nao_critica_limpeza_concorrente","label":"Conformidade de Periodicidade — Área Não Crítica / Limpeza Concorrente (%)","tipo":"Taxa/%","invertido":false},{"id":"conformidade_de_periodicidade_area_nao_critica_limpeza_terminal","label":"Conformidade de Periodicidade — Área Não Crítica / Limpeza Terminal (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_cumprimento_do_cronograma_de_limpezas","label":"Taxa de Cumprimento do Cronograma de Limpezas (%)","tipo":"Taxa/%","invertido":false},{"id":"custo_por_dia_limpeza_r","label":"Custo por Dia — Limpeza (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"custo_por_dia_lavanderia_r","label":"Custo por Dia — Lavanderia (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"custo_por_dia_total_do_setor_higienizacao_e_lavanderia_hospitalar_r","label":"Custo por Dia — Total do Setor Higienização e Lavanderia Hospitalar (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"custo_limpeza","label":"% Custo Limpeza (%)","tipo":"Taxa/%","invertido":true},{"id":"custo_lavanderia","label":"% Custo Lavanderia (%)","tipo":"Taxa/%","invertido":true},{"id":"custo_total_do_setor_de_higienizacao_e_lavanderia_hospitalar_r","label":"Custo Total do Setor de Higienização e Lavanderia Hospitalar (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true}]},{"id":"farmacia","num":"04","label":"Farmácia","responsavel":"Valquíria","indicadores":[{"id":"itens_fora_dos_niveis","label":"% itens fora dos níveis (%)","tipo":"Taxa/%","invertido":true},{"id":"perdas_vencimento_extravios","label":"% perdas vencimento/extravios (%)","tipo":"Taxa/%","invertido":true},{"id":"acuracia_de_estoque","label":"Acurácia de estoque (%)","tipo":"Taxa/%","invertido":false},{"id":"giro_de_estoque_vezes","label":"Giro de estoque (vezes)","tipo":"Valor/Qtd","invertido":false},{"id":"taxa_ajustes_negativos","label":"Taxa ajustes negativos (%)","tipo":"Taxa/%","invertido":true},{"id":"de_atendimentos_com_erro_no_lancamento","label":"% de Atendimentos com erro no lançamento (%)","tipo":"Taxa/%","invertido":true},{"id":"contas_sem_divergencia","label":"% contas sem divergência (%)","tipo":"Taxa/%","invertido":false},{"id":"perdas_por_nao_lancamentos_r","label":"Perdas por não lançamentos (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"valor_total_estoque_r","label":"Valor total estoque (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"valor_total_de_notas_compras_r","label":"Valor total de notas - compras (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true}]},{"id":"faturamento","num":"05","label":"Faturamento","responsavel":"Carla","indicadores":[{"id":"metas_sus_atingidas","label":"% metas SUS atingidas (%)","tipo":"Taxa/%","invertido":false},{"id":"faturamentos_no_prazo","label":"% faturamentos no prazo (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_glosa_inicial","label":"Taxa de Glosa Inicial (%)","tipo":"Taxa/%","invertido":true},{"id":"valor_financeiro_glosado_r","label":"Valor Financeiro Glosado (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"de_aihs_canceladas","label":"% de AIHs Canceladas (%)","tipo":"Taxa/%","invertido":true},{"id":"de_servicos_pactuados_abaixo_da_meta_leitura_trimestral","label":"% de Serviços Pactuados Abaixo da Meta — leitura trimestral (%)","tipo":"Taxa/%","invertido":true}]},{"id":"nutricao","num":"06","label":"Nutrição","responsavel":"Eucléia","indicadores":[{"id":"amostras_microbiologicas_ok","label":"% Amostras microbiológicas OK (%)","tipo":"Taxa/%","invertido":false},{"id":"itens_vencidos_sobre_estoque","label":"% Itens vencidos sobre estoque (%)","tipo":"Taxa/%","invertido":true},{"id":"custo_compras_nutricao_r","label":"Custo Compras Nutrição (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"custo_por_paciente_alimentacao_r","label":"Custo por paciente / alimentação (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"custo_de_refeicoes_sobre_compras","label":"% Custo de Refeições sobre Compras (%)","tipo":"Taxa/%","invertido":true},{"id":"custo_por_refeicao_r","label":"Custo por refeição (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"n_refeicoes_pacientes","label":"Nº Refeições Pacientes","tipo":"Valor/Qtd","invertido":false},{"id":"perdas_por_vencimento_r","label":"Perdas por Vencimento (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true}]},{"id":"radiologia","num":"07","label":"Radiologia","responsavel":"Daiane","indicadores":[{"id":"laudos_dentro_do_sla","label":"% Laudos dentro do SLA (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_retrabalho","label":"Taxa de Retrabalho (%)","tipo":"Taxa/%","invertido":true},{"id":"tat_medio_exame_laudo_horas","label":"TAT médio exame → laudo (horas)","tipo":"Valor/Qtd","invertido":true},{"id":"valor_horas_extras_radiologia_r","label":"Valor Horas Extras Radiologia (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"produtividade_por_equipamento_exames_equip","label":"Produtividade por Equipamento (exames/equip.)","tipo":"Valor/Qtd","invertido":false},{"id":"receita_por_exame_ticket_medio_r","label":"Receita por Exame — Ticket Médio (R$)","tipo":"Valor/Qtd","invertido":false,"moeda":true},{"id":"taxa_de_utilizacao_da_capacidade_de_exames","label":"Taxa de Utilização da Capacidade de Exames (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_cancelamento_por_preparo_inadequado","label":"Taxa de Cancelamento por Preparo Inadequado (%)","tipo":"Taxa/%","invertido":true}]},{"id":"rh","num":"08","label":"RH","responsavel":"Andrégis","indicadores":[{"id":"taxa_de_absenteismo","label":"Taxa de Absenteísmo (%)","tipo":"Taxa/%","invertido":true},{"id":"custo_absenteismo_r","label":"Custo Absenteísmo (R$)","tipo":"Valor/Qtd","invertido":true,"moeda":true},{"id":"n_de_admissoes","label":"Nº de Admissões","tipo":"Valor/Qtd","invertido":false},{"id":"n_de_desligamentos","label":"Nº de Desligamentos","tipo":"Valor/Qtd","invertido":true},{"id":"taxa_afastamentos_saude","label":"Taxa Afastamentos Saúde (%)","tipo":"Taxa/%","invertido":true},{"id":"taxa_de_turnover","label":"Taxa de Turnover (%)","tipo":"Taxa/%","invertido":true},{"id":"rotatividade_voluntaria","label":"Rotatividade Voluntária (%)","tipo":"Taxa/%","invertido":true},{"id":"participacao_amb_indigena","label":"% Participação — Amb. Indígena (%)","tipo":"Taxa/%","invertido":false},{"id":"participacao_dermatologia","label":"% Participação — Dermatologia (%)","tipo":"Taxa/%","invertido":false},{"id":"participacao_emergencia","label":"% Participação — Emergência (%)","tipo":"Taxa/%","invertido":false},{"id":"participacao_internacoes","label":"% Participação — Internações (%)","tipo":"Taxa/%","invertido":false},{"id":"participacao_neurologia","label":"% Participação — Neurologia (%)","tipo":"Taxa/%","invertido":false},{"id":"satisfacao_emergencia_media","label":"Satisfação Emergência (média)","tipo":"Valor/Qtd","invertido":false},{"id":"satisfacao_internacao_media","label":"Satisfação Internação (média)","tipo":"Valor/Qtd","invertido":false},{"id":"satisfacao_treinamentos_media_1_5","label":"Satisfação Treinamentos (média 1-5)","tipo":"Valor/Qtd","invertido":false},{"id":"satisfacao_enfermagem_media","label":"Satisfação Enfermagem (média)","tipo":"Valor/Qtd","invertido":false},{"id":"respondentes_enfermagem","label":"% Respondentes — Enfermagem (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_participacao_capacitacoes","label":"Taxa Participação Capacitações (%)","tipo":"Taxa/%","invertido":false},{"id":"satisfacao_nutricao_media","label":"Satisfação Nutrição (média)","tipo":"Valor/Qtd","invertido":false},{"id":"nps_nutricao_prom_detr","label":"NPS Nutrição (% prom − % detr)","tipo":"Valor/Qtd","invertido":false}]},{"id":"gestao","num":"09","label":"Gestão","responsavel":"Janis","indicadores":[{"id":"projetos_aprovados","label":"% Projetos aprovados (%)","tipo":"Taxa/%","invertido":false},{"id":"n_projetos_aprovados","label":"Nº Projetos Aprovados","tipo":"Valor/Qtd","invertido":false},{"id":"n_projetos_submetidos","label":"Nº Projetos Submetidos","tipo":"Valor/Qtd","invertido":false},{"id":"n_especialidades_medicas_ativas","label":"Nº Especialidades Médicas Ativas","tipo":"Valor/Qtd","invertido":false},{"id":"colaboradores_treinados_lgpd","label":"% Colaboradores treinados LGPD (%)","tipo":"Taxa/%","invertido":false},{"id":"valor_investido_equipamentos_r","label":"Valor Investido Equipamentos (R$)","tipo":"Valor/Qtd","invertido":false,"moeda":true}]},{"id":"producao","num":"10","label":"Produção","responsavel":"Janis","indicadores":[{"id":"utilizacao_bloco_cirurgico","label":"% Utilização Bloco Cirúrgico (%)","tipo":"Taxa/%","invertido":false},{"id":"participacao_regional","label":"Participação Regional (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_de_no_shows","label":"Taxa de No-Shows (%)","tipo":"Taxa/%","invertido":true},{"id":"taxa_de_ocupacao_dos_leitos","label":"Taxa de Ocupação dos Leitos (%)","tipo":"Taxa/%","invertido":false},{"id":"tmp_dias","label":"TMP (dias)","tipo":"Valor/Qtd","invertido":false},{"id":"vidas_unicas_atendidas","label":"Vidas Únicas Atendidas","tipo":"Valor/Qtd","invertido":false},{"id":"taxa_ocupacao_agenda_cardiologia","label":"Taxa Ocupação Agenda — Cardiologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_psicologia","label":"Taxa Ocupação Agenda — Psicologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_dermatologia_1","label":"Taxa Ocupação Agenda — Dermatologia 1 (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_dermatologia_2","label":"Taxa Ocupação Agenda — Dermatologia 2 (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_vascular","label":"Taxa Ocupação Agenda — Vascular (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_eletroneuromiografia","label":"Taxa Ocupação Agenda — Eletroneuromiografia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_fonoaudiologia","label":"Taxa Ocupação Agenda — Fonoaudiologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_otorrinolaringologia","label":"Taxa Ocupação Agenda — Otorrinolaringologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_urologia","label":"Taxa Ocupação Agenda — Urologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_reumatologia","label":"Taxa Ocupação Agenda — Reumatologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_psiquiatria","label":"Taxa Ocupação Agenda — Psiquiatria (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_traumatologia_1","label":"Taxa Ocupação Agenda — Traumatologia 1 (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_traumatologia_2","label":"Taxa Ocupação Agenda — Traumatologia 2 (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_neurologia","label":"Taxa Ocupação Agenda — Neurologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_pediatria","label":"Taxa Ocupação Agenda — Pediatria (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_oftalmologia","label":"Taxa Ocupação Agenda — Oftalmologia (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_geriatria","label":"Taxa Ocupação Agenda — Geriatria (%)","tipo":"Taxa/%","invertido":false},{"id":"taxa_ocupacao_agenda_global","label":"Taxa Ocupação Agenda Global (%)","tipo":"Taxa/%","invertido":false}]}];
 
 // Colunas 0-based: D=3(meta), E=4(Jan)..P=15(Dez), Q=16(consolidado)
 const COL_META=3, COL_JAN=4, COL_DEZ=15, COL_CONS=16;
@@ -551,6 +587,7 @@ const ST = {
   tab:'capa',
   selectedMonths: [new Date().getMonth()],   // sobrescrito por ajustarMesAutomatico() assim que a planilha chega
   mesManual: false,
+  filtroCor: null,                            // null | 'verde' | 'amarelo' | 'vermelho' | 'sem'
   data:null, loading:false, error:null, charts:{}
 };
 
@@ -559,23 +596,6 @@ let appEntered = false;
 function boot(){
   document.body.classList.add('authed');
   document.getElementById('app').classList.add('authed');
-  // Posicionar period-bar colado embaixo da tabs-nav, e main colado embaixo do period-bar
-  requestAnimationFrame(()=>{
-    const topBar = document.querySelector('.top-bar');
-    const tabsNav = document.querySelector('.tabs-nav');
-    const periodBar = document.getElementById('periodBar');
-    const main = document.querySelector('main');
-    if(topBar && tabsNav && periodBar && main){
-      const tabsBottom = tabsNav.getBoundingClientRect().bottom;
-      periodBar.style.top = Math.ceil(tabsBottom) + 'px';
-      // Aguarda o period-bar renderizar para calcular sua altura
-      requestAnimationFrame(()=>{
-        const pbBottom = periodBar.getBoundingClientRect().bottom;
-        main.style.paddingTop = Math.ceil(pbBottom) + 'px';
-        periodBar.style.visibility = 'visible';
-      });
-    }
-  });
   initPeriod();
   bindTabs();
   renderMain();
@@ -757,13 +777,13 @@ function htmlAreasGrid(sel){
     let v=0,a=0,r=0;
     area.indicadores.forEach(ind=>{
       const d=getData(ind); if(!d) return;
-      const sc=semCls(calcCurVal(d,sel),d.meta,ind.invertido);
+      const sc=semCls(calcCurVal(d,sel),metaEfetiva(ind,d,sel),ind.invertido);
       if(sc==='verde') v++; else if(sc==='amarelo') a++; else if(sc==='vermelho') r++;
     });
     const dom=r>0?'vermelho':(a>0?'amarelo':'verde');
     const dots=area.indicadores.map(ind=>{
       const d=getData(ind); if(!d) return '<span class="acm-dot vazio"></span>';
-      const sc=semCls(calcCurVal(d,sel),d.meta,ind.invertido);
+      const sc=semCls(calcCurVal(d,sel),metaEfetiva(ind,d,sel),ind.invertido);
       return `<span class="acm-dot ${sc||'vazio'}"></span>`;
     }).join('');
     const total=area.indicadores.length;
@@ -774,6 +794,7 @@ function htmlAreasGrid(sel){
 }
 function switchTab(id){
   ST.tab=id;
+  ST.filtroCor=null;                          // filtro de sinaleira é por aba, não persiste na navegação
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
   ajustarMesAutomatico();
   renderMain(); window.scrollTo({top:0,behavior:'smooth'});
@@ -794,6 +815,7 @@ function slug(s){
 // PERÍODO — 1ª metade: Ano completo · 2ª metade: meses individuais (redesign, mesma lógica visual nas duas)
 const RANGES = [
   { lbl:'Ano completo', idxs: null },
+  { lbl:'Últimos 3 meses', dyn:'u3' },   // janela móvel: os 3 meses até o último com lançamento
 ];
 
 function initPeriod(){
@@ -807,13 +829,17 @@ function initPeriod(){
     b.textContent = r.lbl;
     b.dataset.range = r.lbl;
     b.addEventListener('click', () => {
-      ST.mesManual = true;   // escolha manual desliga o mês automático
-      if(r.idxs === null){
-        // Ano completo: todos os meses
-        ST.selectedMonths = [0,1,2,3,4,5,6,7,8,9,10,11];
+      let novo;
+      if(r.dyn === 'u3'){
+        novo = ultimos3Meses();
+        if(!novo) return;    // planilha ainda não carregou: não mexe em nada
+      } else if(r.idxs === null){
+        novo = [0,1,2,3,4,5,6,7,8,9,10,11];   // Ano completo
       } else {
-        ST.selectedMonths = [...r.idxs];
+        novo = [...r.idxs];
       }
+      ST.mesManual = true;   // escolha manual desliga o mês automático
+      ST.selectedMonths = novo;
       updateChips();
       renderMain();
     });
@@ -858,7 +884,10 @@ function updateChips(){
   document.querySelectorAll('[data-range]').forEach(b => {
     const r = RANGES.find(r => r.lbl === b.dataset.range);
     if(!r) return;
-    if(r.idxs === null){
+    if(r.dyn === 'u3'){
+      const u = ultimos3Meses();
+      b.classList.toggle('active', !!u && u.length === sel.length && u.every(i => sel.includes(i)));
+    } else if(r.idxs === null){
       // "Ano completo" ativo quando todos 12 meses selecionados
       b.classList.toggle('active', sel.length === 12);
     } else {
@@ -923,6 +952,21 @@ function ultimoMesComDado(areaId){
   return null;
 }
 
+// Janela dos 3 meses que terminam no último mês COM LANÇAMENTO (mesmo limiar de 20% do
+// ultimoMesComDado). Prioriza a aba ativa; cai para o global se a aba não tiver nada.
+// Devolve null enquanto a planilha não chegou — o chamador decide o que fazer.
+function ultimos3Meses(){
+  if(!ST.data) return null;
+  let fim = null;
+  if(ST.tab && ST.tab !== 'capa') fim = ultimoMesComDado(ST.tab);
+  if(fim === null) fim = ultimoMesComDado(null);
+  if(fim === null) return null;
+  const ini = Math.max(0, fim - 2);
+  const out = [];
+  for(let i = ini; i <= fim; i++) out.push(i);
+  return out;
+}
+
 function ajustarMesAutomatico(){
   if(ST.mesManual || !ST.data) return;
   const g = ultimoMesComDado(null);
@@ -968,6 +1012,12 @@ function destroyCharts(){
   ST.charts={};
 }
 
+// Filtro por sinaleira (clique no resumo da aba). Clicar na cor já ativa desliga o filtro.
+function setFiltroCor(c){
+  ST.filtroCor = (ST.filtroCor === c) ? null : c;
+  renderMain();
+}
+
 // RENDER
 function renderMain(){
   destroyCharts();
@@ -1002,7 +1052,7 @@ function htmlCapa(){
       const d=getData(ind);
       if(!d){ semDados++; return; }
       const cur=calcCurVal(d,sel);
-      const meta=d.meta;
+      const meta=metaEfetiva(ind,d,sel);
       const sc=semCls(cur,meta,ind.invertido);
       if(sc==='verde') verde++;
       else if(sc==='amarelo') amarelo++;
@@ -1095,16 +1145,50 @@ function htmlArea(area){
     const contiguo = sel.every((v,i)=>i===0||v===sel[i-1]+1);
     lbl = contiguo ? MESES[sel[0]]+' – '+MESES[sel[sel.length-1]] : sel.length+' meses';
   }
+  // RESUMO DA ABA — contagem por sinaleira no período selecionado.
+  // A cor usada aqui é exatamente a mesma que o card calcula (semCls do valor do período).
+  const cont = {verde:0, amarelo:0, vermelho:0, sem:0};
+  const comCor = area.indicadores.map(ind=>{
+    const d  = getData(ind);
+    const sc = d ? (semCls(calcCurVal(d,sel), metaEfetiva(ind,d,sel), ind.invertido) || 'sem') : 'sem';
+    cont[sc]++;
+    return {ind, sc};
+  });
+
+  const f = ST.filtroCor;
+  const visiveis = f ? comCor.filter(x=>x.sc===f) : comCor;
+
+  const AR_LBL = {verde:'No alvo', amarelo:'Atenção', vermelho:'Crítico', sem:'Sem leitura'};
+  function arCard(cor){
+    const num = cont[cor];
+    const cls = 'ar-card ' + cor + (f===cor?' ativo':'') + (num===0?' zero':'');
+    const oc  = num===0 ? '' : ` onclick="setFiltroCor('${cor}')"`;
+    const tip = num===0 ? 'Nenhum indicador nesta faixa neste período'
+              : (f===cor ? 'Clique para limpar o filtro' : 'Clique para ver só estes');
+    return `<button type="button" class="${cls}" title="${tip}"${oc}><span class="ar-dot"></span><span class="ar-num">${num}</span><span class="ar-lbl">${AR_LBL[cor]}</span></button>`;
+  }
+
+  const resumoH = `<div class="aba-resumo">
+  ${arCard('verde')}${arCard('amarelo')}${arCard('vermelho')}${arCard('sem')}
+  ${f ? `<button type="button" class="ar-limpar" onclick="setFiltroCor(null)">✕ Limpar filtro · mostrando ${visiveis.length} de ${comCor.length}</button>` : ''}
+</div>`;
+
   let h=`<div class="tab-panel active"><section class="area-wrap">
 <div class="area-head">
   <div class="area-pill">${area.num} &nbsp;·&nbsp; Área</div>
   <h2 class="area-h2"><u>${area.label}</u></h2>
   <div class="area-sub">Responsável: <strong>${area.responsavel}</strong> &nbsp;·&nbsp; Período: <strong>${lbl}</strong></div>
 </div>
-<hr class="np-div">
-<div class="ind-grid" id="indGrid_${area.id}">`;
-  area.indicadores.forEach(ind=>{ h+=htmlCard(ind); });
-  h+=`</div></section></div>`;
+${resumoH}
+<hr class="np-div">`;
+  if(visiveis.length === 0){
+    h += `<div class="ar-vazio">Nenhum indicador nesta faixa no período selecionado.</div>`;
+  } else {
+    h += `<div class="ind-grid" id="indGrid_${area.id}">`;
+    visiveis.forEach(x=>{ h+=htmlCard(x.ind); });
+    h += `</div>`;
+  }
+  h+=`</section></div>`;
   return h;
 }
 
@@ -1177,6 +1261,42 @@ function semCls(v,meta,inv){
   }
 }
 
+// Quantos meses do ano têm lançamento real neste indicador.
+function mesesComDado(d){
+  if(!d || !d.meses) return 0;
+  let n = 0;
+  for(let i=0;i<12;i++){ const v=d.meses[i]; if(v!==null && v!==undefined && !isNaN(v)) n++; }
+  return n;
+}
+
+// META EFETIVA DO PERÍODO.
+// O CONSOLIDADO ANO da central SOMA os Valor/Qtd e faz MÉDIA dos Taxa/%. Em "Ano completo",
+// portanto, o valor de um Valor/Qtd é a soma de N meses — e compará-lo com a meta MENSAL
+// infla o desvio (7 meses de tempo de espera contra o limite de um mês vira "+618%").
+// Aqui a meta é acumulada pelo mesmo N. Isso equivale a comparar a MÉDIA do período com a
+// meta mensal, que é a leitura certa tanto para contagem (volume, admissões) quanto para
+// média/tempo/custo unitário (espera, satisfação, ticket).
+// Em seleções de 1 a 11 meses o card já usa a média dos meses, então a meta segue mensal.
+// A linha tracejada do gráfico continua sendo a meta MENSAL — o gráfico é mês a mês.
+function metaEfetiva(ind, d, sel){
+  if(!d || d.meta===null || d.meta===undefined) return null;
+  if(!sel || sel.length!==12) return d.meta;
+  if(ind.tipo==='Taxa/%') return d.meta;          // consolidado de % já é média
+  const n = mesesComDado(d);
+  if(n<=1 || d.cons===null || d.cons===undefined || isNaN(d.cons)) return d.meta;
+
+  // Em vez de PRESUMIR que todo Valor/Qtd soma, o dashboard olha o consolidado que a central
+  // devolveu e descobre o regime: se ele bate com a SOMA dos meses, a meta é acumulada; se bate
+  // com a MÉDIA — ou com um recálculo do agregado, que fica na mesma escala mensal — a meta
+  // segue mensal. Assim, quando a fórmula de um indicador for corrigida na central (média em vez
+  // de soma, ou soma dos numeradores ÷ soma dos denominadores), o card passa a ler certo sozinho,
+  // sem precisar de uma segunda rodada de código nem de uma marca por indicador.
+  let soma = 0;
+  for(let i=0;i<12;i++){ const v=d.meses[i]; if(v!==null && v!==undefined && !isNaN(v)) soma+=v; }
+  const media = soma/n;
+  return Math.abs(d.cons-soma) < Math.abs(d.cons-media) ? d.meta*n : d.meta;
+}
+
 function calcAtt(cur, meta){
   // % em relação à referência (meta OU limite). Sempre real/referência.
   // Meta: >=100% = atingiu/superou (bom). Limite: <=100% = dentro do teto (bom).
@@ -1194,13 +1314,44 @@ function calcCurVal(d, sel){
   return vals.reduce((a,b)=>a+b,0)/vals.length;
 }
 
+// Variação entre dois pontos. Quando a base é ZERO, variação percentual não existe
+// (divisão por zero) — devolve a diferença ABSOLUTA: p.p. para Taxa/%, valor bruto p/ o resto.
+function deltaTxt(prevV, curV, ind){
+  if(prevV===null||prevV===undefined||isNaN(prevV)) return null;
+  if(curV===null||curV===undefined||isNaN(curV)) return null;
+  const diff = curV - prevV;
+  const arrow = diff>0?'▲':(diff<0?'▼':'—');
+  const better = ind.invertido ? diff<0 : diff>0;
+  if(diff===0) return {arrow:'—', txt:'estável', better:null, zeroBase:prevV===0, pct:0, diff:0};
+  if(prevV===0){
+    const txt = ind.tipo==='Taxa/%'
+      ? Math.abs(diff).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' p.p.'
+      : fmtVal(Math.abs(diff), ind);
+    return {arrow, txt, better, zeroBase:true, pct:null, diff};
+  }
+  const m=(diff/Math.abs(prevV))*100;
+  return {arrow, txt:Math.abs(m).toFixed(1).replace('.',',')+'%', better, zeroBase:false, pct:m, diff};
+}
+
+// Meses consecutivos em zero, olhando para trás a partir de ateIdx (ignora meses sem lançamento).
+function streakZero(d, ateIdx){
+  let n=0;
+  for(let i=ateIdx;i>=0;i--){
+    const v=d.meses[i];
+    if(v===null||v===undefined||isNaN(v)) continue;
+    if(v===0) n++; else break;
+  }
+  return n;
+}
+
 function htmlCard(ind){
   const d = getData(ind);
   const sel = getMesesSelecionados();
   const realCount = d ? d.meses.filter(v=>v!==null && v!==undefined && !isNaN(v)).length : 0;
-  let cur=null, prev=null, meta=null;
+  let cur=null, prev=null, meta=null, metaMes=null;
   if(d){
-    meta = d.meta;
+    metaMes = d.meta;                     // meta mensal — é a do gráfico e da tracejada
+    meta    = metaEfetiva(ind, d, sel);   // meta do período — é a da barra e da sinaleira
     cur = calcCurVal(d, sel);
     // prev: mês anterior ao primeiro selecionado (só quando 1 mês)
     if(sel && sel.length===1 && sel[0]>0) prev = d.meses[sel[0]-1];
@@ -1231,66 +1382,123 @@ function htmlCard(ind){
     momH=`<div class="ic-delta neu"><span class="dl">Período</span>${lbl2} (média)</div>`;
   }
 
-  // Comparação de 2 meses selecionados — cabeçalho vira valor duplo + média (checkpoint v40→v41)
-  // v2: legenda consolidada Jun→Jul + variação (opção B escolhida) com cor dinâmica por faixa
+  // Bloco de valor duplo — v48: vale para QUALQUER seleção (antes, só com 2 meses).
+  //   1 mês  → mês anterior  →  mês selecionado
+  //   2 meses→ 1º mês        →  2º mês            (+ média do par à direita)
+  //   3+ meses (opção "a")   → média do período anterior de MESMO tamanho → média do período
+  //   Ano completo (12)      → mantém o número único + selo ANO (não existe ano anterior na planilha)
   let dualH = '';
   let labelStyleAttr = '';
-  if(d && sel && sel.length===2 && cur!==null){
+  if(d && sel && sel.length !== 12 && cur !== null){
     const mintStyle = 'color:var(--mint);font-weight:500;';
     labelStyleAttr = ` style="${mintStyle}"`;
-    const v1 = d.meses[sel[0]], v2 = d.meses[sel[1]];
-    const v1Fmt = fmtVal(v1, ind), v2Fmt = fmtVal(v2, ind);
+    const contiguo = sel.every((v,i)=>i===0||v===sel[i-1]+1);
 
-    // Variação: amarelo se |m|<=5%; acima disso, verde/vermelho conforme melhora ou piora (respeita invertido)
+    let vEsq=null, vDir=cur, lblEsq='—', lblDir='', avgH='';
+
+    if(sel.length===1){
+      vEsq   = sel[0]>0 ? d.meses[sel[0]-1] : null;
+      lblEsq = sel[0]>0 ? MESES[sel[0]-1] : '—';
+      lblDir = MESES[sel[0]];
+    } else if(sel.length===2){
+      vEsq = d.meses[sel[0]]; vDir = d.meses[sel[1]];
+      lblEsq = MESES[sel[0]]; lblDir = MESES[sel[1]];
+      avgH = `<div class="ic-dual-avg">
+      <div class="ic-avg-label" style="${mintStyle}">média</div>
+      <div class="ic-avg-value">${vFmt}</div>
+    </div>`;
+    } else {
+      // 3+ meses: direita = média do período; esquerda = média da janela anterior de mesmo tamanho
+      const n = sel.length, iniAnt = sel[0]-n;
+      if(contiguo && iniAnt>=0){
+        const valsAnt=[];
+        for(let i=iniAnt;i<sel[0];i++){
+          const v=d.meses[i];
+          if(v!==null && v!==undefined && !isNaN(v)) valsAnt.push(v);
+        }
+        if(valsAnt.length){
+          vEsq = valsAnt.reduce((a,b)=>a+b,0)/valsAnt.length;
+          lblEsq = MESES[iniAnt]+'–'+MESES[sel[0]-1];
+        } else {
+          lblEsq = MESES[iniAnt]+'–'+MESES[sel[0]-1];
+        }
+      }
+      lblDir = contiguo ? MESES[sel[0]]+'–'+MESES[sel[sel.length-1]] : sel.length+' meses';
+    }
+
+    const vEsqFmt = fmtVal(vEsq, ind), vDirFmt = fmtVal(vDir, ind);
+
+    // Variação: amarelo se |m|<=5%; acima disso, verde/vermelho conforme melhora ou piora (respeita invertido).
+    // Base zero → diferença absoluta (p.p. ou valor), nunca percentual.
     let deltaH = '';
-    if(v1!==null && v2!==null && v1!==0){
-      const m = ((v2-v1)/Math.abs(v1))*100;
-      const abs = Math.abs(m).toFixed(1).replace('.',',');
-      const arrow = m>0?'▲':(m<0?'▼':'—');
-      const melhorou = ind.invertido ? m<0 : m>0;
-      const deltaColor = Math.abs(m)<=5 ? 'var(--warning)' : (melhorou ? 'var(--success)' : 'var(--danger)');
-      deltaH = ` <span class="ic-dual-delta" style="color:${deltaColor}">${arrow} ${abs}%</span>`;
+    const dt = deltaTxt(vEsq, vDir, ind);
+    if(dt){
+      const deltaColor = (dt.better===null || (dt.pct!==null && Math.abs(dt.pct)<=5))
+        ? 'var(--warning)'
+        : (dt.better ? 'var(--success)' : 'var(--danger)');
+      deltaH = ` <span class="ic-dual-delta" style="color:${deltaColor}">${dt.arrow} ${dt.txt}</span>`;
     }
 
     dualH = `<div class="ic-value-dual">
     <div class="ic-dual-left">
       <div class="ic-dual-nums">
-        <span class="ic-dual-prev ${v1Fmt?'':'vazio'}">${v1Fmt||'&mdash;'}</span>
+        <span class="ic-dual-prev ${vEsqFmt?'':'vazio'}">${vEsqFmt||'&mdash;'}</span>
         <span class="ic-dual-arrow">→</span>
-        <span class="ic-dual-cur ${v2Fmt?'':'vazio'}">${v2Fmt||'&mdash;'}</span>
+        <span class="ic-dual-cur ${vDirFmt?'':'vazio'}">${vDirFmt||'&mdash;'}</span>
       </div>
-      <div class="ic-dual-sub">${MESES[sel[0]]} → ${MESES[sel[1]]}${deltaH}</div>
+      <div class="ic-dual-sub">${lblEsq} → ${lblDir}${deltaH}</div>
     </div>
-    <div class="ic-dual-avg">
-      <div class="ic-avg-label" style="${mintStyle}">média</div>
-      <div class="ic-avg-value">${vFmt}</div>
-    </div>
+    ${avgH}
   </div>`;
   }
 
-  const metaD = meta!==null ? fmtVal(meta,ind)||String(meta) : '—';
+  const metaD    = meta!==null    ? fmtVal(meta,ind)||String(meta)          : '—';
+  const metaMesD = metaMes!==null ? fmtVal(metaMes,ind)||String(metaMes)    : '—';
+  // Quando a meta foi acumulada, o rodapé explica a conta em vez de mostrar um número solto.
+  const nAcum = (meta!==null && metaMes!==null && meta!==metaMes) ? Math.round(meta/metaMes) : 1;
+  const consTip = ind.tipo==='Taxa/%'
+    ? 'Consolidado do ano: média dos meses lançados'
+    : 'Consolidado do ano: soma dos meses lançados — a meta ao lado foi acumulada pelo mesmo número de meses';
+  const metaFootD = nAcum>1
+    ? `${metaD} <span style="opacity:.55;font-weight:400">(${metaMesD}/mês × ${nAcum})</span>`
+    : metaD;
 
   // Insight de comparação (apenas 1 mês selecionado, com mês anterior disponível)
   let insightH = '';
-  if(sel && sel.length===1 && sel[0]>0 && cur!==null && prev!==null && prev!==0){
-    const m=((cur-prev)/Math.abs(prev))*100;
-    const abs=Math.abs(m).toFixed(1).replace('.',',');
+  if(meta===0 && d && sel && sel.length){
+    // Meta zero: a leitura de evolução é SEQUÊNCIA, não proporção.
+    const ult = sel[sel.length-1];
+    const vUlt = d.meses[ult];
+    if(vUlt!==null && vUlt!==undefined && !isNaN(vUlt)){
+      const cls = vUlt<=0 ? 'verde' : 'vermelho';
+      let txt;
+      if(vUlt<=0){
+        const n = streakZero(d, ult);
+        txt = n>1 ? `<strong>${n} meses</strong> seguidos sem ocorrência` : `Sem ocorrência em ${MESES_FULL[ult]}`;
+      } else {
+        const antes = ult>0 ? streakZero(d, ult-1) : 0;
+        txt = `Ocorrência registrada em ${MESES_FULL[ult]}`
+            + (antes>0 ? `, após <strong>${antes} ${antes>1?'meses':'mês'}</strong> em zero` : '');
+      }
+      insightH=`<div class="ic-insight ${cls}">${txt}</div>`;
+    }
+  } else if(sel && sel.length===1 && sel[0]>0 && cur!==null && prev!==null){
+    const dt = deltaTxt(prev, cur, ind);
     const mesAtual=MESES_FULL[sel[0]], mesAnt=MESES_FULL[sel[0]-1];
     const cls=sc||'neu';
     let txt;
-    if(m===0){ txt=`${mesAtual} manteve-se estável vs. ${mesAnt}`; }
-    else { txt=`${mesAtual} ${m>0?'cresceu':'caiu'} <strong>${abs}%</strong> vs. ${mesAnt}`; }
+    if(!dt || dt.diff===0){ txt=`${mesAtual} manteve-se estável vs. ${mesAnt}`; }
+    else { txt=`${mesAtual} ${dt.diff>0?'cresceu':'caiu'} <strong>${dt.txt}</strong> vs. ${mesAnt}`; }
     insightH=`<div class="ic-insight ${cls}">${txt}</div>`;
   } else if(d && sel && sel.length>=3){
     const ini=sel[0], fim=sel[sel.length-1];
     const vIni=d.meses[ini], vFim=d.meses[fim];
-    if(vIni!==null && vFim!==null && vIni!==0){
-      const m=((vFim-vIni)/Math.abs(vIni))*100;
-      const abs=Math.abs(m).toFixed(1).replace('.',',');
+    const dt3 = deltaTxt(vIni, vFim, ind);
+    if(dt3){
       const cls=sc||'neu';
-      let txt;
-      if(m===0){ txt=`De ${MESES_FULL[ini]} a ${MESES_FULL[fim]}: estável`; }
-      else { txt=`De ${MESES_FULL[ini]} a ${MESES_FULL[fim]}: ${m>0?'▲':'▼'} <strong>${abs}%</strong>`; }
+      const txt = dt3.diff===0
+        ? `De ${MESES_FULL[ini]} a ${MESES_FULL[fim]}: estável`
+        : `De ${MESES_FULL[ini]} a ${MESES_FULL[fim]}: ${dt3.arrow} <strong>${dt3.txt}</strong>`;
       insightH=`<div class="ic-insight ${cls}">${txt}</div>`;
     }
   }
@@ -1302,13 +1510,26 @@ function htmlCard(ind){
   let goalH;
   if(meta===null){
     goalH = `<div class="ic-meta">${refLbl}: <strong>&mdash;</strong></div>`;
+  } else if(meta===0){
+    // META ZERO (evento que não deve acontecer): real ÷ 0 não existe. Sem barra de atingimento —
+    // estado binário: dentro do limite zero (verde) ou acima dele (vermelho). Nunca inventa um %.
+    const semDado = (cur===null||cur===undefined||isNaN(cur));
+    const dentro  = !semDado && (ind.invertido ? cur<=0 : cur>=0);
+    const clsZ    = semDado ? 'neu' : (dentro ? 'verde' : 'vermelho');
+    const txtZ    = semDado ? '&mdash;' : (dentro ? 'Sem ocorrências' : 'Acima do limite zero');
+    const tipZ    = 'Limite zero: não há percentual a calcular — o card mostra se o período ficou em zero ou não';
+    goalH = `<div class="ic-goal">
+      <div class="ic-goal-top"><span class="ic-goal-lbl">${refLbl} zero</span><span class="ic-goal-pct ${clsZ}" title="${tipZ}">${txtZ}</span></div>
+      <div class="ic-goal-track">${semDado?'':`<div class="ic-goal-fill ${clsZ}" style="width:100%"></div>`}</div>
+      <div class="ic-goal-foot"><span>Real: <strong>${vFmt||'&mdash;'}</strong></span><span>${refLbl}: <strong>${metaFootD}</strong></span></div>
+    </div>`;
   } else {
     const att = calcAtt(cur, meta);
     if(att===null){
       goalH = `<div class="ic-goal">
       <div class="ic-goal-top"><span class="ic-goal-lbl">${compLbl}</span><span class="ic-goal-pct neu">&mdash;</span></div>
       <div class="ic-goal-track"><div class="ic-goal-mark" style="left:76.9%"></div></div>
-      <div class="ic-goal-foot"><span>Real: <strong>&mdash;</strong></span><span>${refLbl}: <strong>${metaD}</strong></span></div>
+      <div class="ic-goal-foot"><span>Real: <strong>${vFmt||'&mdash;'}</strong></span><span>${refLbl}: <strong>${metaFootD}</strong></span></div>
     </div>`;
     } else {
       const MAX=130;                          // escala fixa: referência=100%, teto visual +30%
@@ -1334,7 +1555,7 @@ function htmlCard(ind){
         ${over>0?`<div class="ic-goal-over ${overCls}" style="left:${markPos}%;width:${over}%"></div>`:''}
         <div class="ic-goal-mark" style="left:${markPos}%" title="${markTip}"></div>
       </div>
-      <div class="ic-goal-foot"><span>Real: <strong>${vFmt||'&mdash;'}</strong></span><span>${refLbl}: <strong>${metaD}</strong></span></div>
+      <div class="ic-goal-foot"><span>Real: <strong>${vFmt||'&mdash;'}</strong></span><span>${refLbl}: <strong>${metaFootD}</strong></span></div>
     </div>`;
     }
   }
@@ -1343,13 +1564,13 @@ function htmlCard(ind){
   <div class="ic-head">
     <div class="ic-label"${labelStyleAttr}>${ind.label}</div>
     <div style="display:flex;align-items:center;gap:6px;">
-      ${sel.length===12 ? '<span class="cons-badge" title="Valor consolidado do ano (média dos 12 meses)">ANO</span>' : ''}
+      ${sel.length===12 ? '<span class="cons-badge" title="'+consTip+'">ANO</span>' : ''}
       <div class="semaforo ${sc}" title="${sc||'sem meta'}"></div>
     </div>
   </div>
   ${dualH || `<div class="ic-value ${vFmt?'':'vazio'}">${vFmt||'Aguardando dados'}</div>`}
   ${dualH ? '' : `<div class="ic-deltas">${momH}</div>`}
-  ${meta!==null?`<div class="ic-chartcap"><span class="ic-cap-dash"></span>${refLbl} ${metaD}</div>`:''}
+  ${metaMes!==null?`<div class="ic-chartcap"><span class="ic-cap-dash"></span>${refLbl} ${metaMesD}${sel.length===12&&ind.tipo!=='Taxa/%'?' / mês':''}</div>`:''}
   ${realCount===0
     ? `<div class="ic-chart ic-chart-single"><div class="ic-single-note">Aguardando o primeiro lançamento.</div></div>`
     : `<div class="ic-chart"><canvas id="ch_${ind.id}"></canvas></div>`
@@ -1404,9 +1625,10 @@ function buildOneChart(ind, expanded){
   const isSelIdx = i => selSet.has(i);
   const popIdx = [];
   allVals.forEach((v,i)=>{ if(v!==null && v!==undefined && !isNaN(v)) popIdx.push(i); });
-  // Com 1 único ponto real, um "gráfico de linha" vira só um círculo solto no ar — sem área,
-  // sem contexto. Nesse caso mostra como coluna (o mesmo dado, só com peso visual de verdade).
-  if(type==='line' && popIdx.length===1) type='bar';
+  // Com 1 ou 2 pontos reais, "gráfico de linha" não é gráfico: 1 ponto vira um círculo solto no ar
+  // e 2 pontos viram um bloco preenchido de ponta a ponta, com os pontos cortados nas bordas.
+  // Nos dois casos mostra como coluna — o mesmo dado, com peso visual de verdade (v48).
+  if(type==='line' && popIdx.length<=2) type='bar';
   const labels = popIdx.map(i=>MESES[i]);
   const vals = popIdx.map(i=>allVals[i]);
   const bgColors = popIdx.map(i=> isSelIdx(i)?col:colFade);   // barras
@@ -1424,7 +1646,14 @@ function buildOneChart(ind, expanded){
     borderDash:[5,4],
     pointRadius:0,pointHoverRadius:0,
     fill:false,tension:0,spanGaps:true,clip:false,type:'line',
-    datalabels:{display:false}
+    // Identifica a tracejada dentro do gráfico (antes ela só era nomeada na legenda acima do card).
+    datalabels:{
+      display:(c)=> c.dataIndex === c.dataset.data.length-1,
+      anchor:'end', align:'bottom', offset:2, clamp:true,
+      color:'rgba(168,204,168,0.75)',
+      font:{size:9.5,weight:'700',family:'Montserrat'},
+      formatter:()=> (ind.invertido?'Limite ':'Meta ')+fmtVal(metaVal,ind)
+    }
   }] : [];
 
   // Escala Y com números redondos (nice numbers) — sempre começando em 0, exceto quando o
@@ -1440,7 +1669,11 @@ function buildOneChart(ind, expanded){
       const hiRaw=Math.max(...nums), loRaw=Math.min(...nums);
       const isCount = ind.tipo!=='Taxa/%' && !ind.moeda && nums.every(v=>Number.isInteger(v));
       const lo = loRaw<0 ? loRaw : 0;
-      const hi = ind.tipo==='Taxa/%' ? Math.max(100, hiRaw) : hiRaw;
+      // Taxa/% normalmente estica até 100% para as réguas ficarem comparáveis. Com META ZERO isso
+      // achata o dado no rodapé (0 → 2,8% vira linha reta): nesse caso a escala segue o próprio dado.
+      const forcaCem = ind.tipo==='Taxa/%' && metaVal!==0;
+      let hi = forcaCem ? Math.max(100, hiRaw) : hiRaw;
+      if(hi<=lo) hi = lo + 1;
       const ns = niceScale(lo, hi, 5, isCount);
       yMin=ns.min; yMax=ns.max; yStep=ns.step; yDecimals=ns.decimals;
     }
@@ -1453,7 +1686,18 @@ function buildOneChart(ind, expanded){
       datasets:[{
         data:vals,
         borderColor:col,
-        backgroundColor:type==='line'?colFade:bgColors,
+        // Linha: degradê que some no rodapé, para a área não competir com o número do card.
+        backgroundColor: type==='line'
+          ? (c)=>{
+              const {ctx:cx, chartArea} = c.chart;
+              if(!chartArea) return colFade;
+              const g = cx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+              g.addColorStop(0, colFade);
+              g.addColorStop(1, 'rgba(63,89,140,0.02)');
+              return g;
+            }
+          : bgColors,
+        maxBarThickness: expanded?96:64,   // em tela cheia, 2 barras não viram duas lajes
         borderWidth:type==='line'?1.8:0,
         fill:type==='line',
         tension:0.38,
@@ -1494,7 +1738,9 @@ function buildOneChart(ind, expanded){
                 linhas.push((ind.invertido?' Limite:':' Meta:  ')+fmtVal(meta,ind));
                 const dist=ind.tipo==='Taxa/%'
                   ?(v-meta).toFixed(1).replace('.',',')+'pp'
-                  :((v-meta)/Math.abs(meta)*100).toFixed(1).replace('.',',')+'%';
+                  :(meta===0
+                      ? fmtVal(v-meta,ind)                                        // meta zero: diferença absoluta
+                      : ((v-meta)/Math.abs(meta)*100).toFixed(1).replace('.',',')+'%');
                 const sinal=v>=meta?'+':'';
                 linhas.push(' Dist.: '+(sinal+dist));
               }
@@ -1506,6 +1752,7 @@ function buildOneChart(ind, expanded){
       scales:{
         x:{
           display: true,
+          offset:true,                 // meia categoria de folga nas pontas: o dado nunca encosta na moldura
           grid:{display:false},
           ticks:{
             color:'rgba(224,238,231,0.4)',
