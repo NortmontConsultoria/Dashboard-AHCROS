@@ -1381,7 +1381,13 @@ function deltaTxt(prevV, curV, ind){
     return {arrow, txt, better, zeroBase:true, pct:null, diff};
   }
   const m=(diff/Math.abs(prevV))*100;
-  return {arrow, txt:Math.abs(m).toFixed(1).replace('.',',')+'%', better, zeroBase:false, pct:m, diff};
+  const rel = Math.abs(m).toFixed(1).replace('.',',')+'%';
+  // Taxa/%: a variação vai em PONTOS PERCENTUAIS, com a relativa entre parênteses (v50).
+  // 0,3% → 0,1% é "0,2 p.p. (66,7%)": só a relativa soaria como queda de dois terços.
+  const txt = ind.tipo==='Taxa/%'
+    ? Math.abs(diff).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' p.p. ('+rel+')'
+    : rel;
+  return {arrow, txt, better, zeroBase:false, pct:m, diff};
 }
 
 // Meses consecutivos em zero, olhando para trás a partir de ateIdx (ignora meses sem lançamento).
@@ -1476,11 +1482,14 @@ function htmlCard(ind){
           return `<span class="${cls} ${f?'':'vazio'}">${f||'&mdash;'}</span>`;
         });
         dualNums = partes.join('<span class="ic-dual-arrow">→</span>');
-        const dtP = deltaTxt(d.meses[pts[0]], d.meses[pts[pts.length-1]], ind);
+        // v50: a variação do topo é do ÚLTIMO mês contra o ANTERIOR do próprio período.
+        // A variação do período inteiro ficou no rodapé, para o card não repetir a mesma conta.
+        const iAnt = pts.length>=2 ? pts[pts.length-2] : null;
+        const dtP = iAnt===null ? null : deltaTxt(d.meses[iAnt], d.meses[pts[pts.length-1]], ind);
         const nomes = (pts.length<=6 ? pts.map(i=>MESES[i])
                                      : [MESES[pts[0]], '…', MESES[pts[pts.length-1]]]).join(' → ');
         dualSub = nomes +
-          (dtP ? ` <span class="ic-dual-delta" style="color:${corDelta(dtP)}">${dtP.arrow} ${dtP.txt}</span>` : '');
+          (dtP ? ` <span class="ic-dual-delta" style="color:${corDelta(dtP)}">${dtP.arrow} ${dtP.txt} vs. ${MESES[iAnt]}</span>` : '');
       }
       avgH = `<div class="ic-dual-avg">
       <div class="ic-avg-label" style="${mintStyle}">${cobreTudo(d,sel)?'consolidado':'média'}</div>
@@ -1535,10 +1544,14 @@ function htmlCard(ind){
     if(!dt || dt.diff===0){ txt=`${mesAtual} manteve-se estável vs. ${mesAnt}`; }
     else { txt=`${mesAtual} ${dt.diff>0?'cresceu':'caiu'} <strong>${dt.txt}</strong> vs. ${mesAnt}`; }
     insightH=`<div class="ic-insight ${cls}">${txt}</div>`;
-  } else if(d && sel && sel.length>=3){
-    const ini=sel[0], fim=sel[sel.length-1];
+  } else if(d && sel && sel.length>=2){
+    // v50: o rodapé passou a carregar o PERÍODO INTEIRO (primeiro → último mês lançado da
+    // seleção), porque o topo agora mostra mês contra mês anterior.
+    const ptsF = sel.filter(i => d.meses[i]!==null && d.meses[i]!==undefined && !isNaN(d.meses[i]));
+    const ini=ptsF.length?ptsF[0]:sel[0], fim=ptsF.length?ptsF[ptsF.length-1]:sel[sel.length-1];
     const vIni=d.meses[ini], vFim=d.meses[fim];
-    const dt3 = deltaTxt(vIni, vFim, ind);
+    // com menos de 3 meses lançados o período é a mesma conta do topo — não repete
+    const dt3 = (ptsF.length<3) ? null : deltaTxt(vIni, vFim, ind);
     if(dt3){
       const cls=sc||'neu';
       const txt = dt3.diff===0
@@ -1699,8 +1712,6 @@ function buildOneChart(ind, expanded){
   // Escala Y com números redondos (nice numbers) — sempre começando em 0, exceto quando o
   // próprio indicador pode ser negativo (ex.: Variação Saldos, YoY). Passo e decimais vêm
   // juntos, pra nunca arredondar dois ticks diferentes pro mesmo número exibido.
-  // Indicador de % (Taxa/%) SEMPRE mostra até pelo menos 100% — senão um indicador em 0%
-  // e outro em 60% ficam com a mesma "régua" e parecem igualmente desenvolvidos.
   let yMin=0, yMax=1, yStep=1, yDecimals=0;
   {
     const nums = vals.filter(v=>v!==null && v!==undefined && !isNaN(v));
@@ -1709,10 +1720,11 @@ function buildOneChart(ind, expanded){
       const hiRaw=Math.max(...nums), loRaw=Math.min(...nums);
       const isCount = ind.tipo!=='Taxa/%' && !ind.moeda && nums.every(v=>Number.isInteger(v));
       const lo = loRaw<0 ? loRaw : 0;
-      // Taxa/% normalmente estica até 100% para as réguas ficarem comparáveis. Com META ZERO isso
-      // achata o dado no rodapé (0 → 2,8% vira linha reta): nesse caso a escala segue o próprio dado.
-      const forcaCem = ind.tipo==='Taxa/%' && metaVal!==0;
-      let hi = forcaCem ? Math.max(100, hiRaw) : hiRaw;
+      // v50: o eixo acompanha o próprio dado. O topo é o maior entre a série e a meta/limite
+      // (metaVal já entrou em nums), arredondado pelo nice number. O piso continua em 0.
+      // O mínimo fixo de 100% para Taxa/% saiu: achatava indicadores pequenos (0,5% virava
+      // um traço colado no zero) e cortava os que passam de 100% (ocupação de agenda).
+      let hi = hiRaw;
       if(hi<=lo) hi = lo + 1;
       const ns = niceScale(lo, hi, 5, isCount);
       yMin=ns.min; yMax=ns.max; yStep=ns.step; yDecimals=ns.decimals;
@@ -1740,7 +1752,7 @@ function buildOneChart(ind, expanded){
         maxBarThickness: expanded?96:64,   // em tela cheia, 2 barras não viram duas lajes
         borderWidth:type==='line'?1.8:0,
         fill:type==='line',
-        tension:0.38,
+        tension:0,   // v50: reta entre pontos — a curva sugeria valores intermediários que não existem
         pointRadius: type==='line'?ptRadius:0,
         pointBackgroundColor: type==='line'?ptColors:undefined,
         pointHoverRadius:5,
