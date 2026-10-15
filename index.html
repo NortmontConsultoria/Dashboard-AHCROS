@@ -22,15 +22,15 @@
   --danger:#B33A3A;
   --info:#3F598C;
   --mint-dark:#b8d4c0;
-  --text-muted:rgba(224,238,231,0.55);
-  --border-dark:rgba(224,238,231,0.1);
-  --bg-card:rgba(224,238,231,0.04);
+  --text-muted:rgba(var(--fg-rgb),0.55);
+  --border-dark:rgba(var(--fg-rgb),0.1);
+  --bg-card:rgba(var(--fg-rgb),0.04);
   /* --- CORES DE PÁGINA: revertidas pro tema escuro original (era claro no pacote v39→v40) --- */
   --bg-page:var(--navy);
-  --ink-page:var(--mint);
+  --ink-page:var(--fg);
   --ink-page-muted:var(--text-muted);
   --rule-page:var(--border-dark);
-  --accent-page:var(--sage);
+  --accent-page:var(--accent-fg);
   --ok-page:var(--success); --warn-page:var(--warning); --bad-page:var(--danger);
   /* --- SUPERFÍCIES ESCURAS: exatamente as cores que o card já tinha --- */
   --surface:#062B3F;                   /* = rgba(15,66,69,.35) sobre o navy */
@@ -38,8 +38,19 @@
   --surface-exp:#0A3542;               /* = .65 */
   --surface-lista:#072C40;             /* = .40 */
 }
+/* v65 — TEMA CLARO (pedido da Janis, 14/10): fundo claro para destacar os gráficos na apresentação.
+   Marca preservada (navy/mint/sage) no login; o resto lê os tokens abaixo. */
+:root{
+  --fg:#011E3C; --fg-rgb:1,30,60; --on-fg:#FFFFFF;
+  --accent-fg:#2F7A5E; --accent-rgb:47,122,94;
+  --text-muted:rgba(1,30,60,.62); --border-dark:rgba(1,30,60,.12); --bg-card:rgba(1,30,60,.03);
+  --bg-page:#EEF3F0; --ink-page:var(--fg); --ink-page-muted:var(--text-muted);
+  --rule-page:var(--border-dark); --accent-page:var(--accent-fg);
+  --surface:#FFFFFF; --surface-hover:#F6F9F7; --surface-exp:#FFFFFF; --surface-lista:#FAFCFB;
+}
+
 *{box-sizing:border-box;margin:0;padding:0;}
-.ind-card,.area-card-mini,.exec-lista{color:var(--mint);}
+.ind-card,.area-card-mini,.exec-lista{color:var(--fg);}
 html{scroll-behavior:smooth;}
 body{
   font-family:'Montserrat',-apple-system,sans-serif;
@@ -123,7 +134,7 @@ body{
 }
 .brand{display:flex;align-items:center;gap:14px;}
 .brand-nortmont{display:flex;align-items:center;}
-.brand-nortmont-logo{height:22px;width:auto;display:block;color:var(--mint);filter:drop-shadow(0 0 5px rgba(168,204,168,.65)) drop-shadow(0 0 12px rgba(168,204,168,.3));}
+.brand-nortmont-logo{height:22px;width:auto;display:block;color:var(--fg);filter:drop-shadow(0 0 5px rgba(var(--accent-rgb),.65)) drop-shadow(0 0 12px rgba(var(--accent-rgb),.3));}
 .brand-divider{width:1px;height:22px;background:var(--rule-page);}
 .brand-client{font-size:10px;color:var(--ink-page-muted);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;}
 .brand-client strong{color:var(--ink-page);}
@@ -136,7 +147,7 @@ body{
   overflow-x:auto;scrollbar-width:thin;
 }
 .tabs-nav::-webkit-scrollbar{height:3px;}
-.tabs-nav::-webkit-scrollbar-thumb{background:rgba(224,238,231,.25);}
+.tabs-nav::-webkit-scrollbar-thumb{background:rgba(var(--fg-rgb),.25);}
 .tabs-list{display:flex;gap:3px;padding:0 28px 6px;min-width:max-content;}
 .tab-btn{
   background:transparent;outline:none;cursor:pointer;
@@ -144,10 +155,10 @@ body{
   padding:5px 11px;border-radius:20px;
   transition:all .18s;white-space:nowrap;border:1px solid var(--rule-page);
 }
-.tab-btn:hover{color:var(--ink-page);background:rgba(224,238,231,.07);border-color:rgba(224,238,231,.3);}
+.tab-btn:hover{color:var(--ink-page);background:rgba(var(--fg-rgb),.07);border-color:rgba(var(--fg-rgb),.3);}
 .tab-btn.active{
-  color:var(--mint);background:var(--navy);
-  border-color:var(--navy);font-weight:700;
+  color:var(--fg);background:var(--fg);
+  border-color:var(--fg);font-weight:700;
 }
 .tab-num{font-weight:700;opacity:.6;margin-right:4px;font-size:9.5px;}
 
@@ -165,24 +176,24 @@ body{
   color:var(--ink-page-muted);flex-shrink:0;
 }
 .period-chips{display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
-.period-divider{width:1px;align-self:stretch;background:rgba(224,238,231,.16);margin:2px 4px;flex-shrink:0;}
+.period-divider{width:1px;align-self:stretch;background:rgba(var(--fg-rgb),.16);margin:2px 4px;flex-shrink:0;}
 /* Não selecionado: pílula clara e sólida (alto contraste no fundo escuro). */
 .period-chip{
-  background:rgba(224,238,231,.88);border:1px solid rgba(224,238,231,.88);
-  color:var(--navy);font-family:inherit;font-size:10.5px;font-weight:600;
+  background:rgba(var(--fg-rgb),.88);border:1px solid rgba(var(--fg-rgb),.88);
+  color:var(--on-fg);font-family:inherit;font-size:10.5px;font-weight:600;
   padding:5px 11px;border-radius:50px;cursor:pointer;letter-spacing:.4px;
   transition:all .15s;white-space:nowrap;
 }
-.period-chip:hover{background:#fff;border-color:#fff;}
+.period-chip:hover{background:var(--fg);border-color:var(--fg);}
 /* Selecionado: quase a cor do fundo (funde com o period-bar) + contorno neon sage. */
 .period-chip.active{
-  background:var(--surface);color:var(--mint);
-  border:1.5px solid var(--sage);font-weight:700;
-  box-shadow:0 0 6px rgba(168,204,168,.6), 0 0 16px rgba(168,204,168,.3);
+  background:var(--surface);color:var(--fg);
+  border:1.5px solid var(--accent-fg);font-weight:700;
+  box-shadow:0 0 6px rgba(var(--accent-rgb),.6), 0 0 16px rgba(var(--accent-rgb),.3);
 }
 .period-chip.active:hover{
   background:var(--surface-hover);
-  box-shadow:0 0 8px rgba(168,204,168,.75), 0 0 20px rgba(168,204,168,.4);
+  box-shadow:0 0 8px rgba(var(--accent-rgb),.75), 0 0 20px rgba(var(--accent-rgb),.4);
 }
 .period-summary{
   margin-left:auto;font-size:11px;color:var(--ink-page-muted);
@@ -252,12 +263,12 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
 .exec-sem-lbl{font-size:9px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--ink-page-muted);}
 .exec-listas{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 @media(max-width:700px){.exec-listas{grid-template-columns:1fr;}}
-.exec-lista{background:var(--surface-lista);border:1px solid rgba(224,238,231,.16);border-radius:10px;padding:18px 20px;}
+.exec-lista{background:var(--surface-lista);border:1px solid rgba(var(--fg-rgb),.16);border-radius:10px;padding:18px 20px;}
 .exec-lista-titulo{font-size:9px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--ink-page-muted);margin-bottom:12px;}
 .exec-lista .exec-lista-titulo{color:var(--text-muted);}
-.exec-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(224,238,231,.06);}
+.exec-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(var(--fg-rgb),.06);}
 .exec-item:last-child{border-bottom:none;}
-.exec-item-nome{font-size:11px;font-weight:500;color:var(--mint);flex:1;line-height:1.3;}
+.exec-item-nome{font-size:11px;font-weight:500;color:var(--fg);flex:1;line-height:1.3;}
 .exec-item-area{font-size:9px;color:var(--text-muted);margin-top:1px;}
 .exec-item-val{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;margin-left:12px;white-space:nowrap;}
 .exec-item-val.verde{color:var(--success);}
@@ -284,11 +295,11 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
 .ar-card.verde .ar-dot{background:var(--ok-page);box-shadow:0 0 7px var(--ok-page);}
 .ar-card.amarelo .ar-dot{background:var(--warn-page);box-shadow:0 0 7px var(--warn-page);}
 .ar-card.vermelho .ar-dot{background:var(--bad-page);box-shadow:0 0 7px var(--bad-page);}
-.ar-card.sem .ar-dot{background:rgba(224,238,231,.25);}
+.ar-card.sem .ar-dot{background:rgba(var(--fg-rgb),.25);}
 .ar-card.verde.ativo{border-color:var(--ok-page);background:rgba(47,143,110,.18);}
 .ar-card.amarelo.ativo{border-color:var(--warn-page);background:rgba(197,139,42,.18);}
 .ar-card.vermelho.ativo{border-color:var(--bad-page);background:rgba(179,58,58,.18);}
-.ar-card.sem.ativo{border-color:var(--ink-page-muted);background:rgba(224,238,231,.08);}
+.ar-card.sem.ativo{border-color:var(--ink-page-muted);background:rgba(var(--fg-rgb),.08);}
 .ar-card.zero{opacity:.38;cursor:default;}
 .ar-limpar{
   background:none;border:1px solid var(--rule-page);border-radius:50px;
@@ -326,7 +337,7 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
 /* CARD */
 .ind-card{
   background:var(--surface);
-  border:1px solid rgba(224,238,231,.18);
+  border:1px solid rgba(var(--fg-rgb),.18);
   border-radius:10px;padding:24px;
   display:flex;flex-direction:column;gap:14px;
   transition:border-color .25s,background .25s,transform .25s,box-shadow .25s;
@@ -336,14 +347,14 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
   box-shadow:0 2px 12px rgba(1,30,60,.4);
 }
 .ind-card:hover{
-  border-color:rgba(224,238,231,.35);
+  border-color:rgba(var(--fg-rgb),.35);
   background:var(--surface-hover);
   transform:translateY(-2px);
   box-shadow:0 8px 32px rgba(1,30,60,.6);
 }
 .ind-card.expanded{
   grid-column: span 2;
-  border-color:rgba(168,204,168,.5);
+  border-color:rgba(var(--accent-rgb),.5);
   background:var(--surface-exp);
   box-shadow:0 12px 48px rgba(1,30,60,.8);
   max-width:100%;
@@ -352,7 +363,7 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
   content:'✕ recolher';
   display:block;
   font-size:9px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
-  color:rgba(224,238,231,.35);
+  color:rgba(var(--fg-rgb),.35);
   text-align:right;
   margin-top:4px;
 }
@@ -369,19 +380,19 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
 }
 .cons-badge{
   font-size:8px;font-weight:700;letter-spacing:1.2px;
-  color:rgba(224,238,231,.45);
-  border:1px solid rgba(224,238,231,.18);
+  color:rgba(var(--fg-rgb),.45);
+  border:1px solid rgba(var(--fg-rgb),.18);
   border-radius:4px;padding:1px 5px;
   cursor:help;
 }
-.semaforo{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:2px;background:rgba(224,238,231,.12);transition:all .3s;}
+.semaforo{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:2px;background:rgba(var(--fg-rgb),.12);transition:all .3s;}
 .semaforo.verde{background:var(--success);box-shadow:0 0 8px var(--success);}
 .semaforo.amarelo{background:var(--warning);box-shadow:0 0 8px var(--warning);}
 .semaforo.vermelho{background:var(--danger);box-shadow:0 0 8px var(--danger);}
 
 .ic-value{
   font-size:38px;font-weight:700;letter-spacing:-1.5px;
-  line-height:1.05;color:var(--mint);
+  line-height:1.05;color:var(--fg);
   font-variant-numeric:tabular-nums;
   word-break:break-all;overflow-wrap:anywhere;
 }
@@ -394,13 +405,13 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
 .ic-dual-prev{font-size:15px;font-weight:600;color:var(--text-muted);}
 .ic-dual-prev.vazio{font-style:italic;}
 .ic-dual-arrow{font-size:13px;color:var(--text-muted);}
-.ic-dual-cur{font-size:30px;font-weight:700;letter-spacing:-1px;line-height:1.05;color:var(--mint);word-break:break-all;overflow-wrap:anywhere;}
+.ic-dual-cur{font-size:30px;font-weight:700;letter-spacing:-1px;line-height:1.05;color:var(--fg);word-break:break-all;overflow-wrap:anywhere;}
 .ic-dual-cur.vazio{color:var(--text-muted);font-weight:400;font-style:italic;}
 .ic-dual-sub{font-size:12.5px;color:var(--text-muted);margin-top:5px;letter-spacing:.2px;}
 .ic-dual-delta{font-weight:700;}
 .ic-dual-avg{flex-shrink:0;text-align:right;}
 .ic-avg-label{font-size:9px;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:2px;}
-.ic-avg-value{font-size:19px;font-weight:700;color:var(--sage);font-variant-numeric:tabular-nums;}
+.ic-avg-value{font-size:19px;font-weight:700;color:var(--accent-fg);font-variant-numeric:tabular-nums;}
 .ind-card.expanded .ic-dual-cur{font-size:42px;}
 .ind-card.expanded .ic-avg-value{font-size:26px;}
 .ind-card.expanded .ic-dual-prev{font-size:19px;}
@@ -413,13 +424,13 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
 .ic-delta.neu{color:var(--text-muted);}
 
 .ic-chart{height:128px;position:relative;transition:height .25s;min-width:0;overflow:hidden;}
-.ic-chartcap{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:600;color:rgba(224,238,231,.62);letter-spacing:.3px;margin:2px 0 1px;}
-.ic-cap-dash{width:16px;height:0;border-top:2px dashed var(--sage);opacity:.85;display:inline-block;flex:none;}
+.ic-chartcap{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:600;color:rgba(var(--fg-rgb),.62);letter-spacing:.3px;margin:2px 0 1px;}
+.ic-cap-dash{width:16px;height:0;border-top:2px dashed var(--accent-fg);opacity:.85;display:inline-block;flex:none;}
 .ic-chart canvas{max-width:100%!important;}
 .ic-chart.ic-chart-single{display:flex;align-items:center;justify-content:center;text-align:center;padding:0 14px;}
 .ic-single-note{font-size:11px;color:var(--text-muted);line-height:1.45;}
 .ind-card.expanded .ic-single-note{font-size:13px;}
-.ic-insight{margin-top:8px;font-size:11.5px;font-weight:500;line-height:1.35;padding:6px 10px;border-radius:8px;background:rgba(224,238,231,.05);border-left:3px solid var(--text-muted);color:var(--text-muted);}
+.ic-insight{margin-top:8px;font-size:11.5px;font-weight:500;line-height:1.35;padding:6px 10px;border-radius:8px;background:rgba(var(--fg-rgb),.05);border-left:3px solid var(--text-muted);color:var(--text-muted);}
 .ic-insight strong{font-weight:700;font-variant-numeric:tabular-nums;}
 .ic-insight.pos{border-left-color:var(--success);color:var(--success);background:rgba(47,143,110,.08);}
 .ic-insight.neg{border-left-color:var(--danger);color:var(--danger);background:rgba(179,58,58,.08);}
@@ -427,10 +438,10 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
 
 .ic-meta{
   font-size:11px;color:var(--text-muted);
-  border-top:1px solid rgba(224,238,231,.08);
+  border-top:1px solid rgba(var(--fg-rgb),.08);
   padding-top:11px;
 }
-.ic-meta strong{color:var(--sage);font-weight:700;}
+.ic-meta strong{color:var(--accent-fg);font-weight:700;}
 
 
 /* TENDÊNCIA */
@@ -442,24 +453,24 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
 /* GRADE DE ÁREAS */
 .areas-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;}
 @media(max-width:900px){.areas-grid{grid-template-columns:repeat(2,1fr);}}
-.area-card-mini{border-radius:10px;padding:14px 16px;border:1px solid rgba(224,238,231,.15);background:var(--surface);display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:all .18s;}
-.area-card-mini:hover{background:var(--surface-hover);border-color:rgba(224,238,231,.3);}
+.area-card-mini{border-radius:10px;padding:14px 16px;border:1px solid rgba(var(--fg-rgb),.15);background:var(--surface);display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:all .18s;}
+.area-card-mini:hover{background:var(--surface-hover);border-color:rgba(var(--fg-rgb),.3);}
 .area-card-mini.verde{border-left:3px solid var(--success);}
 .area-card-mini.amarelo{border-left:3px solid var(--warning);}
 .area-card-mini.vermelho{border-left:3px solid var(--danger);}
 .acm-num{font-size:8px;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);}
-.acm-nome{font-size:11px;font-weight:600;color:var(--mint);line-height:1.2;}
+.acm-nome{font-size:11px;font-weight:600;color:var(--fg);line-height:1.2;}
 .acm-barra{display:flex;gap:3px;margin-top:2px;flex-wrap:wrap;}
 .acm-dot{width:7px;height:7px;border-radius:50%;}
 .acm-dot.verde{background:var(--success);}
 .acm-dot.amarelo{background:var(--warning);}
 .acm-dot.vermelho{background:var(--danger);}
-.acm-dot.vazio{background:rgba(224,238,231,.15);}
+.acm-dot.vazio{background:rgba(var(--fg-rgb),.15);}
 .acm-pct{font-size:9px;color:var(--text-muted);margin-top:1px;}
 /* REFRESH */
 .refresh-wrap{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:10px;color:var(--ink-page-muted);}
 .refresh-btn{background:transparent;border:1px solid var(--rule-page);color:var(--ink-page);font-family:inherit;font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:5px 12px;border-radius:50px;cursor:pointer;transition:all .15s;}
-.refresh-btn:hover{background:rgba(224,238,231,.07);}
+.refresh-btn:hover{background:rgba(var(--fg-rgb),.07);}
 /* LOADING/ERRO */
 .load-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 32px;gap:14px;}
 .load-spin{width:28px;height:28px;border-radius:50%;border:2px solid var(--rule-page);border-top-color:var(--ink-page);animation:spin .75s linear infinite;}
@@ -489,18 +500,307 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
 .ic-goal-pct.amarelo{color:var(--warning);}
 .ic-goal-pct.vermelho{color:var(--danger);}
 .ic-goal-pct.neu{color:var(--text-muted);}
-.ic-goal-track{position:relative;height:11px;border-radius:6px;background:rgba(224,238,231,.08);overflow:hidden;}
+.ic-goal-track{position:relative;height:11px;border-radius:6px;background:rgba(var(--fg-rgb),.08);overflow:hidden;}
 .ic-goal-fill{position:absolute;left:0;top:0;height:100%;border-radius:6px 0 0 6px;z-index:1;transition:width .55s cubic-bezier(.4,0,.2,1);}
 .ic-goal-fill.verde{background:var(--success);}
 .ic-goal-fill.amarelo{background:var(--warning);}
 .ic-goal-fill.vermelho{background:var(--danger);}
-.ic-goal-fill.neu{background:rgba(224,238,231,.22);}
+.ic-goal-fill.neu{background:rgba(var(--fg-rgb),.22);}
 .ic-goal-over{position:absolute;top:0;height:100%;z-index:1;}
-.ic-goal-over.good{background:repeating-linear-gradient(45deg,var(--sage),var(--sage) 3px,rgba(168,204,168,.35) 3px,rgba(168,204,168,.35) 7px);}
+.ic-goal-over.good{background:repeating-linear-gradient(45deg,var(--accent-fg),var(--accent-fg) 3px,rgba(var(--accent-rgb),.35) 3px,rgba(var(--accent-rgb),.35) 7px);}
 .ic-goal-over.bad{background:repeating-linear-gradient(45deg,var(--danger),var(--danger) 3px,rgba(179,58,58,.4) 3px,rgba(179,58,58,.4) 7px);}
-.ic-goal-mark{position:absolute;top:0;height:100%;width:2px;background:var(--mint);z-index:3;box-shadow:0 0 3px rgba(224,238,231,.5);}
+.ic-goal-mark{position:absolute;top:0;height:100%;width:2px;background:var(--fg);z-index:3;box-shadow:0 0 3px rgba(var(--fg-rgb),.5);}
 .ic-goal-foot{display:flex;justify-content:space-between;margin-top:6px;font-size:10.5px;color:var(--text-muted);}
-.ic-goal-foot strong{color:var(--mint);font-weight:700;}
+.ic-goal-foot strong{color:var(--fg);font-weight:700;}
+
+/* ===== v51 — Resumo · LAYOUT · BRUTOS ===== */
+:root{ --warning:#F28123; --alerta-logo:#F28123; }   /* laranja do logo AHCROS = cor de alerta */
+.v51-selo{display:inline-flex;align-items:center;justify-content:center;background:#F4F8F6;border-radius:10px;padding:4px 8px;line-height:0}
+.v51-selo img{height:30px;width:auto;display:block}
+.v51-selo-g{padding:8px 12px;border-radius:14px}
+.v51-selo-g img{height:56px}
+.brand-client .v51-selo{vertical-align:middle}
+.v51-snap{background:var(--alerta-logo);color:#1b1004;font-size:13px;font-weight:600;padding:8px 16px;text-align:center}
+.v51-resumo,.area-wrap{max-width:1180px;margin:0 auto}
+.v51-rhead{display:flex;gap:18px;align-items:center;margin:8px 0 18px}
+.v51-h2{font-size:30px;line-height:1.15;margin:0;color:var(--fg)}
+.v51-sub{margin:4px 0 0;color:var(--text-muted);font-size:14px}
+.v51-frase{font-size:17px;line-height:1.5;color:var(--fg);max-width:72ch;margin:6px 0 22px}
+.v51-frase-s{font-size:14px;line-height:1.45;color:var(--text-muted);margin:2px 0 12px;max-width:80ch}
+.v51-h3{font-size:15px;font-weight:600;color:var(--accent-fg);margin:26px 0 10px}
+.v51-h4{font-size:16px;font-weight:600;color:var(--fg);margin:0}
+.v51-nota{font-size:12px;color:var(--text-muted);margin:24px 0 0}
+.v51-aviso{border-left:3px solid var(--alerta-logo);padding:8px 12px;margin:14px 0 0;font-size:14px;color:var(--fg);background:rgba(242,129,35,.08);max-width:90ch}
+.v51-vols{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.v51-vol{background:var(--surface);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.v51-vol.vazio{opacity:.6}
+.v51-vol-t{font-size:16px;font-weight:600;color:var(--fg);line-height:1.3;min-height:2.6em}
+.v51-vol-v{font-size:40px;line-height:1.1;font-weight:700;color:var(--fg);font-variant-numeric:tabular-nums}
+.v51-vol-s{font-size:12px;color:var(--text-muted);min-height:1.2em}
+.v51-spark{width:100%;height:34px;margin-top:4px}
+.v51-spark polyline{fill:none;stroke:var(--accent-fg);stroke-width:1.6}
+.v51-spark circle{fill:var(--fg)}
+.v51-dl{font-weight:600}
+.v51-dl.bom{color:var(--success)} .v51-dl.ruim{color:var(--alerta-logo)} .v51-dl.neutro{color:var(--text-muted)}
+.v51-cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+@media(max-width:860px){.v51-cols{grid-template-columns:1fr}}
+.v51-areas,.v51-desv{display:flex;flex-direction:column;gap:6px}
+.v51-arow,.v51-drow{all:unset;box-sizing:border-box;cursor:pointer;display:grid;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;background:var(--surface);color:var(--fg);font-size:14px}
+.v51-arow{grid-template-columns:28px minmax(110px,1.1fr) 1.4fr auto}
+.v51-arow:hover,.v51-drow:hover{background:var(--surface-hover)}
+.v51-arow:focus-visible,.v51-drow:focus-visible,.v51-chip:focus-visible{outline:2px solid var(--accent-fg);outline-offset:2px}
+.v51-arow-n{color:var(--text-muted);font-variant-numeric:tabular-nums}
+.v51-arow-c{font-size:12px;color:var(--text-muted);white-space:nowrap}
+.v51-bar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:rgba(var(--fg-rgb),.06)}
+.v51-bar i{display:block;height:100%}
+.v51-bar .verde{background:var(--success)} .v51-bar .amarelo{background:var(--alerta-logo)} .v51-bar .vermelho{background:var(--danger)} .v51-bar .sem{background:rgba(var(--fg-rgb),.12)}
+.t-verde{color:var(--success)} .t-amarelo{color:var(--alerta-logo)} .t-vermelho{color:#E06464} .t-sem{color:var(--text-muted)}
+.v51-drow{grid-template-columns:110px 1fr auto}
+.v51-drow-a{font-size:12px;color:var(--text-muted)}
+.v51-drow-v{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.v51-drow-v em{font-style:normal;font-weight:400;color:var(--text-muted);font-size:12px;margin-left:4px}
+@media(max-width:560px){.v51-arow{grid-template-columns:24px 1fr}.v51-arow .v51-bar,.v51-arow-c{grid-column:1/-1}.v51-drow{grid-template-columns:1fr}}
+.v51-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:0 0 22px}
+.v51-kpi{background:var(--surface);border-radius:12px;padding:14px 16px;border-top:3px solid rgba(var(--fg-rgb),.15)}
+.v51-kpi.verde{border-top-color:var(--success)} .v51-kpi.amarelo{border-top-color:var(--alerta-logo)} .v51-kpi.vermelho{border-top-color:var(--danger)}
+.v51-kpi-t{font-size:13px;color:var(--text-muted)}
+.v51-kpi-v{font-size:34px;font-weight:700;color:var(--fg);margin:4px 0;font-variant-numeric:tabular-nums}
+.v51-kpi-s{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:12px}
+.v51-pill{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:rgba(var(--accent-rgb),.14);color:var(--accent-fg);white-space:nowrap}
+.v51-chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px;border-bottom:1px solid var(--border-dark);padding-bottom:12px}
+.v51-chip{background:transparent;border:1px solid var(--border-dark);color:var(--fg);font:inherit;font-size:14px;padding:7px 16px;border-radius:999px;cursor:pointer}
+.v51-chip.ativo{background:var(--fg);color:var(--on-fg);border-color:var(--fg);font-weight:600}
+.v51-bloco{background:var(--surface);border-radius:12px;padding:16px 18px;margin:0 0 20px} .ind-grid + .v51-bloco{margin-top:24px} .v56-nota{font-size:12px;color:var(--text-muted);margin:10px 0 0} .v56-kpi-dl{font-size:12px;color:var(--text-muted);display:inline-flex;gap:6px;align-items:center} .v51-kpi .v51-mb{margin-top:10px} .v56-kpi-seq{font-size:12px;color:var(--accent-fg);margin-top:6px} .v56-cp-meta .v51-cp-bar{opacity:.55} .v56-cp-meta .v51-cp-m{color:var(--accent-fg);font-weight:600} .v53-cp-v>span{display:inline-flex;align-items:center;justify-content:flex-end;gap:4px;min-width:62px} .v51-cp-row.v57-cp-ano{opacity:1;padding-bottom:8px;margin-bottom:4px;border-bottom:1px solid var(--border-dark)} .v57-cp-ano .v51-cp-m{color:var(--fg);font-weight:700} .v57-cp-ano .v53-cp-v{color:var(--fg)} .v57-sec{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-fg);margin:6px 0 10px}
+.v51-mx{display:grid;gap:8px;align-items:stretch}
+.v51-mx-h{font-size:14px;font-weight:600;color:var(--fg);text-align:center;align-self:end}
+.v51-mx-r{font-size:14px;color:var(--fg);align-self:center;padding-right:8px}
+.v51-mx-c{border-radius:10px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;background:rgba(var(--fg-rgb),.05);border:1px solid transparent}
+.v51-mx-c b{font-size:24px;color:var(--fg);font-variant-numeric:tabular-nums}
+.v51-mx-c.verde{border-color:rgba(47,143,110,.55)} .v51-mx-c.amarelo{border-color:var(--alerta-logo)} .v51-mx-c.vermelho{border-color:var(--danger);background:rgba(179,58,58,.12)}
+.v51-cp{display:flex;flex-direction:column;gap:6px}
+.v51-cp-row{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;opacity:.7}
+.v51-cp-row.sel{opacity:1}
+.v51-cp-m{font-size:13px;color:var(--text-muted)}
+.v51-cp-bar{display:flex;height:22px;border-radius:6px;overflow:hidden}
+.v51-cp-bar i{display:flex;align-items:center;justify-content:center;font-style:normal;font-size:11px;font-weight:700;color:var(--navy)}
+.v51-leg{display:flex;gap:16px;margin-top:10px;font-size:13px;color:var(--text-muted)}
+.v51-leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+.v52-rk{display:flex;flex-direction:column;gap:7px}
+.v52-rk-row{display:grid;grid-template-columns:minmax(110px,200px) 1fr minmax(120px,auto);gap:12px;align-items:center}
+.v52-rk-n{font-size:13px;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v52-rk-bar{position:relative;height:16px;background:rgba(var(--fg-rgb),.07);border-radius:5px}
+.v52-rk-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;background:var(--text-muted)}
+.v52-rk-bar i.verde{background:rgba(47,143,110,.9)} .v52-rk-bar i.amarelo{background:var(--alerta-logo)} .v52-rk-bar i.vermelho{background:var(--danger)}
+.v52-rk-bar u,.v52-rk-leg u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--fg);margin-left:-1px}
+.v52-rk-leg u{position:relative;display:inline-block;top:2px;height:12px;margin:0 4px 0 0}
+.v52-rk-v{font-size:13px;color:var(--text-muted);font-variant-numeric:tabular-nums;text-align:right}
+.v52-rk-v b{color:var(--fg);font-size:14px}
+.v52-rk-p{display:block;font-size:12px;margin-top:1px}
+.v52-rk.v62-d .v52-rk-row{grid-template-columns:minmax(110px,200px) minmax(120px,150px) 1fr minmax(120px,auto)}
+.v52-rk:not(.v62-d) .v52-rk-d{display:none}
+.v52-rk-d{font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.v52-rk-d small{color:var(--text-muted)}
+@media (max-width:640px){.v52-rk.v62-d .v52-rk-row{grid-template-columns:auto 1fr auto}.v52-rk.v62-d .v52-rk-d{grid-column:1}.v52-rk.v62-d .v52-rk-bar{grid-column:2}}
+.v60-plot{padding-right:34px}
+.v60-plot .v55-gl{right:34px}
+.v60-gr{position:absolute;right:0;width:30px;transform:translateY(50%);font-size:11px;color:var(--fg);text-align:left}
+.v60-ln{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:2}
+.v60-ln text{font-size:12px;font-weight:700;fill:var(--fg);paint-order:stroke;stroke:var(--surface);stroke-width:4px;font-variant-numeric:tabular-nums}
+.v53-col-b em.v60-in{top:4px;font-size:11px}
+.v60-leg{font-size:12px;color:var(--text-muted);margin:8px 0 0;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.v60-leg i{display:inline-block;width:10px;height:10px;border-radius:2px}
+.v60-leg s{display:inline-block;width:16px;height:0;border-top:2.5px solid var(--fg);margin-left:6px}
+
+.v52-rk-leg{font-size:12px;color:var(--text-muted);margin:10px 0 0}
+@media (max-width:640px){.v52-rk-row{grid-template-columns:1fr auto}.v52-rk-n{grid-column:1/-1}.v52-rk-bar{grid-column:1}}
+
+.v53-col{display:flex;gap:28px;align-items:flex-end;overflow-x:auto;padding:22px 4px 0}
+.v53-col-g{display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.65;flex:0 0 auto}
+.v53-col-g.sel{opacity:1}
+.v53-col-bars{display:flex;gap:4px;align-items:flex-end;height:180px;border-bottom:1px solid var(--border-dark)}
+.v53-col-b{position:relative;width:34px;border-radius:4px 4px 0 0;min-height:1px}
+.v53-col-b em{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-style:normal;font-size:12px;color:var(--fg);font-variant-numeric:tabular-nums;white-space:nowrap}
+.v53-col-m{font-size:13px;color:var(--text-muted)}
+.v53-cp-v{font-size:12px;color:var(--text-muted);font-variant-numeric:tabular-nums;white-space:nowrap;display:flex;gap:10px}
+.v53-cp-v i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.v54-pn{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.v54-pn-t{font-size:13px;color:var(--text-muted);text-align:center}
+.v55-plot{position:relative;padding-left:46px}
+.v55-plot .v53-col{position:relative;z-index:1}
+.v55-gl{position:absolute;left:46px;right:0;border-top:1px solid rgba(var(--fg-rgb),.08)}
+.v55-gl small{position:absolute;left:-46px;top:-8px;width:40px;text-align:right;font-size:11px;color:var(--text-muted)}
+.v55-ml{position:absolute;left:46px;right:0;border-top:2px dashed;z-index:2;pointer-events:none}
+.v55-ml small{position:absolute;right:0;top:-17px;font-size:11px;font-weight:600}
+.v53-col-m{height:20px;line-height:20px}
+.v55-rds{display:flex;flex-direction:column;gap:6px;margin-top:14px;border-top:1px dashed var(--border-dark);padding-top:10px}
+.v55-rds-t{font-size:11px;color:var(--accent-fg)}
+.v55-rd{display:grid;grid-template-columns:minmax(120px,220px) 90px auto minmax(140px,1fr) auto;gap:12px;align-items:center;padding:6px 10px;border-radius:8px;border-left:3px solid transparent;background:rgba(var(--fg-rgb),.03)}
+.v55-rd.verde{border-left-color:rgba(47,143,110,.9)} .v55-rd.amarelo{border-left-color:var(--alerta-logo)} .v55-rd.vermelho{border-left-color:var(--danger)}
+.v55-rd-n{font-size:13px;color:var(--fg)} .v55-rd-n i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.v55-rd b{font-size:18px;color:var(--fg);font-variant-numeric:tabular-nums}
+@media (max-width:720px){.v55-rd{grid-template-columns:1fr auto}.v55-rd-mb,.v55-rd-d{grid-column:1/-1}}
+.v51-slot{display:flex;flex-direction:column;min-width:0}
+.v51-slot.v61-largo{grid-column:1/-1}
+.v51-slot.v61-largo .ind-card:not(.expanded) .ic-chart{height:170px}
+.v51-slot:has(.ind-card.expanded){grid-column:1/-1}
+.v51-orig{display:flex;flex-wrap:wrap;gap:6px 14px;padding:8px 14px 10px;font-size:12px;color:var(--text-muted);border-top:1px dashed var(--border-dark)}
+.v51-orig-t{width:100%;font-size:11px;color:var(--accent-fg)}
+.v51-orig-i b{color:var(--fg);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+.v51-vd{font-size:14px;font-weight:700}
+.v51-vd.sobe{color:#3FBF8A} .v51-vd.cai{color:#E06464} .v51-vd.igual{color:var(--text-muted);font-weight:400}
+.v51-mb{width:100%;display:flex;flex-direction:column;gap:4px;margin-top:4px}
+.v51-mb-t{position:relative;height:6px;border-radius:3px;background:rgba(var(--fg-rgb),.1)}
+.v51-mb-t i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--success)}
+.v51-mb.amarelo .v51-mb-t i{background:var(--alerta-logo)} .v51-mb.vermelho .v51-mb-t i{background:var(--danger)}
+.v51-mb-t s{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--fg);transform:translateX(-1px)}
+.v51-mb-l{font-size:11px;color:var(--text-muted);text-align:right}
+.v51-mb.verde .v51-mb-l{color:#3FBF8A}
+
+.ind-card{box-shadow:0 1px 3px rgba(1,30,60,.07)}
+/* v65 — meta mais visível no card: pílula logo abaixo do valor, mesma tracejada do gráfico */
+.ic-chartcap{display:inline-flex;width:fit-content;font-size:12.5px;font-weight:700;color:var(--fg);background:rgba(1,30,60,.06);border-radius:999px;padding:4px 11px;margin:8px 0 6px;letter-spacing:.2px}
+.ic-cap-dash{border-top:2px dashed var(--fg);opacity:.8}
+/* v65 — dados de origem recolhidos (toggle) */
+details.v51-orig>summary{cursor:pointer;list-style:none;width:100%;font-size:11px;color:var(--accent-fg);font-weight:600}
+details.v51-orig>summary::-webkit-details-marker{display:none}
+details.v51-orig>summary::before{content:'▸';display:inline-block;margin-right:6px}
+.v51-orig-l{display:flex;flex-wrap:wrap;gap:6px 18px;width:100%}
+details.v51-orig[open]>summary::before{content:'▾'}
+details.v51-orig:not([open]){padding-bottom:8px}
+/* v65 — tema claro: abas e chips de período */
+.tab-btn.active{color:var(--on-fg)}
+.period-chip{background:var(--surface);border-color:rgba(1,30,60,.18);color:var(--fg)}
+.period-chip:hover{background:rgba(1,30,60,.07);border-color:rgba(1,30,60,.3)}
+.period-chip.active,.period-chip.active:hover{background:var(--fg);color:var(--on-fg);border:1.5px solid var(--fg);box-shadow:none}
+.ind-card:hover{box-shadow:0 8px 24px rgba(1,30,60,.12)}
+.ind-card.expanded{box-shadow:0 12px 36px rgba(1,30,60,.16)}
+
+/* v66-C usa este bloco + o de baixo — CARDS CLAROS DE ALTO CONTRASTE (alternativa pedida pelo usuário, 14/10).
+   Página gelo, cards brancos com borda, texto e elementos internos em navy forte. */
+:root{ --bg-page:#E6EDE9; --text-muted:rgba(1,30,60,.74); --ink-page-muted:rgba(1,30,60,.74); }
+.ind-card,.ar-card,.area-card-mini,.exec-lista,.v51-vol,.v51-arow,.v51-drow,.v51-kpi,.v51-bloco{
+  --fg:#011E3C; --fg-rgb:1,30,60; --on-fg:#FFFFFF;
+  --accent-fg:#1F6B50; --accent-rgb:31,107,80;
+  --text-muted:rgba(1,30,60,.78); --border-dark:rgba(1,30,60,.2); --bg-card:rgba(1,30,60,.04);
+  --ink-page:#011E3C; --ink-page-muted:rgba(1,30,60,.78); --rule-page:rgba(1,30,60,.2); --accent-page:#1F6B50;
+  --surface:#FFFFFF; --surface-hover:#FAFCFB; --surface-exp:#FFFFFF; --surface-lista:#FFFFFF;
+  color:var(--fg);
+}
+.ind-card,.v51-vol,.v51-kpi,.v51-bloco,.v51-arow,.v51-drow,.ar-card,.area-card-mini,.exec-lista{border:1.5px solid rgba(1,30,60,.24)!important}
+.ind-card{box-shadow:0 2px 6px rgba(1,30,60,.08)}
+.ind-card:hover{border-color:rgba(1,30,60,.45)!important;box-shadow:0 10px 26px rgba(1,30,60,.14)}
+.ind-card.expanded{border-color:var(--fg)!important;box-shadow:0 14px 36px rgba(1,30,60,.18)}
+.ic-goal-track{background:rgba(1,30,60,.12)}
+.ic-insight{background:rgba(1,30,60,.05)}
+/* meta em destaque: pílula sólida navy com texto branco */
+.ic-chartcap{background:var(--fg);color:var(--on-fg);font-size:13px;font-weight:800;padding:5px 12px;letter-spacing:.2px}
+.ic-cap-dash{border-top:2px dashed var(--on-fg);opacity:1}
+.v51-pill{background:var(--fg);color:var(--on-fg);font-weight:700}
+.v51-vd.sobe,.v51-mb.verde .v51-mb-l{color:#1F7A55} .v51-vd.cai,.t-vermelho{color:#B83232}
+
+/* v66-C — PÁGINA ESCURA (navy da marca) + CARDS CLAROS de alto contraste (14/10). */
+:root{
+  --bg-page:#011E3C;
+  --fg:#E0EEE7; --fg-rgb:224,238,231; --on-fg:#011E3C;
+  --accent-fg:#A8CCA8; --accent-rgb:168,204,168;
+  --text-muted:rgba(224,238,231,.62); --border-dark:rgba(224,238,231,.12); --bg-card:rgba(224,238,231,.04);
+  --ink-page:#E0EEE7; --ink-page-muted:rgba(224,238,231,.62); --rule-page:rgba(224,238,231,.14); --accent-page:#A8CCA8;
+  --surface:#062B3F; --surface-hover:#093241; --surface-exp:#0A3542; --surface-lista:#072C40;
+}
+.period-chip{background:transparent;border-color:rgba(224,238,231,.28);color:var(--fg)}
+.period-chip:hover{background:rgba(224,238,231,.1);border-color:rgba(224,238,231,.45)}
+.period-chip.active,.period-chip.active:hover{background:var(--fg);color:var(--on-fg);border:1.5px solid var(--fg);box-shadow:none}
+.ind-card,.v51-vol,.v51-kpi,.v51-bloco,.v51-arow,.v51-drow,.ar-card,.area-card-mini,.exec-lista{border:1px solid rgba(224,238,231,.18)!important}
+.ind-card{box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.ind-card:hover{border-color:var(--accent-fg)!important;box-shadow:0 10px 28px rgba(0,0,0,.45)}
+.ind-card.expanded{border-color:var(--accent-fg)!important;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+
+/* v66-C2 — texto dos cards mais forte, mais escuro e maior (pedido do usuário, 14/10) */
+.ind-card,.ar-card,.area-card-mini,.exec-lista,.v51-vol,.v51-arow,.v51-drow,.v51-kpi,.v51-bloco{ --text-muted:rgba(1,30,60,.86); --ink-page-muted:rgba(1,30,60,.86); }
+.ic-label{font-size:12px;font-weight:800;color:var(--fg)}
+.cons-badge{font-size:10px;color:rgba(1,30,60,.8);border-color:rgba(1,30,60,.4)}
+.ic-dual-prev{font-size:17px;font-weight:700}
+.ic-dual-arrow{font-size:14px}
+.ic-dual-sub{font-size:14px;font-weight:600}
+.ic-avg-label{font-size:11px;font-weight:800}
+.ic-avg-value{font-size:22px}
+.ic-delta{font-size:13.5px;font-weight:700} .ic-delta .dl{font-size:10px}
+.ic-single-note{font-size:13px;font-weight:600}
+.ic-insight{font-size:13.5px;font-weight:600;color:var(--fg)}
+.ic-meta{font-size:12.5px;font-weight:600}
+.ic-goal-lbl{font-size:11px;font-weight:800}
+.ic-goal-pct{font-size:17px}
+.ic-goal-foot{font-size:12.5px;font-weight:600} .ic-goal-foot strong{font-weight:800}
+.v51-arow,.v51-drow{font-size:15px;font-weight:600}
+.v51-arow-c,.v51-drow-a,.v51-drow-v em{font-size:13px;font-weight:600}
+.v51-vol-s,.v51-kpi-s,.v56-kpi-dl{font-size:13.5px;font-weight:600}
+.v51-kpi-t{font-size:14.5px;font-weight:700;color:var(--fg)}
+
+/* v66-E — VERSÃO FINAL CONTRÁRIA: página clara + CARDS ESCUROS, com todos os reforços
+   (texto maior e mais forte, gráfico forte, pílula de meta sólida). 14/10. */
+:root{
+  --bg-page:#EEF3F0;
+  --fg:#011E3C; --fg-rgb:1,30,60; --on-fg:#FFFFFF;
+  --accent-fg:#2F7A5E; --accent-rgb:47,122,94;
+  --text-muted:rgba(1,30,60,.72); --border-dark:rgba(1,30,60,.12); --bg-card:rgba(1,30,60,.03);
+  --ink-page:#011E3C; --ink-page-muted:rgba(1,30,60,.72); --rule-page:rgba(1,30,60,.14); --accent-page:#2F7A5E;
+  --surface:#FFFFFF; --surface-hover:#F6F9F7; --surface-exp:#FFFFFF; --surface-lista:#FAFCFB;
+}
+.period-chip{background:#FFFFFF;border-color:rgba(1,30,60,.2);color:var(--fg)}
+.period-chip:hover{background:rgba(1,30,60,.07);border-color:rgba(1,30,60,.35)}
+.period-chip.active,.period-chip.active:hover{background:var(--fg);color:var(--on-fg);border:1.5px solid var(--fg);box-shadow:none}
+.ind-card,.ar-card,.area-card-mini,.exec-lista,.v51-vol,.v51-arow,.v51-drow,.v51-kpi,.v51-bloco{
+  --fg:#E0EEE7; --fg-rgb:224,238,231; --on-fg:#011E3C;
+  --accent-fg:#A8CCA8; --accent-rgb:168,204,168;
+  --text-muted:rgba(224,238,231,.88); --ink-page:#E0EEE7; --ink-page-muted:rgba(224,238,231,.88);
+  --border-dark:rgba(224,238,231,.14); --bg-card:rgba(224,238,231,.05); --rule-page:rgba(224,238,231,.14); --accent-page:#A8CCA8;
+  --surface:#062B3F; --surface-hover:#093241; --surface-exp:#0A3542; --surface-lista:#072C40;
+  color:var(--fg);
+}
+.ind-card,.ar-card,.area-card-mini,.exec-lista,.v51-vol,.v51-arow,.v51-drow,.v51-kpi,.v51-bloco{border:1px solid rgba(1,30,60,.35)!important}
+.ind-card{box-shadow:0 2px 8px rgba(1,30,60,.22)}
+.ind-card:hover{border-color:var(--accent-fg)!important;box-shadow:0 10px 28px rgba(1,30,60,.3)}
+.ind-card.expanded{border-color:var(--accent-fg)!important;box-shadow:0 14px 40px rgba(1,30,60,.34)}
+.cons-badge{color:rgba(224,238,231,.85);border-color:rgba(224,238,231,.4)}
+.ic-goal-track{background:rgba(224,238,231,.14)}
+.ic-insight{background:rgba(224,238,231,.07)}
+.v51-vd.sobe,.v51-mb.verde .v51-mb-l{color:#4FD69A} .v51-vd.cai,.t-vermelho{color:#F07070}
+
+/* v66-F — padrão escuro de volta, com FUNDO na cor da borda do card (#3F5F66: borda do card escurecida, pedido do usuário 14/10 18:05)
+   e cards um pouco mais escuros. Fora dos cards: texto branco (contraste 6,9:1 sobre #3F5F66). */
+:root{
+  --bg-page:#3F5F66;
+  --fg:#FFFFFF; --fg-rgb:255,255,255; --on-fg:#011E3C;
+  --accent-fg:#FFFFFF; --accent-rgb:255,255,255;
+  --text-muted:#F2F7F5; --border-dark:rgba(255,255,255,.25); --bg-card:rgba(255,255,255,.06);
+  --ink-page:#FFFFFF; --ink-page-muted:#F2F7F5; --rule-page:rgba(255,255,255,.3); --accent-page:#FFFFFF;
+}
+.period-chip{background:rgba(1,30,60,.28);border-color:rgba(255,255,255,.45);color:#FFFFFF}
+.period-chip:hover{background:rgba(1,30,60,.45);border-color:#FFFFFF}
+.period-chip.active,.period-chip.active:hover{background:#E0EEE7;color:#011E3C;border:1.5px solid #E0EEE7;box-shadow:none}
+.tab-btn{border-color:rgba(255,255,255,.35)}
+.tab-btn.active{background:#E0EEE7;color:#011E3C;border-color:#E0EEE7}
+.ind-card,.ar-card,.area-card-mini,.exec-lista,.v51-vol,.v51-arow,.v51-drow,.v51-kpi,.v51-bloco{ --success:#4FD69A; --danger:#FF7B7B; --warning:#F5A05A; --ok-page:#4FD69A; --bad-page:#FF7B7B; --warn-page:#F5A05A;
+  --surface:#052538; --surface-hover:#072D42; --surface-exp:#082F45; --surface-lista:#062940; }
+.ind-card,.ar-card,.area-card-mini,.exec-lista,.v51-vol,.v51-arow,.v51-drow,.v51-kpi,.v51-bloco{border:1px solid rgba(224,238,231,.22)!important}
+.ind-card{box-shadow:0 3px 10px rgba(0,0,0,.28)}
+.ind-card:hover,.ind-card.expanded{border-color:#A8CCA8!important;box-shadow:0 12px 32px rgba(0,0,0,.38)}
+details.v51-orig>summary{font-weight:700}
+.v51-orig-i b{color:#FFFFFF}
+.tab-num{opacity:1}
+.area-pill,.area-sub,.v51-orig-i,.v51-orig-t{color:#FFFFFF!important;opacity:1}
+.v51-cp-row{opacity:.95} .v53-col-g{opacity:.95} .v56-cp-meta .v51-cp-bar{opacity:1} .v51-cp-row.sel .v51-cp-m,.v53-col-g.sel{font-weight:800}
+
+/* v66-I — pedido 14/10 18:26: página no verde-petróleo que era do card (#062B3F) e cards no navy bem escuro que era da página (#011E3C).
+   Mantém tudo do v66-F (texto branco fora, cores semânticas claras e reforços dentro). */
+:root{ --bg-page:#0B3A50; }
+.ind-card,.ar-card,.area-card-mini,.exec-lista,.v51-vol,.v51-arow,.v51-drow,.v51-kpi,.v51-bloco{ --surface:#01162D; --surface-hover:#031D38; --surface-exp:#021A33; --surface-lista:#01162D; }
+.ind-card,.ar-card,.area-card-mini,.exec-lista,.v51-vol,.v51-arow,.v51-drow,.v51-kpi,.v51-bloco{border:1px solid rgba(168,204,168,.28)!important}
+.ind-card{box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.ind-card:hover,.ind-card.expanded{border-color:#A8CCA8!important;box-shadow:0 12px 32px rgba(0,0,0,.5)}
 </style>
 </head>
 <body>
@@ -530,14 +830,14 @@ main{padding-top:0;}   /* a pilha sticky já ocupa o espaço */
            Não é tema/cor: o arquivo em si está quebrado. Wordmark abaixo é temporário até reenviar a logo real. -->
       <div class="brand-nortmont"><svg class="brand-nortmont-logo" viewBox="0 0 2157 486" xmlns="http://www.w3.org/2000/svg"> <g> <path d="M 127.66 428.36 C124.63,429.79 119.25,430.00 84.79,430.00 L 45.39 430.00 L 40.87 427.13 C38.99,425.94 37.54,425.07 36.41,423.89 C32.50,419.80 32.50,411.97 32.50,374.21 C32.50,373.16 32.50,372.09 32.50,371.00 L 32.50 325.50 L 35.81 319.66 C38.70,314.55 61.63,280.93 85.00,247.50 C89.23,241.45 100.22,225.58 109.41,212.24 C123.18,192.24 126.81,187.63 130.02,185.99 C134.73,183.59 143.80,183.33 147.96,185.48 C149.53,186.29 160.75,197.48 172.88,210.35 C185.53,223.76 196.41,234.44 198.37,235.37 C203.22,237.67 209.46,237.43 214.23,234.75 C217.58,232.87 223.68,224.62 251.74,184.00 C270.17,157.33 286.43,134.22 287.88,132.66 C289.32,131.10 291.72,129.19 293.20,128.41 C296.93,126.46 306.74,126.68 310.69,128.79 C312.64,129.84 320.21,138.64 330.19,151.46 C340.12,164.22 347.83,173.20 349.90,174.39 C354.48,177.04 361.44,177.05 366.50,174.42 C370.62,172.27 369.58,173.63 422.20,101.75 C443.43,72.75 445.42,70.34 449.97,68.01 C452.14,66.91 455.73,66.00 457.94,66.00 C466.14,66.00 468.75,67.99 487.20,88.32 C506.98,110.10 528.94,134.13 550.43,157.50 C558.52,166.30 566.01,175.18 567.08,177.23 C568.98,180.88 569.02,183.80 568.76,299.89 L 568.50 418.81 L 565.43 422.66 C559.61,429.94 559.26,430.00 525.00,429.98 L 523.82 429.98 C500.16,429.96 492.93,429.96 487.76,426.70 C485.41,425.21 483.48,423.05 480.61,419.90 C473.14,411.68 468.88,405.88 415.75,331.53 C387.11,291.45 370.27,268.75 368.09,267.28 C365.53,265.56 363.29,265.00 358.89,265.00 C348.45,265.00 347.99,265.44 326.23,295.97 C289.86,347.02 289.75,347.17 285.48,349.41 C280.76,351.89 273.84,352.04 269.50,349.77 C267.85,348.90 257.50,340.25 246.50,330.53 C235.50,320.81 224.52,311.94 222.10,310.82 C216.54,308.24 209.49,308.72 204.67,312.03 C200.92,314.59 201.23,314.12 175.18,356.50 C165.03,373.00 152.03,394.15 146.27,403.50 C133.42,424.39 131.99,426.30 127.66,428.36 ZM 683.92 349.25 L 684.00 430.00 L 638.00 430.00 L 638.00 193.00 L 667.75 193.03 L 697.50 193.07 L 714.68 218.28 C724.13,232.15 741.42,257.23 753.10,274.00 C788.47,324.79 803.58,346.99 810.09,357.76 C813.51,363.41 816.42,367.91 816.57,367.76 C816.72,367.61 816.45,356.24 815.96,342.50 C815.48,328.75 815.06,289.49 815.04,255.25 L 815.00 193.00 L 838.00 193.00 C855.73,193.00 861.00,193.29 861.01,194.25 C861.02,195.85 861.02,427.08 861.01,428.75 C861.00,429.72 854.85,430.00 833.59,430.00 L 806.17 430.00 L 802.72 425.25 C792.77,411.56 709.92,286.33 693.54,260.23 C687.58,250.73 682.62,243.08 682.52,243.23 C682.41,243.38 682.67,249.12 683.08,256.00 C683.50,262.88 683.87,304.84 683.92,349.25 ZM 1494.01 375.21 L 1494.00 428.93 L 1472.25 429.21 C1460.29,429.37 1449.49,429.36 1448.25,429.18 L 1446.00 428.86 L 1446.00 371.70 C1446.00,320.09 1446.00,311.42 1442.42,304.66 C1441.69,303.27 1440.80,301.97 1439.74,300.39 C1437.56,297.16 1434.87,294.75 1431.52,293.04 C1427.07,290.77 1425.38,290.50 1415.52,290.52 C1406.47,290.53 1403.68,290.91 1399.91,292.64 C1391.80,296.36 1386.23,303.35 1382.21,314.88 C1380.83,318.86 1380.56,327.11 1380.25,374.25 L 1379.90 429.00 L 1333.00 429.00 L 1333.00 345.08 C1333.00,298.93 1332.73,260.45 1332.39,259.58 C1331.85,258.17 1334.22,258.00 1354.78,258.00 L 1377.77 258.00 L 1378.37 260.25 C1378.70,261.49 1378.98,266.01 1378.99,270.30 L 1379.00 278.10 L 1385.75 271.28 C1393.02,263.94 1402.17,258.49 1412.50,255.36 C1421.78,252.53 1445.06,252.73 1454.54,255.72 C1466.75,259.56 1476.54,267.25 1482.56,277.75 C1484.30,280.78 1486.00,282.00 1486.00,280.23 C1486.00,279.81 1488.04,277.13 1490.53,274.28 C1496.85,267.07 1508.39,259.62 1518.29,256.37 C1525.70,253.94 1528.01,253.67 1542.00,253.59 C1554.39,253.52 1558.70,253.87 1563.50,255.34 C1582.50,261.16 1595.13,273.30 1601.62,291.97 C1606.45,305.84 1606.99,314.06 1606.99,373.75 L 1607.00 429.00 L 1584.00 429.00 C1571.35,429.00 1560.66,429.00 1560.25,429.00 C1559.84,429.00 1559.28,402.55 1559.00,370.23 L 1558.50 311.45 L 1555.16 304.67 C1549.61,293.40 1541.40,289.30 1526.15,290.21 C1513.20,290.97 1504.52,296.23 1499.26,306.50 C1494.10,316.57 1494.02,317.58 1494.01,375.21 ZM 997.26 432.46 C986.67,434.31 965.37,434.34 955.31,432.51 C925.61,427.13 902.92,410.68 890.48,385.53 C881.83,368.03 878.65,350.09 881.00,331.95 C883.96,309.10 892.96,291.47 909.33,276.43 C914.85,271.35 919.26,268.50 928.50,264.02 C941.73,257.62 948.28,255.60 960.97,254.04 C1007.89,248.28 1045.96,266.14 1064.26,302.50 C1077.31,328.44 1075.84,366.85 1060.85,391.60 C1047.40,413.82 1026.30,427.38 997.26,432.46 ZM 1746.50 430.64 C1738.08,432.82 1733.81,433.29 1719.50,433.59 C1701.33,433.97 1693.71,433.04 1681.33,428.97 C1652.78,419.57 1633.04,399.23 1624.39,370.30 C1622.28,363.24 1621.66,358.73 1621.27,347.50 C1620.50,325.65 1624.07,310.58 1633.65,295.20 C1650.76,267.75 1680.43,253.00 1718.50,253.01 C1765.20,253.02 1800.42,279.07 1811.11,321.50 C1813.98,332.91 1814.23,353.59 1811.61,364.50 C1803.41,398.75 1780.78,421.73 1746.50,430.64 ZM 1311.87 428.77 C1308.92,429.47 1299.75,430.25 1291.50,430.50 C1267.82,431.23 1254.83,427.88 1245.62,418.68 C1240.49,413.54 1237.91,408.93 1235.42,400.46 C1233.90,395.25 1233.63,388.38 1233.26,345.75 L 1232.85 297.00 L 1211.38 297.00 C1186.61,297.00 1178.57,298.20 1167.04,303.60 C1162.94,305.52 1157.63,308.70 1155.24,310.66 C1149.15,315.65 1142.43,326.08 1139.25,335.50 L 1136.55 343.50 L 1136.21 386.25 L 1135.88 429.00 L 1088.00 429.00 L 1087.93 345.75 C1087.88,299.96 1087.66,261.49 1087.43,260.25 L 1087.01 258.00 L 1133.77 258.00 L 1134.36 262.25 C1134.69,264.59 1135.06,271.79 1135.18,278.25 C1135.30,284.71 1135.65,289.99 1135.95,289.97 C1136.25,289.95 1138.06,287.22 1139.96,283.90 C1144.82,275.42 1155.75,265.34 1165.00,260.81 C1177.86,254.51 1181.78,253.84 1208.75,253.28 L 1233.00 252.77 L 1233.00 205.00 L 1280.97 205.00 L 1281.50 257.50 L 1302.27 257.77 L 1323.05 258.04 L 1322.77 275.27 L 1322.50 292.50 L 1301.69 292.77 L 1280.89 293.04 L 1281.19 337.77 C1281.48,380.16 1281.60,382.71 1283.50,386.50 C1284.83,389.17 1287.00,391.33 1290.00,393.00 C1294.13,395.30 1295.42,395.48 1305.75,395.31 C1311.94,395.20 1317.01,395.43 1317.02,395.81 C1317.03,396.19 1317.08,403.48 1317.14,412.00 L 1317.24 427.50 ZM 507.50 387.58 C516.15,391.45 526.13,387.60 530.37,378.75 L 532.89 373.50 L 531.96 305.00 C531.45,267.33 530.91,227.50 530.76,216.50 C530.55,200.13 530.20,195.96 528.85,193.50 C527.94,191.85 518.98,181.73 508.93,171.00 C477.41,137.33 472.70,131.91 467.30,131.11 C466.26,130.96 465.20,130.97 463.92,130.99 C463.45,131.00 462.94,131.01 462.40,131.01 C457.71,131.00 455.51,131.53 452.90,133.27 C449.35,135.65 396.01,207.78 393.41,213.72 C391.53,218.00 391.63,223.38 393.65,227.30 C396.22,232.29 497.87,379.08 501.38,382.87 C503.10,384.72 505.85,386.84 507.50,387.58 ZM 2001.00 371.07 L 2001.00 428.93 L 1979.25 429.21 C1967.29,429.37 1956.49,429.36 1955.25,429.18 L 1953.00 428.86 L 1952.98 376.68 C1952.97,335.67 1952.66,323.08 1951.56,317.86 C1948.01,301.13 1939.58,293.04 1923.59,291.01 C1909.73,289.25 1898.07,292.62 1889.67,300.80 C1883.65,306.65 1880.54,312.64 1877.99,323.24 C1876.16,330.89 1876.01,335.13 1876.01,380.25 L 1876.00 429.00 L 1828.00 429.00 L 1828.00 258.00 L 1873.82 258.00 L 1874.42 266.25 C1874.75,270.79 1875.12,276.07 1875.26,277.98 L 1875.50 281.47 L 1879.12 276.41 C1886.97,265.45 1903.73,256.16 1919.74,253.88 C1929.23,252.53 1947.38,253.34 1955.50,255.47 C1964.74,257.90 1973.45,262.60 1980.09,268.75 C1987.55,275.65 1991.28,280.98 1995.05,290.11 C2000.73,303.88 2001.00,307.62 2001.00,371.07 ZM 2114.00 428.75 C2105.29,430.80 2079.92,431.23 2070.73,429.49 C2052.21,425.97 2041.13,415.53 2037.44,398.13 C2036.34,392.96 2036.03,380.69 2036.02,342.28 L 2036.00 293.05 L 2004.50 292.50 L 2004.23 275.28 L 2003.95 258.05 L 2019.73 257.78 L 2035.50 257.50 L 2035.77 231.23 L 2036.03 204.96 L 2059.77 205.23 L 2083.50 205.50 L 2084.03 258.00 L 2125.05 258.00 L 2124.77 275.25 L 2124.50 292.50 L 2104.25 292.77 L 2084.00 293.04 L 2084.00 337.70 C2084.00,380.33 2084.09,382.56 2086.00,386.50 C2089.18,393.06 2094.38,395.44 2105.50,395.42 C2110.45,395.41 2115.75,395.07 2117.27,394.67 L 2120.05 393.95 L 2119.77 410.70 L 2119.50 427.46 ZM 74.50 400.58 C78.24,402.25 92.90,402.41 98.17,400.83 C99.01,400.58 99.73,400.39 100.41,400.13 C105.00,398.38 108.28,393.17 143.15,340.00 C166.04,305.11 176.77,288.44 178.37,285.30 C180.46,281.19 180.41,275.49 178.22,270.79 C175.89,265.76 151.40,240.07 147.32,238.36 C140.13,235.36 130.80,237.22 125.89,242.63 C122.62,246.23 68.13,325.63 65.74,330.27 C64.26,333.15 63.89,337.71 63.34,359.61 C62.86,378.75 63.01,386.49 63.90,389.20 C65.30,393.43 70.14,398.63 74.50,400.58 ZM 1706.63 396.41 C1714.22,398.25 1718.98,398.29 1727.07,396.57 C1735.86,394.71 1742.03,391.67 1748.06,386.26 C1758.81,376.59 1764.08,362.36 1764.07,343.00 C1764.05,317.46 1752.63,298.61 1733.20,292.07 C1721.88,288.25 1703.72,289.52 1693.31,294.84 C1683.50,299.85 1674.31,313.02 1670.86,327.00 C1668.92,334.89 1669.22,353.06 1671.41,360.45 C1677.08,379.56 1689.53,392.27 1706.63,396.41 ZM 967.26 396.49 C975.42,398.26 979.08,398.27 987.27,396.53 C1010.21,391.67 1024.31,371.64 1024.25,344.00 C1024.20,320.47 1014.08,301.63 997.24,293.72 C991.32,290.94 989.23,290.50 980.07,290.16 C973.91,289.92 967.37,290.27 964.07,291.00 C946.05,295.01 934.19,309.10 930.42,331.00 C924.91,362.91 940.54,390.68 967.26,396.49 ZM 262.78 297.28 C267.52,299.55 274.54,299.07 279.26,296.15 C282.44,294.18 294.61,277.05 324.33,232.70 C332.57,220.41 331.73,215.05 319.17,199.84 C311.03,189.97 306.40,187.36 298.59,188.24 C292.02,188.98 287.81,192.15 281.24,201.29 C278.00,205.80 267.17,220.69 257.18,234.37 C245.76,250.00 238.62,260.71 237.95,263.20 C236.81,267.41 237.37,271.80 239.60,276.16 C241.47,279.83 258.24,295.11 262.78,297.28 Z" fill="currentColor"></path> </g> </svg></div>
       <div class="brand-divider"></div>
-      <div class="brand-client">Cliente · <strong>AHCROS</strong></div>
+      <div class="brand-client"><span class="v51-selo"><img data-logo alt="AHCROS"></span></div>
     </div>
     <div class="top-meta">Operacional · <strong id="topPeriodo">—</strong></div>
   </div>
 
   <nav class="tabs-nav">
     <div class="tabs-list" id="tabsList">
-    <button class="tab-btn active" data-tab="capa">Capa</button>
+    <button class="tab-btn active" data-tab="capa">Resumo</button>
     <button class="tab-btn" data-tab="recepcao"><span class="tab-num">01</span>Recepção</button>
     <button class="tab-btn" data-tab="enfermagem"><span class="tab-num">02</span>Enfermagem</button>
     <button class="tab-btn" data-tab="sanificacao"><span class="tab-num">03</span>Sanificação</button>
@@ -575,10 +875,10 @@ const COL_META=3, COL_JAN=4, COL_DEZ=15, COL_CONS=16;
 
 const C = {
   navy:'#011E3C', mint:'#E0EEE7', sage:'#A8CCA8',
-  success:'#2F8F6E', warning:'#C58B2A', danger:'#B33A3A',
-  axis:'rgba(224,238,231,0.4)', grid:'rgba(224,238,231,0.07)',
+  success:'#4FD69A', warning:'#F5A05A', danger:'#FF7B7B',
+  axis:'rgba(224,238,231,0.92)', grid:'rgba(224,238,231,0.14)',
   mintFade:'rgba(224,238,231,0.12)', dangerFade:'rgba(179,58,58,0.15)',
-  chart:'#7FA0DC', chartFade:'rgba(127,160,220,0.30)'
+  chart:'#8FB2F0', chartFade:'rgba(143,178,240,0.35)'
 };
 
 // selectedMonths: array de índices (0-11) dos meses selecionados
@@ -1243,23 +1543,51 @@ ${resumoH}
 }
 
 // CARD
+// v61 — Indicadores de ESTOQUE (acumulados): o valor do período é a posição do último mês lançado,
+// não média nem soma. Metadado fora do AREAS, por rótulo. Meta segue mensal (não acumula).
+const V61_ESTOQUE = new Set(['% Projetos aprovados (%)','Nº Projetos Aprovados','Nº Projetos Submetidos',
+  '% Colaboradores treinados LGPD (%)','Nº Especialidades Médicas Ativas'].map(r=>slug(r)));
 function getData(ind){
   if(!ST.data) return null;
-  return ST.data[ind.id] || ST.data[slug(ind.label)] || null;
+  const d = ST.data[ind.id] || ST.data[slug(ind.label)] || null;
+  if(d && d._estoque===undefined) d._estoque = typeof V61_ESTOQUE!=='undefined' && V61_ESTOQUE.has(slug(ind.label));
+  return d;
 }
 
+// v64 — regra única de casas (decisão 01/10): uma casa; inteiro ou zero sem casa;
+// duas casas só quando uma casa mostraria "0,0" para algo que não é zero.
+function fmtNum(v){
+  if(v===null||v===undefined||isNaN(v)) return '—';
+  const r1=Math.round(v*10)/10;
+  if(Math.abs(r1)<1e-9){ if(Math.abs(v)<1e-9) return '0'; return v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  const dec=Math.abs(r1-Math.round(r1))<1e-9?0:1;
+  return r1.toLocaleString('pt-BR',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+}
+// NPS é escala de pontos (−100 a 100): a variação sai em pontos, nunca em %.
+function ehNPS(ind){ return /^NPS\b/i.test((ind&&ind.label)||''); }
+// Último mês com lançamento do indicador (para o aviso quando o mês selecionado está vazio).
+function ultLanc(d){ if(!d) return null; for(let i=11;i>=0;i--){ const v=d.meses[i]; if(v!==null&&v!==undefined&&!isNaN(v)) return i; } return null; }
+// v64: meta/limite com duas casas na planilha aparece com duas casas (ex.: limite 0,15%), exceção à regra de uma casa.
+function fmtMeta(v,ind){
+  if(v===null||v===undefined||isNaN(v)) return null;
+  if(!ind.moeda && Math.abs(v*100-Math.round(v*100))<1e-6 && Math.abs(v*10-Math.round(v*10))>1e-6){
+    const s=v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    return ind.tipo==='Taxa/%' ? s+'%' : s;
+  }
+  return fmtVal(v,ind);
+}
 function fmtVal(v,ind){
   if(v===null||v===undefined) return null;
-  if(ind.tipo==='Taxa/%')
-    return v.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+  if(ind.tipo==='Taxa/%') return fmtNum(v)+'%';
   if(ind.moeda){
     const abs=Math.abs(v), neg=v<0;
     const pf=neg?'−R$ ':'R$ ';
-    if(abs>=1e6) return pf+(abs/1e6).toFixed(2).replace('.',',')+'mi';
-    if(abs>=1e3) return pf+(abs/1e3).toFixed(1).replace('.',',')+'mil';
+    if(abs>=1e6) return pf+fmtNum(abs/1e6)+'mi';      // v64: regra única de casas também no mil/mi
+    if(abs>=1e3) return pf+fmtNum(abs/1e3)+'mil';
     return pf+abs.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
   }
-  return v.toLocaleString('pt-BR',{maximumFractionDigits:2});
+  if(/vidas [úÚ]nicas/i.test(ind.label||'')) return Math.round(v).toLocaleString('pt-BR');  // pessoas: média do período em inteiro
+  return fmtNum(v);
 }
 
 // Rótulo curto pro eixo Y — casas decimais vêm do passo da escala (ver niceScale), nunca fixo
@@ -1330,6 +1658,7 @@ function mesesComDado(d){
 // A linha tracejada do gráfico continua sendo a meta MENSAL — o gráfico é mês a mês.
 function metaEfetiva(ind, d, sel){
   if(!d || d.meta===null || d.meta===undefined) return null;
+  if(d._estoque) return d.meta;                    // estoque: compara a posição com a meta, sem acumular
   if(!sel || !cobreTudo(d,sel)) return d.meta;
   if(ind.tipo==='Taxa/%') return d.meta;          // consolidado de % já é média
   const n = mesesComDado(d);
@@ -1356,6 +1685,9 @@ function calcAtt(cur, meta){
 
 function calcCurVal(d, sel){
   if(!d) return null;
+  if(d._estoque){ const s=(!sel||!sel.length)?[...Array(12).keys()]:sel;
+    const u=[...s].reverse().find(i=>d.meses[i]!==null&&d.meses[i]!==undefined&&!isNaN(d.meses[i]));
+    return u===undefined?null:d.meses[u]; }
   if(!sel || sel.length===12) return d.cons;
   if(sel.length===1) return d.meses[sel[0]];
   // Seleção cobrindo tudo que está lançado → CONSOLIDADO da central, não média do navegador.
@@ -1374,23 +1706,30 @@ function deltaTxt(prevV, curV, ind){
   const arrow = diff>0?'▲':(diff<0?'▼':'—');
   const better = ind.invertido ? diff<0 : diff>0;
   if(diff===0) return {arrow:'—', txt:'estável', better:null, zeroBase:prevV===0, pct:0, diff:0};
+  if(ehNPS(ind)) return {arrow, txt:fmtNum(Math.abs(diff))+(Math.abs(diff)===1?' ponto':' pontos'), better, zeroBase:prevV===0, pct:null, diff};
   if(prevV===0){
     const txt = ind.tipo==='Taxa/%'
-      ? Math.abs(diff).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' p.p.'
+      ? fmtNum(Math.abs(diff))+' p.p.'
       : fmtVal(Math.abs(diff), ind);
     return {arrow, txt, better, zeroBase:true, pct:null, diff};
   }
   const m=(diff/Math.abs(prevV))*100;
-  const rel = Math.abs(m).toFixed(1).replace('.',',')+'%';
+  const rel = fmtNum(Math.abs(m))+'%';
   // Taxa/%: a variação vai em PONTOS PERCENTUAIS, com a relativa entre parênteses (v50).
   // 0,3% → 0,1% é "0,2 p.p. (66,7%)": só a relativa soaria como queda de dois terços.
   const txt = ind.tipo==='Taxa/%'
-    ? Math.abs(diff).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' p.p. ('+rel+')'
+    ? fmtNum(Math.abs(diff))+' p.p. ('+rel+')'
     : rel;
   return {arrow, txt, better, zeroBase:false, pct:m, diff};
 }
 
 // Meses consecutivos em zero, olhando para trás a partir de ateIdx (ignora meses sem lançamento).
+// Meses consecutivos COM ocorrência (>0), olhando para trás a partir de ateIdx (ignora meses sem lançamento).
+function streakPos(d, ateIdx){
+  let n=0;
+  for(let i=ateIdx;i>=0;i--){ const v=d.meses[i]; if(v===null||v===undefined||isNaN(v)) continue; if(v>0) n++; else break; }
+  return n;
+}
 function streakZero(d, ateIdx){
   let n=0;
   for(let i=ateIdx;i>=0;i--){
@@ -1401,7 +1740,7 @@ function streakZero(d, ateIdx){
   return n;
 }
 
-function htmlCard(ind){
+function htmlCard(ind, titulo){          // v64: titulo = título do LAYOUT, como no destaque
   const d = getData(ind);
   const sel = getMesesSelecionados();
   const realCount = d ? d.meses.filter(v=>v!==null && v!==undefined && !isNaN(v)).length : 0;
@@ -1427,18 +1766,22 @@ function htmlCard(ind){
       const better=ind.invertido?m<0:m>0;
       const cls=better?'pos':(m===0?'neu':'neg');
       const arr=m>0?'▲':(m<0?'▼':'—');
-      momH=`<div class="ic-delta ${cls}"><span class="dl">MoM</span>${arr} ${Math.abs(m).toFixed(1).replace('.',',')}%</div>`;
+      const dtM=deltaTxt(prev,cur,ind);
+      momH=`<div class="ic-delta ${cls}"><span class="dl">MoM</span>${arr} ${dtM?dtM.txt:''}</div>`;
     } else {
-      momH='<div class="ic-delta neu"><span class="dl">MoM</span>—</div>';
+      momH='';                                   // v64: sem "MoM—"
     }
   } else if(sel.length===12){
     momH='<div class="ic-delta neu"><span class="dl">Período</span>Ano</div>';
   } else {
     const contig = sel.every((v,i)=>i===0||v===sel[i-1]+1);
     const lbl2 = contig ? MESES[sel[0]]+'–'+MESES[sel[sel.length-1]] : sel.length+' meses';
-    const suf = (d && cobreTudo(d,sel)) ? ' (consolidado)' : ' (média)';
+    const suf = d&&d._estoque ? ' (posição no último mês)' : (d && cobreTudo(d,sel)) ? ' (consolidado)' : ' (média)';
     momH=`<div class="ic-delta neu"><span class="dl">Período</span>${lbl2}${suf}</div>`;
   }
+
+  // v64: sem dado no que foi selecionado → diz o último lançamento (ex.: Faturamento em Ago)
+  if(cur===null){ const uL=ultLanc(d); momH = uL!==null ? `<div class="ic-delta neu">Último lançamento: ${MESES[uL]}</div>` : ''; }
 
   // Bloco de valor duplo — v48: vale para QUALQUER seleção (antes, só com 2 meses).
   //   1 mês  → mês anterior  →  mês selecionado
@@ -1448,7 +1791,7 @@ function htmlCard(ind){
   let dualH = '';
   let labelStyleAttr = '';
   if(d && sel && sel.length !== 12 && cur !== null){
-    const mintStyle = 'color:var(--mint);font-weight:500;';
+    const mintStyle = 'color:var(--fg);font-weight:500;';
     labelStyleAttr = ` style="${mintStyle}"`;
     const contiguo = sel.every((v,i)=>i===0||v===sel[i-1]+1);
 
@@ -1460,11 +1803,13 @@ function htmlCard(ind){
       const vEsq   = sel[0]>0 ? d.meses[sel[0]-1] : null;
       const lblEsq = sel[0]>0 ? MESES[sel[0]-1] : '—';
       const eF = fmtVal(vEsq, ind), dF = fmtVal(cur, ind);
-      dualNums = `<span class="ic-dual-prev ${eF?'':'vazio'}">${eF||'&mdash;'}</span>
+      // v64: sem dado no mês anterior, o card não mostra "Mai → Jun" com traço
+      const curS = `<span class="ic-dual-cur ${dF?'':'vazio'}">${dF||'&mdash;'}</span>`;
+      dualNums = eF ? `<span class="ic-dual-prev">${eF}</span>
         <span class="ic-dual-arrow">→</span>
-        <span class="ic-dual-cur ${dF?'':'vazio'}">${dF||'&mdash;'}</span>`;
+        ${curS}` : curS;
       const dt1 = deltaTxt(vEsq, cur, ind);
-      dualSub = `${lblEsq} → ${MESES[sel[0]]}` +
+      dualSub = (eF ? `${lblEsq} → ${MESES[sel[0]]}` : MESES[sel[0]]) +
         (dt1 ? ` <span class="ic-dual-delta" style="color:${corDelta(dt1)}">${dt1.arrow} ${dt1.txt}</span>` : '');
     } else {
       // só os meses selecionados QUE TÊM lançamento entram na progressão
@@ -1492,7 +1837,7 @@ function htmlCard(ind){
           (dtP ? ` <span class="ic-dual-delta" style="color:${corDelta(dtP)}">${dtP.arrow} ${dtP.txt} vs. ${MESES[iAnt]}</span>` : '');
       }
       avgH = `<div class="ic-dual-avg">
-      <div class="ic-avg-label" style="${mintStyle}">${cobreTudo(d,sel)?'consolidado':'média'}</div>
+      <div class="ic-avg-label" style="${mintStyle}">${d&&d._estoque?'último mês':cobreTudo(d,sel)?'consolidado':'média'}</div>
       <div class="ic-avg-value">${vFmt||'&mdash;'}</div>
     </div>`;
     }
@@ -1506,11 +1851,11 @@ function htmlCard(ind){
   </div>`;
   }
 
-  const metaD    = meta!==null    ? fmtVal(meta,ind)||String(meta)          : '—';
-  const metaMesD = metaMes!==null ? fmtVal(metaMes,ind)||String(metaMes)    : '—';
+  const metaD    = meta!==null    ? fmtMeta(meta,ind)||String(meta)          : '—';
+  const metaMesD = metaMes!==null ? fmtMeta(metaMes,ind)||String(metaMes)    : '—';
   // Quando a meta foi acumulada, o rodapé explica a conta em vez de mostrar um número solto.
   const nAcum = (meta!==null && metaMes!==null && meta!==metaMes) ? Math.round(meta/metaMes) : 1;
-  const consTip = ind.tipo==='Taxa/%'
+  const consTip = d&&d._estoque ? 'Indicador acumulado: o valor do período é a posição do último mês lançado, comparada com a meta' : ind.tipo==='Taxa/%'
     ? 'Consolidado do período: vem da coluna CONSOLIDADO da central (média dos meses lançados)'
     : 'Consolidado do período: vem da coluna CONSOLIDADO da central (soma dos meses lançados) — a meta ao lado foi acumulada pelo mesmo número de meses';
   const metaFootD = nAcum>1
@@ -1531,7 +1876,8 @@ function htmlCard(ind){
         txt = n>1 ? `<strong>${n} meses</strong> seguidos sem ocorrência` : `Sem ocorrência em ${MESES_FULL[ult]}`;
       } else {
         const antes = ult>0 ? streakZero(d, ult-1) : 0;
-        txt = `Ocorrência registrada em ${MESES_FULL[ult]}`
+        const sg = streakPos(d, ult);
+        txt = sg>1 ? `<strong>${sg}º mês</strong> seguido com ocorrência` : `Ocorrência registrada em ${MESES_FULL[ult]}`
             + (antes>0 ? `, após <strong>${antes} ${antes>1?'meses':'mês'}</strong> em zero` : '');
       }
       insightH=`<div class="ic-insight ${cls}">${txt}</div>`;
@@ -1597,11 +1943,11 @@ function htmlCard(ind){
       const over = attV>100 ? (attV-100)/MAX*100 : 0;
       const cls = semCls(cur,meta,ind.invertido)||'neu';
       const overCls = isLimite ? 'bad' : 'good';   // passar da meta = bom; passar do limite = ruim
-      const attR   = Math.round(att);
+      const attR   = Math.round(att*10)/10;       // v64: uma casa, o mesmo número do destaque
       const attTxt = isLimite
-        ? (attR <= 100 ? attR+'% do limite' : 'Ultrapassou o limite em '+(attR-100)+'%')
-        : (attR >  100 ? 'Superou a meta em '+(attR-100)+'%'
-                       : (attR === 100 ? 'Meta atingida' : attR+'% da meta'));
+        ? (attR <= 100 ? fmtNum(att)+'% do limite' : 'Ultrapassou o limite em '+fmtNum(att-100)+'%')
+        : (attR >  100 ? 'Superou a meta em '+fmtNum(att-100)+'%'
+                       : (attR === 100 ? 'Meta atingida' : fmtNum(att)+'% da meta'));
       const tip = isLimite
         ? 'Real ÷ Limite — abaixo de 100% está dentro do limite (bom); acima ultrapassa o limite (ruim)'
         : 'Real ÷ Meta — 100% atinge a meta; acima supera a meta (bom)';
@@ -1620,7 +1966,7 @@ function htmlCard(ind){
 
   return `<div class="ind-card" id="card_${ind.id}" onclick="toggleExpand('card_${ind.id}','${ind.id}')">
   <div class="ic-head">
-    <div class="ic-label"${labelStyleAttr}>${ind.label}</div>
+    <div class="ic-label"${labelStyleAttr}>${titulo?escH(titulo):ind.label}</div>
     <div style="display:flex;align-items:center;gap:6px;">
       ${(d && sel.length>1 && cobreTudo(d,sel)) ? '<span class="cons-badge" title="'+consTip+'">'+(sel.length===12?'ANO':'PERÍODO')+'</span>' : ''}
       <div class="semaforo ${sc}" title="${sc||'sem meta'}"></div>
@@ -1691,7 +2037,7 @@ function buildOneChart(ind, expanded){
   const vals = popIdx.map(i=>allVals[i]);
   const bgColors = popIdx.map(i=> isSelIdx(i)?col:colFade);   // barras
   const ptRadius = popIdx.map(i=> isSelIdx(i)?4.5:2);         // pontos (linha)
-  const ptColors = popIdx.map(i=> isSelIdx(i)?C.mint:col);    // cor do ponto
+  const ptColors = popIdx.map(i=> isSelIdx(i)?'#E0EEE7':col);   // v66-C3: ponto selecionado navy cheio    // cor do ponto
 
   // Rótulos nos pontos/barras: sempre visíveis
   const showLabels = true;
@@ -1699,9 +2045,9 @@ function buildOneChart(ind, expanded){
   const metaVal = d ? d.meta : null;
   const metaDataset = metaVal !== null ? [{
     data: labels.map(()=>metaVal),
-    borderColor:'rgba(168,204,168,0.6)',
-    borderWidth:1.5,
-    borderDash:[5,4],
+    borderColor:'rgba(224,238,231,0.9)',   // v66-B: meta navy forte sobre o card claro
+    borderWidth:2,
+    borderDash:[6,4],
     pointRadius:0,pointHoverRadius:0,
     fill:false,tension:0,spanGaps:true,clip:false,type:'line',
     // Dentro do gráfico só entram os valores do próprio dado. A tracejada é nomeada na
@@ -1745,12 +2091,12 @@ function buildOneChart(ind, expanded){
               if(!chartArea) return colFade;
               const g = cx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
               g.addColorStop(0, colFade);
-              g.addColorStop(1, 'rgba(127,160,220,0.02)');
+              g.addColorStop(1, 'rgba(143,178,240,0.03)');
               return g;
             }
           : bgColors,
         maxBarThickness: expanded?96:64,   // em tela cheia, 2 barras não viram duas lajes
-        borderWidth:type==='line'?1.8:0,
+        borderWidth:type==='line'?3:0,
         fill:type==='line',
         tension:0,   // v50: reta entre pontos — a curva sugeria valores intermediários que não existem
         pointRadius: type==='line'?ptRadius:0,
@@ -1761,8 +2107,8 @@ function buildOneChart(ind, expanded){
         clip: false,
         datalabels: {
           display:(ctx)=> (isSelIdx(popIdx[ctx.dataIndex]) && (sel.length<=4 || sel.length===12)) ? 'auto' : false,
-          color:'rgba(224,238,231,0.95)',
-          font:{size:expanded?14:12,weight:'700',family:'Montserrat'},
+          color:'#E0EEE7',
+          font:{size:expanded?16:14,weight:'800',family:'Montserrat'},
           anchor:type==='bar'?'end':'top',
           align:'top',
           offset:6,
@@ -1787,12 +2133,12 @@ function buildOneChart(ind, expanded){
               const v=c.raw;
               const linhas=[' Valor: '+fmtVal(v,ind)];
               if(meta!==null){
-                linhas.push((ind.invertido?' Limite:':' Meta:  ')+fmtVal(meta,ind));
+                linhas.push((ind.invertido?' Limite:':' Meta:  ')+fmtMeta(meta,ind));
                 const dist=ind.tipo==='Taxa/%'
-                  ?(v-meta).toFixed(1).replace('.',',')+'pp'
+                  ?fmtNum(v-meta)+' p.p.'
                   :(meta===0
                       ? fmtVal(v-meta,ind)                                        // meta zero: diferença absoluta
-                      : ((v-meta)/Math.abs(meta)*100).toFixed(1).replace('.',',')+'%');
+                      : fmtNum((v-meta)/Math.abs(meta)*100)+'%');
                 const sinal=v>=meta?'+':'';
                 linhas.push(' Dist.: '+(sinal+dist));
               }
@@ -1807,8 +2153,8 @@ function buildOneChart(ind, expanded){
           offset:true,                 // meia categoria de folga nas pontas: o dado nunca encosta na moldura
           grid:{display:false},
           ticks:{
-            color:'rgba(224,238,231,0.4)',
-            font:{size:10.5,family:'Montserrat'},
+            color:'#E0EEE7',
+            font:{size:13,weight:'600',family:'Montserrat'},
             maxRotation:0
           },
           border:{display:false}
@@ -1820,8 +2166,8 @@ function buildOneChart(ind, expanded){
           border:{display:false},
           ticks:{
             stepSize:yStep,
-            color:'rgba(224,238,231,0.4)',
-            font:{size:10.5,family:'Montserrat'},
+            color:'#E0EEE7',
+            font:{size:13,weight:'600',family:'Montserrat'},
             padding:4,
             callback:(v)=>fmtAxisTick(v,ind,yDecimals)
           }
@@ -1833,6 +2179,565 @@ function buildOneChart(ind, expanded){
 
 // PRODUÇÃO — boot() só é chamado após login Google + leitura OK da planilha (ver tryLoadAndEnter).
 // Refresh automático a cada 5 min enquanto autenticado (ver fetchSheet).
+</script>
+<script>
+const LOGO_AHCROS = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAABgCAMAAAB4x5+jAAABgFBMVEUGoOIjo5f2bSEHZ8sKE6jg8OAd0vMRS7nsmFP4iCef2dQy1LNSzrfs5rGl6OrdzqvMtYh9//1Or6bmpnLStYwBBl3YuJBQ0dvY5tUVF4Rt0dBfq6contHcyKAA//9VYKxdqK+kp6tnpMoAAP8xyeRDTa9QptNlyLmbq7KUrdHqnWj//wB/f39/f/9t1NCSssiP1dH/f39kordunMXy+X/ysq7VwpNWZ6in96+HxbsAf392nc5d8q6xYxW4cWaopJf/AADvd0YYf34/v78A/wBkW52qqmq9q4eByr7dZzn/qlU8HnkAVaopdbwAf/8ufMI9uqp/fwBNesJmmTN//39ywbuA2Mj/fz/neEvUqirijcYAAAACyvP1gyMuyaz9/v0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwBXmrAAAAYHRSTlP9/f79/CH59+H8Vf7sGiZZ6ALenpkIZd9SNp6bg5kBqAkTmAGKy9KlVSBqAQICaWKYAmF7BAzUCgRlAiMEAwWeAd7+BAFmBNiNUQNUA4ICg6MCmAUCeMgEmQYJAP7+/ge/r0ncAAAGnklEQVR42qWZB3vaSBCGJcQiIVABZCD4wGAftnF3bKfXSy6X670OMP//X9xskbSSsS3BPk9sAuLNN9/MbIsBD40WsAs2wgeeMh7CfADW/IyvYEPOGPx2G3/FDTljcNvmc/q1GWdMQZlths/2kAYA4lqcFseY2/pbuAYHX2BzaS7/ZAwZDS4JJ1ieM8bPS9M0XbZv8GFXq9MdtleaI6Mie84ti3OqfOzg6tDu4UzgwOQcfKxxqhM4LcXBN1IOca4sAZKcR7BVhnMJLXbA3TGbsKtztkpxJm9YZyjk5Dml9NwAcxxXYKQ/lsxXSc41sPeV7tlSgtbmXJKaioPbEmP6E0uArJKcS0CnUulgW2KWrmevw0HwCVPxWMw5Q1szujDnbzZcEIf1VVjLA9hZh8OCOmGcfj/W04QrzeiCHDxmDud0+oHSYzbxUDO6IOcSgjrnHKWcxGijOOf4E8nh9nyrcQ5wWpbj+X2uhjhB8EvMacadahXmvIbOgsupHAXBY4Uxm75nJYIKcY6pBOuK0z1TnOVyEGfeLshB3hGC0/EjP8ZQYOdWPJfdNW9ga9ySY9waTyhbkvOPH8rGIAxljNmSY1Uf7W2dnJ6cnJy2Tkf0o3Uq16J83o8W0h8HQ7atCdqVHKO6Qs1PnOO7fjrcUcx5j1HXTTkuk4HNre9nT8cvX85mM382fsm/w9j1GMH4sibGfD6vzWs9PFpInyus+zYJbEk9pgTN5Sxk27w05Vv7F+zjiDjzdHCOEhR4IR5ogjxDctT0qjgy2B6bZDk17NbrktPBsJtmjARdye9IUAZjGAN2i0NxiYp2IHoL7RQUCzJqvKoVJubM3ZhDrznH9yjvyiAvvEmd5jWkvlOz83KM+UByxGvOcXkdSs4RhBGmghoXuKs4Rh7D3yOOes05Z7wvVAVBN/Sea4IYU88RaAVnbmicASScSoDhoeZQYwBX6rmakcPQO19kOD3sxImvdCD6BnSH5AZG2Jl1R3C0v/GEBfVY0HtyuqsLaqKrCzJWcyRIGp0KQk0QRTaIhRsZzC1OxiCHMRK0rUeG++rfmxv3ckRgiaAIopCxtp6zfvxc7ms5DlUm5gU9z0R2ofTU7uCQb6Iie9CppykbdXOCXNaLm0jDJByRxhr/rKY7XQmoqFXuVc6YW7uTo6pTfrYrS0hF5nfDALezOdNB85RjxcOQH/V1QV0Ic5H5SWQPcHZBCKorq70wiCNrcEE90CKbpxwrHSpmn6Up4wtQyLS+X/Zc7EkQdfhqjiE5++RQCgrQiVAXpFmdToDGz5YOksOVguIiCkJPVbUEuV6vdovzo4axFWdfL+pK1MpXNbq3Obs6JwapolaCvJtwCI9TQTWtGBPOuY6xVWT7TBfk+FlBjSac1fIc1Ch2ImgXnLQYKxGmVd0QNeTf4sB5CrFpJZBtYrBMZIxXdWaKzTldM2bsPJHDVzi5rbD2oatFRotiqAmimXGQ53hPwf/NshNFKjLrXBe0oFVaF8RLKDN6tG/5gfbMzPP4UVb+ZKzftwwMRJupyDAK/UPJ4YLO1INq9Bnf/5xu/X6d7OzkK9oQXul9X4lYIohzDnKHVD/eR+3t4Yj/pD+IrRHf7jCWETQMMZkZqTdoA8fP4TPkv+84f42Ac9q0+UgVdRJBFBjnZBSNVnJQcKzDjNUsCoE7ZPPAmj4dpx88DyrOVLWZJig2qOnCSRGOJwrqbWaKZVEk2170fJHzqdDDi7vfTyNbdFnIZilnVFSPuIWQguKtsHRarD/wrMC5+6NXFZwq02a0RRA8kYE1ivtMW0BxLQJRomfRYU88moa+MhvUYMX88apqTLTcO0xsYSXnRTnODkbJnL9gwyGIQqSJ40M5TvUw7Y5Flwxq26aw2S/J2UlriBvEjebzT/426UFOdZKuig57wtd6HtYLKMvZSbeeVNIe5zQZtEpzqunWk2YzwRncwtzBOdY5Xyc7NIcNibNcIeeeOkzGNAmMOORP4wL+KHgftaVzql48fXBOu9Fbdfu7mvMUDm8HtqgT5z+ztyKqO+/ZEA93+OFxOp3aU5Wx+qLTD8561OmjUveQqG53kcGQ90a93u17f13Aq1L3kE+TA/bWJ3GqX1TqtGhdYOtkrXt1mT5eQWQPPFvn3jge76AlfI74WoPrc9TtCck5hk308NsTEtSByw3+3yHmkJx3G3IoGvK5A9/BxnpIDl5eb8i59oJFPbhXTiHOv/6w3oEb2JTzuuU4/ut3m3IQ+MEAYVPODQR9ePPAQ/8Dt0DqNApdWv4AAAAASUVORK5CYII=";
+// ===== v51 — REFORMULAÇÃO: Resumo da direção · aba LAYOUT · aba BRUTOS =====
+// Metadado de organização fica FORA do AREAS (vem da aba LAYOUT; se ela não existir, do padrão abaixo).
+// Dados brutos vêm da aba BRUTOS (gerada pelo brutosLayout_v63.gs). A Página1 (contrato A–Q) não muda.
+const LAYOUT_RANGE = 'LAYOUT!A1:I400';
+const BRUTOS_RANGE = 'BRUTOS!A1:R900';
+const LAYOUT_PADRAO = [["BRUTO", "Produção", "Nº total de atendimentos", "Atendimentos no mês", "RESUMO", "1", "volume", "", ""], ["BRUTO", "Produção", "Contagem distinta de pacientes únicos atendidos no mês", "Vidas únicas (pacientes distintos)", "RESUMO", "2", "volume", "", ""], ["BRUTO", "Produção", "Nº de saídas hospitalares", "Saídas hospitalares (altas, óbitos e transferências)", "RESUMO", "3", "volume", "", ""], ["BRUTO", "Produção", "Pacientes-dia no período", "Pacientes-dia", "RESUMO", "4", "volume", "", ""], ["BRUTO", "Produção", "Nº total de agendamentos", "Consultas agendadas", "RESUMO", "5", "volume", "", ""], ["INDICADOR", "Sanificação", "Taxa de Cumprimento do Cronograma de Limpezas (%)", "Cumprimento do cronograma", "Qualidade", "10", "card", "SIM", ""], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Crítica / Limpeza Concorrente (%)", "", "Qualidade", "20", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Crítica / Limpeza Terminal (%)", "", "Qualidade", "21", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Semicrítica / Limpeza Concorrente (%)", "", "Qualidade", "22", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Semicrítica / Limpeza Terminal (%)", "", "Qualidade", "23", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Não Crítica / Limpeza Concorrente (%)", "", "Qualidade", "24", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Não Crítica / Limpeza Terminal (%)", "", "Qualidade", "25", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Taxa de não conformidades CCIH (%)", "Não conformidades CCIH", "Qualidade", "30", "card", "SIM", ""], ["INDICADOR", "Sanificação", "% equipe treinada (%)", "Equipe treinada", "Equipe", "40", "card", "SIM", ""], ["INDICADOR", "Sanificação", "Custo por Dia — Total do Setor Higienização e Lavanderia Hospitalar (R$)", "Total do setor", "Custo", "50", "colunas", "SIM", "Custo por dia"], ["INDICADOR", "Sanificação", "Custo por Dia — Limpeza (R$)", "Limpeza", "Custo", "51", "colunas", "", "Custo por dia"], ["INDICADOR", "Sanificação", "Custo por Dia — Lavanderia (R$)", "Lavanderia", "Custo", "52", "colunas", "", "Custo por dia"], ["INDICADOR", "Sanificação", "% Custo Limpeza (%)", "Limpeza", "Custo", "60", "composicao", "", "Divisão do custo do setor"], ["INDICADOR", "Sanificação", "% Custo Lavanderia (%)", "Lavanderia", "Custo", "61", "composicao", "", "Divisão do custo do setor"], ["INDICADOR", "Sanificação", "Custo Total do Setor de Higienização e Lavanderia Hospitalar (R$)", "Total do setor", "Custo", "45", "colunas", "", "Custo total do setor"], ["INDICADOR", "Recepção", "Taxa de cadastros incorretos (%)", "Cadastros incorretos", "Atendimento", "10", "card", "", ""], ["INDICADOR", "Recepção", "Tempo Médio de Espera — Médico (Emergência) (min)", "Tempo de espera — médico (emergência)", "Atendimento", "20", "card", "SIM", ""], ["INDICADOR", "Recepção", "Taxa de Desistência na Fila (Emergência) (%)", "Desistência na fila (emergência)", "Atendimento", "30", "card", "SIM", ""], ["INDICADOR", "Recepção", "Taxa de Confirmação no 1º Contato (%)", "Confirmação no 1º contato", "Atendimento", "40", "card", "", ""], ["INDICADOR", "Recepção", "Volume de Atendimento — Turno da Manhã", "Manhã", "Volume", "50", "colunas_total", "", "Atendimentos por turno"], ["INDICADOR", "Recepção", "Volume de Atendimento — Turno da Tarde", "Tarde", "Volume", "60", "colunas_total", "", "Atendimentos por turno"], ["INDICADOR", "Recepção", "Volume de Atendimento — Consultório Externo", "Atendimentos — consultório externo", "Volume", "70", "card", "", ""], ["INDICADOR", "Recepção", "Consultas Particulares Agendadas — Recepção Principal", "Consultas particulares agendadas", "Volume", "80", "card", "", ""], ["INDICADOR", "Recepção", "N° de Exames Agendados — Recepção Centro de Diagnóstico", "Exames agendados — centro de diagnóstico", "Volume", "90", "card", "", ""], ["INDICADOR", "Recepção", "% Atendimentos por Convênio — SUS (%)", "SUS", "Convênios", "100", "composicao", "", "Atendimentos por convênio"], ["INDICADOR", "Recepção", "% Atendimentos por Convênio — Particular (%)", "Particular", "Convênios", "110", "composicao", "", "Atendimentos por convênio"], ["INDICADOR", "Recepção", "% Atendimentos por Convênio — Outros Convênios (%)", "Outros convênios", "Convênios", "120", "composicao", "", "Atendimentos por convênio"], ["INDICADOR", "Enfermagem", "Taxa de erros de medicação na internação (%)", "Erros de medicação", "Indicadores", "10", "card", "SIM", ""], ["INDICADOR", "Enfermagem", "Taxa de IRAS (%)", "IRAS", "Indicadores", "20", "card", "SIM", ""], ["INDICADOR", "Enfermagem", "Taxa de quedas (%)", "Quedas", "Indicadores", "30", "card", "", ""], ["INDICADOR", "Enfermagem", "Taxa de lesões por pressão (%)", "Lesões por pressão", "Indicadores", "40", "card", "", ""], ["INDICADOR", "Enfermagem", "Nº de reclamações formais", "Reclamações formais", "Indicadores", "50", "card", "", ""], ["INDICADOR", "Farmácia", "Acurácia de estoque (%)", "Acurácia de estoque", "Controle do estoque", "10", "card", "SIM", ""], ["INDICADOR", "Farmácia", "% itens fora dos níveis (%)", "Itens fora dos níveis", "Controle do estoque", "20", "card", "", ""], ["INDICADOR", "Farmácia", "Giro de estoque (vezes)", "Giro de estoque", "Valor e giro", "30", "card", "", ""], ["INDICADOR", "Farmácia", "Taxa ajustes negativos (%)", "Ajustes negativos", "Controle do estoque", "40", "card", "", ""], ["INDICADOR", "Farmácia", "% perdas vencimento/extravios (%)", "Perdas por vencimento/extravio", "Controle do estoque", "50", "card", "", ""], ["INDICADOR", "Farmácia", "Valor total estoque (R$)", "Valor total do estoque", "Valor e giro", "60", "card", "", ""], ["INDICADOR", "Farmácia", "Valor total de notas - compras (R$)", "Compras (notas fiscais)", "Valor e giro", "70", "card", "", ""], ["INDICADOR", "Farmácia", "% contas sem divergência (%)", "Contas sem divergência", "Lançamento e contas", "80", "card", "SIM", ""], ["INDICADOR", "Farmácia", "% de Atendimentos com erro no lançamento (%)", "Atendimentos com erro no lançamento", "Lançamento e contas", "90", "card", "", ""], ["INDICADOR", "Farmácia", "Perdas por não lançamentos (R$)", "Perdas por não lançamento", "Lançamento e contas", "100", "card", "SIM", ""], ["INDICADOR", "Faturamento", "Taxa de Glosa Inicial (%)", "Glosa inicial", "Glosa", "10", "card", "SIM", ""], ["INDICADOR", "Faturamento", "% metas SUS atingidas (%)", "Metas SUS atingidas", "Faturamento e SUS", "20", "card", "SIM", ""], ["INDICADOR", "Faturamento", "Valor Financeiro Glosado (R$)", "Valor glosado", "Glosa", "30", "card", "", ""], ["INDICADOR", "Faturamento", "% faturamentos no prazo (%)", "Faturamentos no prazo", "Faturamento e SUS", "40", "card", "", ""], ["INDICADOR", "Faturamento", "% de AIHs Canceladas (%)", "AIHs canceladas", "Faturamento e SUS", "50", "card", "", ""], ["INDICADOR", "Faturamento", "% de Serviços Pactuados Abaixo da Meta — leitura trimestral (%)", "Serviços pactuados abaixo da meta (trimestral)", "Faturamento e SUS", "60", "card", "", ""], ["INDICADOR", "Nutrição", "% Amostras microbiológicas OK (%)", "Amostras microbiológicas OK", "Qualidade e perdas", "10", "card", "", ""], ["INDICADOR", "Nutrição", "% Itens vencidos sobre estoque (%)", "Itens vencidos sobre o estoque", "Qualidade e perdas", "20", "card", "", ""], ["INDICADOR", "Nutrição", "Perdas por Vencimento (R$)", "Perdas por vencimento", "Qualidade e perdas", "30", "card", "", ""], ["INDICADOR", "Nutrição", "Custo por refeição (R$)", "Custo por refeição", "Custo e volume", "40", "card", "SIM", ""], ["INDICADOR", "Nutrição", "Custo por paciente / alimentação (R$)", "Custo por paciente (alimentação)", "Custo e volume", "50", "card", "SIM", ""], ["INDICADOR", "Nutrição", "% Custo de Refeições sobre Compras (%)", "Custo de refeições sobre compras", "Custo e volume", "60", "card", "", ""], ["INDICADOR", "Nutrição", "Custo Compras Nutrição (R$)", "Compras da nutrição", "Custo e volume", "70", "card", "", ""], ["INDICADOR", "Nutrição", "Nº Refeições Pacientes", "Refeições servidas", "Custo e volume", "80", "razao", "", "Refeições por paciente-dia"], ["INDICADOR", "Radiologia", "% Laudos dentro do SLA (%)", "Laudos dentro do SLA", "Qualidade", "10", "card", "SIM", ""], ["INDICADOR", "Radiologia", "TAT médio exame → laudo (horas)", "Tempo exame → laudo", "Qualidade", "20", "card", "SIM", ""], ["INDICADOR", "Radiologia", "Taxa de Retrabalho (%)", "Retrabalho", "Qualidade", "30", "card", "", ""], ["INDICADOR", "Radiologia", "Taxa de Cancelamento por Preparo Inadequado (%)", "Cancelamento por preparo inadequado", "Qualidade", "40", "card", "", ""], ["INDICADOR", "Radiologia", "Taxa de Utilização da Capacidade de Exames (%)", "Utilização da capacidade", "Capacidade e custo", "50", "card", "SIM", ""], ["INDICADOR", "Radiologia", "Produtividade por Equipamento (exames/equip.)", "Exames por equipamento", "Capacidade e custo", "60", "card", "", ""], ["INDICADOR", "Radiologia", "Receita por Exame — Ticket Médio (R$)", "Ticket médio por exame", "Capacidade e custo", "70", "card", "", ""], ["INDICADOR", "Radiologia", "% Horas Extras sobre a Folha da Radiologia (%)", "Horas extras sobre a folha", "Capacidade e custo", "80", "card", "", ""], ["INDICADOR", "RH", "Taxa de Absenteísmo (%)", "Absenteísmo", "Pessoas", "10", "card", "SIM", ""], ["INDICADOR", "RH", "Custo Absenteísmo (R$)", "Custo do absenteísmo", "Pessoas", "20", "card", "", ""], ["INDICADOR", "RH", "Taxa de Turnover (%)", "Turnover", "Pessoas", "30", "card", "SIM", ""], ["INDICADOR", "RH", "Rotatividade Voluntária (%)", "Rotatividade voluntária", "Pessoas", "40", "card", "", ""], ["INDICADOR", "RH", "Nº de Admissões", "Admissões", "Pessoas", "50", "colunas", "", "Admissões e desligamentos"], ["INDICADOR", "RH", "Nº de Desligamentos", "Desligamentos", "Pessoas", "60", "colunas", "", "Admissões e desligamentos"], ["INDICADOR", "RH", "Taxa Afastamentos Saúde (%)", "Afastamentos por saúde", "Pessoas", "70", "card", "", ""], ["INDICADOR", "RH", "Taxa Participação Capacitações (%)", "Participação em capacitações", "Capacitação", "80", "card", "SIM", ""], ["INDICADOR", "RH", "Satisfação Treinamentos (média 1-5)", "Satisfação com treinamentos", "Capacitação", "90", "card", "", ""], ["INDICADOR", "RH", "Satisfação Emergência (média)", "Emergência", "Pesquisa de satisfação", "100", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "Satisfação Internação (média)", "Internação", "Pesquisa de satisfação", "110", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "Satisfação Enfermagem (média)", "Enfermagem", "Pesquisa de satisfação", "120", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "Satisfação Nutrição (média)", "Nutrição", "Pesquisa de satisfação", "130", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "NPS Nutrição (% prom − % detr)", "NPS nutrição", "Pesquisa de satisfação", "140", "card", "", ""], ["INDICADOR", "RH", "% Respondentes — Enfermagem (%)", "Respondentes — enfermagem", "Pesquisa de satisfação", "150", "card", "", ""], ["INDICADOR", "RH", "% Participação — Amb. Indígena (%)", "Amb. Indígena", "Pesquisa de satisfação", "160", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Dermatologia (%)", "Dermatologia", "Pesquisa de satisfação", "170", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Emergência (%)", "Emergência", "Pesquisa de satisfação", "180", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Internações (%)", "Internações", "Pesquisa de satisfação", "190", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Neurologia (%)", "Neurologia", "Pesquisa de satisfação", "200", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "Gestão", "% Projetos aprovados (%)", "Projetos aprovados", "Indicadores", "10", "card", "SIM", ""], ["INDICADOR", "Gestão", "Nº Projetos Submetidos", "Submetidos", "Indicadores", "20", "colunas", "", "Projetos submetidos e aprovados"], ["INDICADOR", "Gestão", "Nº Projetos Aprovados", "Aprovados", "Indicadores", "30", "colunas", "", "Projetos submetidos e aprovados"], ["INDICADOR", "Gestão", "Nº Especialidades Médicas Ativas", "Especialidades médicas ativas", "Indicadores", "40", "card", "", ""], ["INDICADOR", "Gestão", "% Colaboradores treinados LGPD (%)", "Colaboradores treinados em LGPD", "Indicadores", "50", "oculto", "", ""], ["INDICADOR", "Gestão", "Valor Investido Equipamentos (R$)", "Investimento em equipamentos", "Indicadores", "60", "card", "", ""], ["INDICADOR", "Produção", "Taxa de Ocupação dos Leitos (%)", "Ocupação dos leitos", "Internação", "10", "card", "SIM", ""], ["INDICADOR", "Produção", "TMP (dias)", "Tempo médio de permanência", "Internação", "20", "card", "", ""], ["INDICADOR", "Produção", "% Utilização Bloco Cirúrgico (%)", "Utilização do bloco cirúrgico", "Internação", "30", "card", "", ""], ["INDICADOR", "Produção", "Taxa de No-Shows (%)", "Faltas às consultas (no-show)", "Agendas", "75", "card_largo", "SIM", ""], ["INDICADOR", "Produção", "Participação Regional (%)", "Participação regional", "Abrangência", "50", "card", "", ""], ["INDICADOR", "Produção", "Vidas Únicas Atendidas", "Vidas únicas atendidas", "Abrangência", "60", "card", "", ""], ["INDICADOR", "Produção", "Taxa Ocupação Agenda Global (%)", "Ocupação global das agendas", "Agendas", "70", "card_largo", "SIM", ""], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Cardiologia (%)", "Cardiologia", "Agendas", "80", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Psicologia (%)", "Psicologia", "Agendas", "90", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Dermatologia 1 (%)", "Dermatologia 1", "Agendas", "100", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Dermatologia 2 (%)", "Dermatologia 2", "Agendas", "110", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Vascular (%)", "Vascular", "Agendas", "120", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Eletroneuromiografia (%)", "Eletroneuromiografia", "Agendas", "130", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Fonoaudiologia (%)", "Fonoaudiologia", "Agendas", "140", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Otorrinolaringologia (%)", "Otorrinolaringologia", "Agendas", "150", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Urologia (%)", "Urologia", "Agendas", "160", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Reumatologia (%)", "Reumatologia", "Agendas", "170", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Psiquiatria (%)", "Psiquiatria", "Agendas", "180", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Traumatologia 1 (%)", "Traumatologia 1", "Agendas", "190", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Traumatologia 2 (%)", "Traumatologia 2", "Agendas", "200", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Neurologia (%)", "Neurologia", "Agendas", "210", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Pediatria (%)", "Pediatria", "Agendas", "220", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Oftalmologia (%)", "Oftalmologia", "Agendas", "230", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Geriatria (%)", "Geriatria", "Agendas", "240", "ranking", "", "Ocupação das agendas por especialidade"]];
+document.querySelectorAll('img[data-logo]').forEach(i=>{ i.src=LOGO_AHCROS; });
+const EXT = { layout:null, layoutOrigem:'', brutos:[], brutosOrigem:'', subaba:{} };
+
+// Checagens de consistência entre brutos. A frase só aparece se a regra for violada pelos números.
+const CHECAGENS = [
+  { a:['Produção','Contagem distinta de pacientes únicos atendidos no mês'],
+    b:['Produção','Nº total de atendimentos'],
+    msg:(va,vb,m)=>`Em ${m}, vidas únicas (${nf(va,0)}) superam o total de atendimentos (${nf(vb,0)}). Pacientes distintos não podem passar do total se o universo for o mesmo: os dois números têm escopos diferentes no Sishosp.` }
+];
+
+function nf(v,dec){            // v64: dec 0 = contagem inteira; qualquer outro caso segue a regra única (fmtNum)
+  if(v===null||v===undefined||isNaN(v)) return '—';
+  if(dec===0) return v.toLocaleString('pt-BR',{maximumFractionDigits:0});
+  return fmtNum(v);
+}
+function nfEixo(v,dec){        // rótulo de eixo: casas do passo da escala, fora da regra de exibição
+  if(v===null||v===undefined||isNaN(v)) return '—';
+  return v.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:(dec===undefined?1:dec)});
+}
+function escH(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function parseLayout(rows){
+  const out=[];
+  (rows||[]).forEach(r=>{
+    const f=(r[0]||'').trim().toUpperCase();
+    if(f!=='INDICADOR' && f!=='BRUTO') return;          // pula cabeçalho e linhas vazias
+    out.push({ fonte:f, area:(r[1]||'').trim(), rotulo:(r[2]||'').trim(), titulo:(r[3]||'').trim(),
+      subaba:(r[4]||'').trim()||'Outros', ordem:parseNum(r[5])??999, visual:(r[6]||'card').trim().toLowerCase(),
+      destaque:/^s/i.test((r[7]||'').trim()), grupo:(r[8]||'').trim() });
+  });
+  return out;
+}
+function parseBrutos(rows){
+  const out=[];
+  (rows||[]).forEach(r=>{
+    const dado=(r[1]||'').trim();
+    if(!dado || dado.toUpperCase()==='DADO') return;
+    const meses=[]; for(let c=4;c<=15;c++) meses.push(parseNum(r[c]));
+    out.push({ area:(r[0]||'').trim(), dado, alimenta:(r[2]||'').trim(),
+      consolida:((r[3]||'SOMA').trim().toUpperCase()), meses, cons:parseNum(r[16]) });
+  });
+  return out;
+}
+
+// ---- Leitura das abas extras (só no modo ao vivo) ----
+async function lerAbaExtra(range){
+  const url='https://sheets.googleapis.com/v4/spreadsheets/'+SHEET_ID+'/values/'+encodeURIComponent(range)+'?t='+Date.now();
+  const res=await fetch(url,{ headers:{'Authorization':'Bearer '+ACCESS_TOKEN}, cache:'no-store' });
+  if(res.ok){ const j=await res.json(); return { rows:j.values||[] }; }
+  let msg='HTTP '+res.status;
+  try{ const j=await res.json(); if(j&&j.error&&j.error.message) msg+=' — '+j.error.message; }catch(_e){}
+  return { erro:msg, ausente: res.status===400 && /parse range/i.test(msg) };
+}
+async function carregarExtras(){
+  const [lay,bru]=await Promise.all([lerAbaExtra(LAYOUT_RANGE), lerAbaExtra(BRUTOS_RANGE)]);
+  if(lay.rows && parseLayout(lay.rows).length){ EXT.layout=parseLayout(lay.rows); aplicarOcultos(); EXT.layoutOrigem='aba LAYOUT da central'; }
+  else { EXT.layout=parseLayout(LAYOUT_PADRAO); aplicarOcultos();
+    EXT.layoutOrigem = lay.ausente ? 'padrão embutido (a aba LAYOUT ainda não existe)'
+                     : lay.erro ? 'padrão embutido (erro ao ler LAYOUT: '+lay.erro+')' : 'padrão embutido (aba LAYOUT vazia)'; }
+  if(bru.rows){ EXT.brutos=parseBrutos(bru.rows); EXT.brutosOrigem='aba BRUTOS da central'; }
+  else { EXT.brutos=[]; EXT.brutosOrigem = bru.ausente ? 'a aba BRUTOS ainda não existe' : 'erro ao ler BRUTOS: '+bru.erro; }
+}
+const _fetchSheetBase = fetchSheet;
+fetchSheet = async function(){
+  await _fetchSheetBase();
+  if(ST.error) return;
+  try{ await carregarExtras(); }
+  catch(e){ EXT.layout=parseLayout(LAYOUT_PADRAO); aplicarOcultos(); EXT.layoutOrigem='padrão embutido'; EXT.brutos=[];
+            EXT.brutosOrigem='erro ao ler BRUTOS: '+(e&&e.message?e.message:e); }
+  if(appEntered) renderMain();
+};
+
+// ---- Ligações ----
+function indPorRotulo(rotulo){
+  const s=slug(rotulo);
+  for(const area of AREAS) for(const ind of area.indicadores)
+    if(ind.id===s || slug(ind.label)===s) return { area, ind };
+  return null;
+}
+// v65: LAYOUT com visual "oculto" tira o indicador do dashboard (a planilha continua medindo).
+function aplicarOcultos(){
+  const oc=new Set((EXT.layout||[]).filter(e=>e.fonte==='INDICADOR'&&e.visual==='oculto').map(e=>slug(e.rotulo)));
+  AREAS.forEach(a=>{ if(!a._todos) a._todos=a.indicadores.slice(); a.indicadores=a._todos.filter(i=>!oc.has(i.id)&&!oc.has(slug(i.label))); });
+}
+function layoutDaArea(area){
+  if(!EXT.layout) return null;
+  const ents=EXT.layout.filter(e=>e.fonte==='INDICADOR'&&e.visual!=='oculto').map(e=>{ const h=indPorRotulo(e.rotulo); return h&&h.area.id===area.id ? {...e, ind:h.ind} : null; }).filter(Boolean);
+  if(!ents.length) return null;
+  const noLayout=new Set(ents.map(e=>e.ind.id));
+  area.indicadores.forEach((ind,i)=>{ if(!noLayout.has(ind.id)) ents.push({fonte:'INDICADOR',area:area.label,rotulo:ind.label,titulo:'',subaba:'Outros',ordem:9000+i,visual:'card',destaque:false,grupo:'',ind}); });
+  return ents.sort((a,b)=>a.ordem-b.ordem);
+}
+function tituloEnt(e){ return e.titulo || e.ind.label.replace(/\s*\((%|R\$|min|dias|horas|vezes)\)\s*$/,''); }
+function brutoPor(area,dado){ const a=slug(area), d=slug(dado); return EXT.brutos.find(b=>slug(b.area)===a && slug(b.dado)===d) || null; }
+function brutosDoInd(ind){ const s=ind.id, l=slug(ind.label); return EXT.brutos.filter(b=>{ const x=slug(b.alimenta); return x && (x===s||x===l); }); }
+function ehComposicao(ind){ const e=EXT.layout&&EXT.layout.find(x=>x.fonte==='INDICADOR'&&slug(x.rotulo)===slug(ind.label)); return !!(e&&e.visual==='composicao'); }
+
+function periodoLbl(sel){
+  // v64: o texto escreve os meses ("Jun–Ago"), nunca "período completo"
+  if(sel.length===1) return MESES[sel[0]];
+  const contiguo=sel.every((v,i)=>i===0||v===sel[i-1]+1);
+  return contiguo ? MESES[sel[0]]+'–'+MESES[sel[sel.length-1]] : sel.length+' meses';
+}
+function leitura(ind,sel){
+  const d=getData(ind); if(!d) return {d:null,cur:null,meta:null,sc:'sem'};
+  const cur=calcCurVal(d,sel), meta=metaEfetiva(ind,d,sel);
+  return { d, cur, meta, sc: semCls(cur,meta,ind.invertido)||'sem' };
+}
+function valBruto(b,sel){
+  const vs=sel.map(i=>b.meses[i]).filter(v=>v!==null&&v!==undefined&&!isNaN(v));
+  if(!vs.length) return {v:null,rot:''};
+  if(sel.length===1) return {v:vs[0],rot:''};
+  const r=b.consolida;
+  if(r==='MÉDIA'||r==='MEDIA') return {v:vs.reduce((s,x)=>s+x,0)/vs.length,rot:'média'};
+  if(r==='ÚLTIMO'||r==='ULTIMO'||r==='NENHUM'){ const i=[...sel].reverse().find(k=>b.meses[k]!==null&&b.meses[k]!==undefined); return {v:b.meses[i],rot:'em '+MESES[i]}; }
+  return {v:vs.reduce((s,x)=>s+x,0),rot:'soma'};
+}
+function deltaHtml(cur,prev,ind){
+  if(cur===null||prev===null||prev===undefined||isNaN(prev)) return '';
+  const diff=cur-prev; if(Math.abs(diff)<1e-9) return '<span class="v51-dl neutro">= mês anterior</span>';
+  const better=ind? (ind.invertido?diff<0:diff>0) : null;
+  const arr=diff>0?'▲':'▼';
+  const rel=prev!==0? ' ('+nf(Math.abs(diff/prev*100),1)+'%)' : '';
+  const txt= ind&&ehNPS(ind) ? `${arr} ${fmtNum(Math.abs(diff))} ${Math.abs(diff)===1?'ponto':'pontos'}`
+           : ind&&ind.tipo==='Taxa/%' ? `${arr} ${fmtNum(Math.abs(diff))} p.p.${rel}` : `${arr} ${fmtNum(Math.abs(prev!==0?diff/prev*100:0))}%`;
+  return `<span class="v51-dl ${better===null?'neutro':(better?'bom':'ruim')}">${txt}</span>`;
+}
+function sparkSvg(meses,sel){
+  const pts=meses.map((v,i)=>({v,i})).filter(p=>p.v!==null&&p.v!==undefined&&!isNaN(p.v));
+  if(pts.length<2) return '';
+  const W=132,H=34,max=Math.max(...pts.map(p=>p.v)),min=Math.min(0,...pts.map(p=>p.v));
+  const x=i=>4+(W-8)*(i-pts[0].i)/Math.max(1,pts[pts.length-1].i-pts[0].i), y=v=>H-4-(H-8)*(v-min)/Math.max(1e-9,max-min);
+  const line=pts.map(p=>x(p.i).toFixed(1)+','+y(p.v).toFixed(1)).join(' ');
+  const s=pts.filter(p=>sel.includes(p.i));
+  return `<svg class="v51-spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><polyline points="${line}"/>${s.map(p=>`<circle cx="${x(p.i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="3"/>`).join('')}</svg>`;
+}
+
+// ================= RESUMO DA DIREÇÃO (substitui a antiga capa) =================
+function htmlResumo(){
+  const sel=getMesesSelecionados(), lbl=periodoLbl(sel), mUlt=sel[sel.length-1];
+  // Volume do mês
+  const vols=(EXT.layout||[]).filter(e=>e.fonte==='BRUTO'&&e.subaba.toUpperCase()==='RESUMO').sort((a,b)=>a.ordem-b.ordem);
+  const volTit=e=>{ const t=e.titulo||e.rotulo; return sel.length>1 ? t.replace(/\s+no m[eê]s$/i,'') : t; };   // período: "Atendimentos", não "no mês"
+  const volH=vols.map(e=>{
+    const b=brutoPor(e.area,e.rotulo);
+    if(!b) return `<div class="v51-vol vazio"><div class="v51-vol-t">${escH(volTit(e))}</div><div class="v51-vol-v">—</div><div class="v51-vol-s">aguardando aba BRUTOS</div></div>`;
+    const {v,rot}=valBruto(b,sel);
+    const pv= sel.length===1&&mUlt>0 ? b.meses[mUlt-1] : null;
+    let dl='';
+    if(v!==null&&pv!==null&&pv!==undefined&&!isNaN(pv)){
+      const df=v-pv, rel=pv!==0?Math.abs(df/pv*100):null;
+      dl = df===0 ? `<span class="v51-vd igual">= ${MESES[mUlt-1]}</span>`
+         : `<span class="v51-vd ${df>0?'sobe':'cai'}">${df>0?'▲':'▼'} ${rel===null?nf(Math.abs(df),0):nf(rel,1)+'%'} vs ${MESES[mUlt-1]}</span>`;
+    }
+    return `<div class="v51-vol"><div class="v51-vol-t">${escH(volTit(e))}</div><div class="v51-vol-v">${v===null?'—':nf(v,0)}</div>${dl||`<span class="v51-vd igual">${v===null?'sem lançamento':(rot||'')}</span>`}</div>`;
+  }).join('');
+  const avisos=CHECAGENS.map(c=>{
+    const a=brutoPor(...c.a), b=brutoPor(...c.b); if(!a||!b) return '';
+    const va=a.meses[mUlt], vb=b.meses[mUlt];
+    return (va!==null&&vb!==null&&va!==undefined&&vb!==undefined&&va>vb) ? `<p class="v51-aviso">${c.msg(va,vb,MESES[mUlt])}</p>` : '';
+  }).join('');
+
+  // Semáforo por área e desvios
+  let tv=0,ta=0,tr=0,tl=0; const desvios=[]; const porArea=[];
+  AREAS.forEach(area=>{
+    const c={verde:0,amarelo:0,vermelho:0,sem:0};
+    area.indicadores.forEach(ind=>{
+      if(ehComposicao(ind)) return;                       // composição não tem direção
+      const L=leitura(ind,sel); c[L.sc]++;
+      if(L.sc==='vermelho'){
+        const gap = L.meta!==0 ? (ind.invertido?(L.cur-L.meta):(L.meta-L.cur))/Math.abs(L.meta) : 1;
+        desvios.push({area,ind,cur:L.cur,meta:L.meta,gap});
+      }
+    });
+    tv+=c.verde; ta+=c.amarelo; tr+=c.vermelho; tl+=c.verde+c.amarelo+c.vermelho;
+    porArea.push({area,c});
+  });
+  desvios.sort((a,b)=>(a.meta===0)-(b.meta===0) || b.gap-a.gap);
+  const piorArea=porArea.slice().sort((a,b)=>b.c.vermelho-a.c.vermelho)[0];
+  let frase = tl===0 ? `Nenhum indicador com leitura em ${lbl}.`
+    : `Em ${lbl}, ${tv} de ${tl} indicadores com leitura estão no alvo, ${ta} em atenção e ${tr} críticos.`;
+  if(tr>0 && piorArea) frase+=` A maior concentração de críticos está em ${piorArea.area.label} (${piorArea.c.vermelho}).`;
+
+  const areasH=porArea.map(({area,c})=>{
+    const n=c.verde+c.amarelo+c.vermelho+c.sem||1, w=k=>(c[k]/n*100).toFixed(2)+'%';
+    return `<button type="button" class="v51-arow" onclick="switchTab('${area.id}')">
+      <span class="v51-arow-n">${area.num}</span><span class="v51-arow-l">${escH(area.label)}</span>
+      <span class="v51-bar" aria-hidden="true"><i class="verde" style="width:${w('verde')}"></i><i class="amarelo" style="width:${w('amarelo')}"></i><i class="vermelho" style="width:${w('vermelho')}"></i><i class="sem" style="width:${w('sem')}"></i></span>
+      <span class="v51-arow-c"><b class="t-verde">${c.verde}</b> · <b class="t-amarelo">${c.amarelo}</b> · <b class="t-vermelho">${c.vermelho}</b>${c.sem?` · <span class="t-sem">${c.sem} sem leitura</span>`:''}</span></button>`;
+  }).join('');
+  const desvH=desvios.slice(0,8).map(x=>`<button type="button" class="v51-drow" onclick="switchTab('${x.area.id}')">
+      <span class="v51-drow-a">${escH(x.area.label)}</span><span class="v51-drow-i">${escH(nomeInd(x.ind))}</span>
+      <span class="v51-drow-v">${fmtVal(x.cur,x.ind)??'—'} <em>${rotMeta(x.ind,x.meta)} ${fmtMeta(x.meta,x.ind)??'—'}</em></span></button>`).join('');
+
+  return `<div class="tab-panel active"><section class="v51-resumo">
+  <header class="v51-rhead">
+    <span class="v51-selo v51-selo-g"><img src="${LOGO_AHCROS}" alt="AHCROS"></span>
+    <div><h2 class="v51-h2">Resumo executivo</h2>
+    <p class="v51-sub">Leitura de ${lbl}</p></div>
+  </header>
+  <p class="v51-frase">${frase}</p>
+  <h3 class="v51-h3">Volume de ${sel.length===1?MESES[mUlt]:lbl}</h3>
+  <div class="v51-vols">${volH||'<p class="v51-nota">Nenhum dado bruto marcado para o Resumo na aba LAYOUT.</p>'}</div>
+  ${avisos}
+  <div class="v51-cols">
+    <div><h3 class="v51-h3">Situação por área</h3><div class="v51-areas">${areasH}</div></div>
+    <div><h3 class="v51-h3">Maiores desvios</h3>${desvH?`<div class="v51-desv">${desvH}</div>`:'<p class="v51-nota">Nenhum indicador crítico no período.</p>'}</div>
+  </div>
+  <p class="v51-nota">Organização: ${escH(EXT.layoutOrigem||'—')}. Dados brutos: ${escH(EXT.brutosOrigem||'—')}.</p>
+</section></div>`;
+}
+
+// ================= ÁREA ORGANIZADA PELO LAYOUT =================
+// v57 — "meta" para quem deve atingir; "limite" para teto (invertido), como no card completo.
+// Meta zero de evento (IRAS, erros, quedas) segue "meta": é o termo usado pela área.
+// v64: invertido = "limite" em todos os textos, inclusive com limite zero (decisão 01/10).
+function rotMeta(ind,meta){ return ind&&ind.invertido ? 'limite' : 'meta'; }
+// Nome do indicador na manchete: nome do bloco + item ("Custo por dia — limpeza").
+function nomeInd(ind){ const e=EXT.layout&&EXT.layout.find(x=>x.fonte==='INDICADOR'&&slug(x.rotulo)===slug(ind.label)); return e?nomeEnt({...e,ind}):tituloEnt({titulo:'',ind}); }
+function nomeEnt(e){
+  let t=tituloEnt(e);
+  if(!e.grupo) return t;
+  if(e.visual==='matriz'){ const m=e.ind.label.replace(/\s*\(%\)\s*$/,'').split(' — ').pop().split(' / ');
+    t=((m[0]||'').replace(/^Área\s+/,'')+' '+(m[1]||'').replace(/^Limpeza\s+/,'').toLowerCase()).trim(); }
+  if(t.toLowerCase().startsWith(e.grupo.toLowerCase())) return t;
+  return e.grupo+' — '+(/^[A-ZÀ-Ý][a-zà-ÿ]+(\s|$)/.test(t)?t.charAt(0).toLowerCase()+t.slice(1):t);
+}
+function atingTxt(L,ind){
+  if(L.cur===null||L.cur===undefined||L.meta===null||L.meta===undefined) return '';
+  const R=rotMeta(ind,L.meta), ok=L.sc==='verde', falta=Math.abs(L.meta-L.cur);
+  const q= ind.tipo==='Taxa/%' ? `${nf(falta,1)} p.p.` : (fmtVal(falta,ind)??nf(falta,1));
+  const pct= L.meta!==0 ? nf(L.cur/L.meta*100,1)+(R==='limite'?'% do limite':'% da meta') : '';
+  if(ind.invertido) return ok ? (R==='limite'?'Dentro do limite':'Meta atingida')+(pct?' · '+pct:'') : `Acima ${R==='limite'?'do limite':'da meta'} em ${q}`+(pct?' · '+pct:'');
+  return ok ? 'Meta atingida'+(pct?' · '+pct:'') : (pct?pct+' · ':'')+`faltam ${q}`;
+}
+function barraMeta(L,ind){
+  if(L.cur===null||L.cur===undefined||L.meta===null||L.meta===undefined) return '';
+  const esc = ind.tipo==='Taxa/%' ? Math.max(100,L.cur,L.meta) : Math.max(L.cur,L.meta)*1.1||1;
+  const pc=v=>Math.max(0,Math.min(100,v/esc*100)).toFixed(1);
+  const txt=atingTxt(L,ind);
+  return `<div class="v51-mb ${L.sc}" aria-label="${txt}"><div class="v51-mb-t"><i style="width:${pc(L.cur)}%"></i><s style="left:${pc(L.meta)}%"></s></div><span class="v51-mb-l">${txt}</span></div>`;
+}
+// Destaque do topo: valor do período, meta/limite, atingimento, variação do último mês contra o anterior
+function htmlKpi(e,sel){
+  const L=leitura(e.ind,sel), d=L.d, R=rotMeta(e.ind,L.meta);
+  const okv=v=>v!==null&&v!==undefined&&!isNaN(v);
+  let m=null,p=null;
+  if(d){ const u=[...sel].reverse().find(i=>okv(d.meses[i])); if(u!==undefined){ m=u; for(let i=m-1;i>=0;i--) if(okv(d.meses[i])){p=i;break;} } }
+  const igual= m!==null&&p!==null&&Math.abs(d.meses[m]-d.meses[p])<1e-9;
+  const dl= igual ? `<span class="v56-kpi-dl">${sel.length>1?MESES[m]+' ':''}igual a ${MESES[p]}</span>` : m!==null&&p!==null ? `<span class="v56-kpi-dl">${sel.length>1?MESES[m]+' ':''}vs ${MESES[p]} ${deltaHtml(d.meses[m],d.meses[p],e.ind)}</span>`
+          : m!==null ? `<span class="v56-kpi-dl">sem mês anterior</span>` : (ultLanc(d)!==null ? `<span class="v56-kpi-dl">último lançamento: ${MESES[ultLanc(d)]}</span>` : '');
+  let seq='';
+  if(d && L.meta===0 && m!==null){ const v=d.meses[m];
+    if(v<=0){ const n=streakZero(d,m); seq= n>1?`${n} meses seguidos sem ocorrência`:`Sem ocorrência em ${MESES[m]}`; }
+    else { const a=m>0?streakZero(d,m-1):0; seq= streakPos(d,m)>1 ? `${streakPos(d,m)}º mês seguido com ocorrência` : `Ocorrência em ${MESES[m]}`+(a>0?`, após ${a} ${a>1?'meses':'mês'} em zero`:''); } }
+  return `<div class="v51-kpi ${L.sc}"><div class="v51-kpi-t">${escH((e.grupo?e.grupo+' — ':'')+tituloEnt(e))}</div><div class="v51-kpi-v">${fmtVal(L.cur,e.ind)??'aguardando'}</div>
+  <div class="v51-kpi-s"><span class="v51-pill">${R} ${fmtMeta(L.meta,e.ind)??'—'}</span>${dl}</div>${barraMeta(L,e.ind)}${seq?`<div class="v56-kpi-seq">${seq}</div>`:''}</div>`;
+}
+function htmlMatriz(ents,sel){
+  const parts=ents.map(e=>{ const m=e.ind.label.replace(/\s*\(%\)\s*$/,'').split(' — ').pop().split(' / ');
+    return {e, lin:(m[0]||'').replace(/^Área\s+/,''), col:(m[1]||'').replace(/^Limpeza\s+/,''), L:leitura(e.ind,sel)}; });
+  const lins=[...new Set(parts.map(p=>p.lin))], cols=[...new Set(parts.map(p=>p.col))];
+  const lidos=parts.filter(p=>p.L.sc!=='sem'), abaixo=lidos.filter(p=>p.L.sc!=='verde');
+  const frase = !lidos.length ? `Sem lançamento em ${periodoLbl(sel)}.`
+    : abaixo.length ? `${abaixo.length} de ${lidos.length} abaixo da meta em ${periodoLbl(sel)}: ${abaixo.map(p=>p.lin+' '+p.col.toLowerCase()).join(', ')}.`
+    : `Todas as ${lidos.length} no alvo em ${periodoLbl(sel)}.`;
+  let h=`<div class="v51-bloco"><h4 class="v51-h4">${escH(ents[0].grupo)}</h4><p class="v51-frase-s">${frase}</p>
+  <div class="v51-mx" style="grid-template-columns:auto repeat(${cols.length},1fr)"><span></span>${cols.map(c=>`<span class="v51-mx-h">${escH(c)}</span>`).join('')}`;
+  lins.forEach(l=>{ h+=`<span class="v51-mx-r">${escH(l)}</span>`;
+    cols.forEach(c=>{ const p=parts.find(x=>x.lin===l&&x.col===c);
+      if(!p){ h+='<span></span>'; return; }
+      h+=`<div class="v51-mx-c ${p.L.sc}" title="${escH(p.e.ind.label)}"><b>${fmtVal(p.L.cur,p.e.ind)??'—'}</b><span class="v51-pill">${rotMeta(p.e.ind,p.L.meta)} ${fmtMeta(p.L.meta,p.e.ind)??'—'}</span>${barraMeta(p.L,p.e.ind)}</div>`; }); });
+  return h+'</div></div>';
+}
+function htmlComposicao(ents,sel){
+  const cores=['#E0EEE7','#3F6FB8','#1F6B4A','#A8CCA8'], txt=['var(--navy)','#fff','#fff','var(--navy)'];
+  const okv=v=>v!==null&&v!==undefined&&!isNaN(v);
+  const meses=[...Array(12).keys()].filter(i=>ents.some(e=>{const d=getData(e.ind);return d&&d.meses[i]!==null&&d.meses[i]!==undefined;}));
+  if(!meses.length) return `<div class="v51-bloco"><h4 class="v51-h4">${escH(ents[0].grupo)}</h4><p class="v51-frase-s">Aguardando lançamento.</p></div>`;
+  const m=[...sel].reverse().find(i=>meses.includes(i)) ?? meses[meses.length-1];
+  const vm=ents.map(e=>{const d=getData(e.ind);return d?d.meses[m]:null;});
+  const soma=vm.reduce((s,v)=>s+(v||0),0);
+  // Meta de composição (mix-alvo). Composição não tem direção por parte: o desvio sai com sinal, sem cor.
+  const mt=ents.map(e=>{const d=getData(e.ind);return d&&okv(d.meta)?d.meta:null;}), temMt=mt.every(okv);
+  const sinal=x=>Math.abs(x)<0.05?'na meta':(x>0?'+':'−')+nf(Math.abs(x),1)+' p.p.';
+  const _p=ents.map((e,k)=>`${escH(tituloEnt(e))} ${nf(vm[k],1)}%`+(temMt&&okv(vm[k])?` (meta ${nf(mt[k],0)}%, ${sinal(vm[k]-mt[k])})`:''));
+  let frase=`Em ${MESES[m]}: `+(_p.length>1?_p.slice(0,-1).join(', ')+' e '+_p[_p.length-1]:_p[0])+'.';
+  if(Math.abs(soma-100)>1) frase+=` As partes somam ${nf(soma,1)}%, não 100%.`;
+  const barra=(vs,lbl,cls)=>{ const t=vs.reduce((s,v)=>s+v,0)||1;
+    return `<div class="v51-cp-row${cls}"><span class="v51-cp-m">${lbl}</span><span class="v51-cp-bar">${vs.map((v,k)=>`<i style="width:${(v/t*100).toFixed(2)}%;background:${cores[k%4]};color:${txt[k%4]}" title="${escH(tituloEnt(ents[k]))} · ${lbl}: ${nf(v,1)}%">${v/t>=0.07?nf(v,1)+'%':''}</i>`).join('')}</span><span class="v53-cp-v">${vs.map((v,k)=>`<span><i style="background:${cores[k%4]}"></i>${nf(v,1)}%</span>`).join('')}</span></div>`; };
+  const cons=ents.map(e=>{const d=getData(e.ind);return d&&okv(d.cons)?d.cons:null;}), temCons=cons.every(okv);
+  const faixa=meses.length>1?`${MESES[meses[0]]}–${MESES[meses[meses.length-1]]}`:MESES[meses[0]];
+  if(temCons){ const _a=ents.map((e,k)=>`${escH(tituloEnt(e))} ${nf(cons[k],1)}%`+(temMt?` (meta ${nf(mt[k],0)}%, ${sinal(cons[k]-mt[k])})`:''));
+    frase=`No ano (${faixa}): `+(_a.length>1?_a.slice(0,-1).join(', ')+' e '+_a[_a.length-1]:_a[0])+'. '+frase; }
+  const rows=(temMt?barra(mt,'Meta',' v56-cp-meta'):'')+(temCons?barra(cons,'Ano',' v57-cp-ano'):'')+meses.map(i=>barra(ents.map(e=>{const d=getData(e.ind);return d&&d.meses[i]!=null?d.meses[i]:0;}),MESES[i],sel.includes(i)?' sel':'')).join('');
+  const leg=ents.map((e,k)=>`<span><i style="background:${cores[k%4]}"></i>${escH(tituloEnt(e))}</span>`).join('');
+  return `<div class="v51-bloco"><h4 class="v51-h4">${escH(ents[0].grupo)}</h4><p class="v51-frase-s">${frase}</p><div class="v51-cp">${rows}</div><div class="v51-leg">${leg}</div></div>`;
+}
+// v66: agrupamentos para indicadores com muitos dados (fora do AREAS, indexado pelo rótulo do ▶)
+const V66_AGRUPA = {
+  'Taxa Ocupação Agenda Global (%)': [['Vagas ofertadas (todas as agendas)', /^Vagas Ofertadas/i], ['Vagas ocupadas (todas as agendas)', /^Vagas Ocupadas/i]],
+  'Taxa de Cumprimento do Cronograma de Limpezas (%)': [['Limpezas no prazo (todas as áreas)', /no prazo/i], ['Limpezas programadas (todas as áreas)', /programadas/i]]
+};
+function htmlBrutosInd(ind,sel){
+  // v66: dados de origem sempre visíveis abaixo do card, só para indicador com 2 ou mais dados brutos
+  let bs=brutosDoInd(ind);
+  const g=Object.entries(V66_AGRUPA).find(([r])=>slug(r)===slug(ind.label));
+  if(g){ bs=g[1].map(([nome,re])=>{ const it=bs.filter(b=>re.test(b.dado)); if(!it.length) return null;
+      const meses=[...Array(12).keys()].map(i=>{ const vs=it.map(b=>b.meses[i]); return vs.some(v=>v===null||v===undefined||isNaN(v))?null:vs.reduce((s,v)=>s+v,0); });
+      return {dado:nome, consolida:it[0].consolida, meses}; }).filter(Boolean); }
+  if(bs.length<2) return '';
+  const lidos=bs.map(b=>({b,r:valBruto(b,sel)}));
+  if(lidos.every(x=>x.r.v===null||x.r.v===undefined)) return '';          // mês sem lançamento: sem bloco
+  return `<div class="v51-orig"><span class="v51-orig-t">Dados de origem · ${periodoLbl(sel)}</span><div class="v51-orig-l">${lidos.map(({b,r})=>{const {v,rot}=r;return `<span class="v51-orig-i"><b>${nf(v,2)}</b> ${escH(b.dado)}${rot&&rot!=='soma'?' ('+rot+')':''}</span>`;}).join('')}</div></div>`;
+}
+
+function htmlRanking(ents,sel){
+  const parts=ents.map(e=>({e,L:leitura(e.ind,sel)}));
+  const ok=p=>p.L.cur!==null&&p.L.cur!==undefined&&!isNaN(p.L.cur);
+  const lidos=parts.filter(ok).sort((a,b)=>b.L.cur-a.L.cur), sem=parts.filter(p=>!ok(p));
+  const abaixo=lidos.filter(p=>p.L.sc!=='verde'&&p.L.sc!=='sem');
+  const frase = !lidos.length ? `Sem lançamento em ${periodoLbl(sel)}.`
+    : abaixo.length ? `${abaixo.length} de ${lidos.length} fora da meta em ${periodoLbl(sel)}: ${abaixo.map(p=>escH(tituloEnt(p.e))).join(', ')}.`
+    : `Todos os ${lidos.length} no alvo em ${periodoLbl(sel)}.`;
+  const topo=Math.max(...lidos.map(p=>p.L.cur), ...lidos.map(p=>p.L.meta).filter(m=>m!==null&&m!==undefined&&!isNaN(m)), 0) || 1;
+  const pct=v=>Math.max(0,Math.min(100,v/topo*100)).toFixed(2);
+  // v62: com 1 mês selecionado, coluna de variação contra o mês anterior lançado, logo após o nome
+  const um=sel.length===1, mesAnt=p=>{ const d=p.L.d; if(!um||!d) return null; for(let i=sel[0]-1;i>=0;i--){ const v=d.meses[i]; if(v!==null&&v!==undefined&&!isNaN(v)) return i; } return null; };
+  const comAnt=um?lidos.map(mesAnt).filter(i=>i!==null):[], mAntLbl=comAnt.length?MESES[Math.max(...comAnt)]:null;
+  const linha=p=>{ const tem=ok(p), m=p.L.meta, temM=m!==null&&m!==undefined&&!isNaN(m), ia=tem?mesAnt(p):null;
+    const dlt=um ? `<span class="v52-rk-d">${ia!==null?deltaHtml(p.L.cur,p.L.d.meses[ia],p.e.ind)+(MESES[ia]!==mAntLbl?` <small>vs ${MESES[ia]}</small>`:''):''}</span>` : '';
+    return `<div class="v52-rk-row" title="${escH(p.e.ind.label)}"><span class="v52-rk-n">${escH(tituloEnt(p.e))}</span>${dlt}
+      <span class="v52-rk-bar">${tem?`<i class="${p.L.sc}" style="width:${pct(p.L.cur)}%"></i>`:''}${temM?`<u style="left:${pct(m)}%"></u>`:''}</span>
+      <span class="v52-rk-v"><b>${tem?fmtVal(p.L.cur,p.e.ind):'aguardando'}</b>${temM?` <small>${rotMeta(p.e.ind,m)} ${fmtMeta(m,p.e.ind)}</small>`:''}${tem&&temM&&m!==0?`<small class="v52-rk-p">${nf(p.L.cur/m*100,1)}% ${rotMeta(p.e.ind,m)==='limite'?'do limite':'da meta'}</small>`:''}</span></div>`; };
+  return `<div class="v51-bloco"><h4 class="v51-h4">${escH(ents[0].grupo)}</h4><p class="v51-frase-s">${frase}</p>
+  <div class="v52-rk${um&&mAntLbl?' v62-d':''}">${lidos.map(linha).join('')}${sem.map(linha).join('')}</div>
+  <p class="v52-rk-leg"><u></u> meta · barras em ordem decrescente do valor de ${periodoLbl(sel)}${um&&mAntLbl?' · variação contra '+mAntLbl:''}</p></div>`;
+}
+
+function niceTop(mx){ if(!(mx>0)) return 1; const n=Math.pow(10,Math.floor(Math.log10(mx))); return [1,2,2.5,5,10].map(k=>k*n).find(t=>t>=mx); }
+// v56 — Partes em R$ derivadas de dois valores reais do mesmo mês: total × participação %.
+// Metadado fora do AREAS, indexado pelo rótulo do total. Sai quando a central trouxer os R$ de cada parte.
+const V56_DERIVADAS = {
+  'Custo Total do Setor de Higienização e Lavanderia Hospitalar (R$)': {
+    nota: 'Limpeza e lavanderia em R$ = custo total do mês × participação % de cada uma. A central ainda não traz esses dois valores como indicador.',
+    partes: [['Limpeza','% Custo Limpeza (%)'],['Lavanderia','% Custo Lavanderia (%)']]
+  }
+};
+function htmlColunas(ents,sel,somar){
+  ents=[...ents].sort((a,b)=>(/^total/i.test(tituloEnt(a))?1:0)-(/^total/i.test(tituloEnt(b))?1:0));
+  const cores=['#8FB2F0','#E0EEE7','#4FD69A'];
+  const num=v=>v===null||v===undefined||isNaN(v)?null:v;
+  const temMeta=x=>x!==null&&x!==undefined&&!isNaN(x);
+  // Fontes: derivadas (se houver) antes das reais
+  const fontes=[]; let nota='';
+  ents.forEach(e=>{
+    const cfg=Object.entries(V56_DERIVADAS).find(([r])=>slug(r)===slug(e.ind.label)); if(!cfg) return;
+    const db=getData(e.ind); if(!db) return;
+    cfg[1].partes.forEach(([nome,rot])=>{ const h=indPorRotulo(rot), dp=h?getData(h.ind):null; if(!dp) return;
+      nota=cfg[1].nota;
+      const mes=i=>{ const b=num(db.meses[i]), p=num(dp.meses[i]); return b===null||p===null?null:b*p/100; };
+      fontes.push({nome, ind:e.ind, mes, tipo:'deriv', db, dp}); });
+  });
+  ents.forEach(e=>{ const d=getData(e.ind); fontes.push({nome:tituloEnt(e), ind:e.ind, mes:i=>d?num(d.meses[i]):null, tipo:'real', meta:d?num(d.meta):null}); });
+  const meses=[...Array(12).keys()].filter(i=>fontes.some(f=>f.mes(i)!==null));
+  if(!meses.length) return `<div class="v51-bloco"><h4 class="v51-h4">${escH(ents[0].grupo)}</h4><p class="v51-frase-s">Aguardando lançamento.</p></div>`;
+  const ser=fontes.map(f=>({...f, meta:f.tipo==='real'?f.meta:null, vals:meses.map(i=>f.mes(i))}));
+  const reais=ser.filter(s=>s.tipo==='real');
+  // Total calculado: soma das partes; meta = soma das metas das partes (o consolidado)
+  const invs=[...new Set(reais.map(s=>!!s.ind.invertido))], indTot=invs.length===1?ents[0].ind:null;
+  const tot=somar ? meses.map((i,j)=>{ const vs=reais.map(s=>s.vals[j]); return vs.every(v=>v!==null)?vs.reduce((a,v)=>a+v,0):null; }) : null;
+  if(somar) ser.push({nome:'Total ('+reais.map(s=>s.nome.toLowerCase()).join(' + ')+')', ind:ents[0].ind, tipo:'soma',
+    meta: reais.every(s=>temMeta(s.meta)) ? reais.reduce((a,s)=>a+s.meta,0) : null, vals:tot});
+  const fv=(v,s)=>fmtVal(v,s.ind) ?? nf(v,0), fvM=(v,s)=>fmtMeta(v,s.ind) ?? nf(v,0);
+  const top=niceTop(Math.max(...ser.flatMap(s=>s.vals).filter(v=>v!==null),...ser.map(s=>s.meta).filter(temMeta),0));
+  const m=[...sel].reverse().find(i=>meses.includes(i)) ?? meses[meses.length-1], k=meses.indexOf(m);
+  // Leitura do período por série
+  const Ls=ser.map(s=>{
+    if(s.tipo==='real') return leitura(s.ind,sel);
+    if(s.tipo==='deriv'){ const bL=leitura(s.ind,sel); let n=0,dn=0;
+      sel.forEach(i=>{ const b=num(s.db.meses[i]), p=num(s.dp.meses[i]); if(b!==null&&p!==null){ n+=b*p/100; dn+=b; } });
+      return {cur: bL.cur!==null&&dn>0 ? bL.cur*n/dn : null, meta:null, sc:'sem'}; }
+    const pl=reais.map(r=>leitura(r.ind,sel));
+    const cur=pl.every(L=>L.cur!==null&&L.cur!==undefined)?pl.reduce((a,L)=>a+L.cur,0):null;
+    const meta=pl.every(L=>temMeta(L.meta))?pl.reduce((a,L)=>a+L.meta,0):null;
+    return {cur, meta, sc: indTot ? (semCls(cur,meta,indTot.invertido)||'sem') : 'sem'};
+  });
+  const partes=(somar?ser.slice(0,-1):ser).map(s=>s.vals[k]===null?`${escH(s.nome.toLowerCase())} sem lançamento`:`${escH(s.nome.toLowerCase())} ${fv(s.vals[k],s)}`+(somar&&tot[k]?` (${nf(s.vals[k]/tot[k]*100,0)}%)`:''));
+  let frase='Em '+MESES[m]+': '+partes.join(', ');
+  if(sel.length>1){                       // v64: com período selecionado, a frase fala do período e usa os valores dele
+    const tP=somar?Ls[Ls.length-1]:null;
+    const ppP=(somar?ser.slice(0,-1):ser).map((s,q)=>{ const L=Ls[q]; return L.cur===null||L.cur===undefined?`${escH(s.nome.toLowerCase())} sem lançamento`:`${escH(s.nome.toLowerCase())} ${fv(L.cur,s)}`; });
+    frase='Em '+periodoLbl(sel)+': '+ppP.join(', ');
+    if(somar&&tP&&tP.cur!==null&&tP.cur!==undefined){ const st=ser[ser.length-1]; frase+=`; total ${fv(tP.cur,st)}`+(temMeta(tP.meta)?` contra ${rotMeta(st.ind,tP.meta)} ${fvM(tP.meta,st)}`:''); }
+  }
+  if(sel.length===1 && somar && tot[k]!==null){ const st=ser[ser.length-1]; frase+=`; total ${fv(tot[k],st)}`+(temMeta(st.meta)?` contra ${rotMeta(st.ind,st.meta)} ${fvM(st.meta,st)}`:'');
+    if(k>0 && tot[k-1]){ const d=(tot[k]-tot[k-1])/tot[k-1]*100; frase+=Math.abs(d)<0.05?`, igual a ${MESES[meses[k-1]]}`:`, ${nf(Math.abs(d),1)}% ${d>0?'acima':'abaixo'} de ${MESES[meses[k-1]]}`; } }
+  frase+='.';
+  const pos=v=>`calc(26px + ${(v/top*180).toFixed(1)}px)`;
+  const grade=[0,1,2,3,4].map(t=>`<span class="v55-gl" style="bottom:${pos(top*t/4)}"><small>${fv(top*t/4,ser[0])}</small></span>`).join('');
+  const metas=ser.map((s,q)=>temMeta(s.meta)?`<span class="v55-ml" style="bottom:${pos(s.meta)};border-color:${cores[q%3]}"><small style="color:${cores[q%3]}">${rotMeta(s.ind,s.meta)} ${escH(s.nome.toLowerCase())} ${fvM(s.meta,s)}</small></span>`:'').join('');
+  const grupos=meses.map((i,j)=>`<div class="v53-col-g${sel.includes(i)?' sel':''}"><div class="v53-col-bars">${ser.map((s,q)=>{ const v=s.vals[j];
+      return `<span class="v53-col-b" title="${escH(s.nome)} · ${MESES[i]}: ${v===null?'sem lançamento':fv(v,s)}" style="height:${v===null?0:(v/top*100).toFixed(2)}%;background:${cores[q%3]}"><em>${v===null?'':fv(v,s)}</em></span>`; }).join('')}</div><span class="v53-col-m">${MESES[i]}</span></div>`).join('');
+  // Leitura por série, como nos cards: valor do período, meta, atingimento, variação contra o mês anterior
+  const ant=meses[k-1];
+  const linhas=ser.map((s,q)=>{ const L=Ls[q];
+    const prev=ant!==undefined?s.vals[k-1]:null, cur=s.vals[k];
+    const dl=(sel.length===1&&cur!==null&&prev!==null)?deltaHtml(cur,prev,s.tipo==='soma'?indTot:s.ind):'';
+    return `<div class="v55-rd ${L.sc}"><span class="v55-rd-n"><i style="background:${cores[q%3]}"></i>${escH(s.nome)}</span>
+      <b>${L.cur===null||L.cur===undefined?'—':fv(L.cur,s)}</b>
+      <span class="v51-pill">${temMeta(L.meta)?rotMeta(s.ind,L.meta)+' '+fvM(L.meta,s):'sem meta'}</span>
+      <span class="v55-rd-mb">${barraMeta(L,s.ind)}</span><span class="v55-rd-d">${dl}</span></div>`; }).join('');
+  return `<div class="v51-bloco"><h4 class="v51-h4">${escH(ents[0].grupo)}</h4><p class="v51-frase-s">${frase}</p>
+  <div class="v55-plot"><div class="v53-col">${grupos}</div>${grade}${metas}</div>
+  <div class="v55-rds"><span class="v55-rds-t">${periodoLbl(sel)}${sel.length===1&&ant!==undefined?' · variação contra '+MESES[ant]:''}</span>${linhas}</div>${nota?`<p class="v56-nota">${escH(nota)}</p>`:''}</div>`;
+}
+// v60: razão derivada no painel a partir de dois valores REAIS (indicador da central ÷ dado do BRUTOS).
+// Fora do AREAS, indexada pelo rótulo do numerador. Sai quando a central trouxer o indicador (linha na área, linha na central, Passo 4).
+const V60_RAZOES = {
+  'Nº Refeições Pacientes': {
+    titulo:'Refeições por paciente-dia', nomeNum:'Refeições servidas', unNum:'refeições',
+    den:['Produção','Pacientes-dia no período'], nomeDen:'Pacientes-dia', unDen:'pacientes-dia',
+    nota:'Refeições por paciente-dia = refeições servidas a pacientes ÷ pacientes-dia (Produção, aba BRUTOS). Calculada no painel: a central ainda não traz esse indicador nem meta para ele.'
+  }
+};
+function htmlRazao(ents,sel){
+  const e=ents[0], cfg=Object.entries(V60_RAZOES).find(([r])=>slug(r)===slug(e.ind.label));
+  const tit=escH(e.grupo||(cfg&&cfg[1].titulo)||tituloEnt(e));
+  const vazio=t=>`<div class="v51-bloco"><h4 class="v51-h4">${tit}</h4><p class="v51-frase-s">${t}</p></div>`;
+  if(!cfg) return vazio('Configuração da razão não encontrada.');
+  const C=cfg[1], dn=getData(e.ind), bd=brutoPor(C.den[0],C.den[1]);
+  if(!bd) return vazio(`Aguardando o dado “${escH(C.den[1])}” na aba BRUTOS.`);
+  const num=v=>v===null||v===undefined||isNaN(v)?null:v;
+  const N=i=>dn?num(dn.meses[i]):null, D=i=>num(bd.meses[i]);
+  const R=i=>{ const n=N(i), d=D(i); return n===null||d===null||d===0?null:n/d; };
+  const meses=[...Array(12).keys()].filter(i=>N(i)!==null||D(i)!==null);
+  if(!meses.length) return vazio('Aguardando lançamento.');
+  const fR=v=>nf(v,2), fC=v=>nf(v,0);
+  const ambos=sel.filter(i=>R(i)!==null), algum=sel.filter(i=>N(i)!==null||D(i)!==null);
+  const sN=ambos.reduce((a,i)=>a+N(i),0), sD=ambos.reduce((a,i)=>a+D(i),0), rP=sD>0?sN/sD:null;
+  const m=[...sel].reverse().find(i=>meses.includes(i)) ?? meses[meses.length-1], k=meses.indexOf(m), ant=meses[k-1];
+  const vv=(a,b)=>{ const d=(a-b)/b*100; return Math.abs(d)<0.05?'estável':(d>0?'+':'−')+nf(Math.abs(d),1)+'%'; };
+  let frase;
+  if(sel.length===1){
+    if(R(m)===null) frase=`Em ${MESES[m]}: ${N(m)===null?C.unNum:C.unDen} sem lançamento.`;
+    else { frase=`Em ${MESES[m]}: ${fR(R(m))} ${C.unNum} por paciente-dia (${fC(N(m))} ${C.unNum} ÷ ${fC(D(m))} ${C.unDen})`;
+      if(ant!==undefined&&R(ant)!==null) frase+=`; contra ${MESES[ant]} (${fR(R(ant))}): ${C.unNum} ${vv(N(m),N(ant))}, ${C.unDen} ${vv(D(m),D(ant))}`;
+      frase+='.'; }
+  } else if(rP===null) frase=`Sem os dois lados lançados em ${periodoLbl(sel)}.`;
+  else { const rs=ambos.map(i=>({i,r:R(i)})), mn=rs.reduce((a,b)=>b.r<a.r?b:a), mx=rs.reduce((a,b)=>b.r>a.r?b:a);
+    const pl=periodoLbl(sel); frase=`${/^(período|ano)/.test(pl)?'No '+pl:'Em '+pl}: ${fR(rP)} ${C.unNum} por paciente-dia (${fC(sN)} ÷ ${fC(sD)})`+(ambos.length>1&&mn.i!==mx.i?`; menor em ${MESES[mn.i]} (${fR(mn.r)}), maior em ${MESES[mx.i]} (${fR(mx.r)})`:'')+'.';
+    if(ambos.length<algum.length) frase+=' Meses com só um dos lados lançado ficam fora da conta.'; }
+  // Gráfico: barras (contagens, eixo da esquerda) + linha (razão, eixo da direita)
+  const cores=['#3F6FB8','rgba(224,238,231,.35)'], corTx=['#fff','var(--fg)'];
+  const topC=niceTop(Math.max(...meses.flatMap(i=>[N(i),D(i)]).filter(v=>v!==null),0)) || 1;
+  const topR=niceTop(Math.max(...meses.map(R).filter(v=>v!==null),0)) || 1;
+  const pos=v=>`calc(26px + ${(v/topC*180).toFixed(1)}px)`;
+  const grade=[0,1,2,3,4].map(t=>`<span class="v55-gl" style="bottom:${pos(topC*t/4)}"><small>${fC(topC*t/4)}</small></span><span class="v60-gr" style="bottom:${pos(topC*t/4)}">${nfEixo(topR*t/4,2)}</span>`).join('');
+  const series=[[C.nomeNum,N],[C.nomeDen,D]];
+  const grupos=meses.map(i=>`<div class="v53-col-g${sel.includes(i)?' sel':''}"><div class="v53-col-bars">${series.map(([nome,f],q)=>{ const v=f(i);
+      return `<span class="v53-col-b" title="${escH(nome)} · ${MESES[i]}: ${v===null?'sem lançamento':fC(v)}" style="height:${v===null?0:(v/topC*100).toFixed(2)}%;background:${cores[q]}"><em class="v60-in" style="color:${corTx[q]}">${v===null?'':fC(v)}</em></span>`; }).join('')}</div><span class="v53-col-m">${MESES[i]}</span></div>`).join('');
+  const W=8+meses.length*100-28, X=j=>40+100*j, Y=r=>22+180*(1-r/topR);
+  const pts=meses.map((i,j)=>({j,r:R(i)})).filter(p=>p.r!==null);
+  let segs=''; for(let q=1;q<pts.length;q++) if(pts[q].j===pts[q-1].j+1) segs+=`<line x1="${X(pts[q-1].j)}" y1="${Y(pts[q-1].r).toFixed(1)}" x2="${X(pts[q].j)}" y2="${Y(pts[q].r).toFixed(1)}"/>`;
+  const svg=`<svg class="v60-ln" width="${W}" height="202" viewBox="0 0 ${W} 202" aria-hidden="true"><g stroke="var(--fg)" stroke-width="2.5" stroke-linecap="round">${segs}</g>${pts.map(p=>`<circle cx="${X(p.j)}" cy="${Y(p.r).toFixed(1)}" r="4.5" fill="var(--fg)" stroke="var(--surface)" stroke-width="2"/><text x="${X(p.j)}" y="${(Y(p.r)-10).toFixed(1)}" text-anchor="middle">${fR(p.r)}</text>`).join('')}</svg>`;
+  // Leitura por série
+  const L=leitura(e.ind,sel), vb=valBruto(bd,sel);
+  const dl=(a,b,ind)=>sel.length===1&&a!==null&&b!==null&&b!==undefined?deltaHtml(a,b,ind):'';
+  const rd=(cls,cor,nome,val,pill,mb,d)=>`<div class="v55-rd ${cls}"><span class="v55-rd-n"><i style="background:${cor}"></i>${nome}</span><b>${val}</b><span class="v51-pill">${pill}</span><span class="v55-rd-mb">${mb}</span><span class="v55-rd-d">${d}</span></div>`;
+  const pa=ant!==undefined;
+  const linhas=
+    rd('sem','var(--fg)',escH(C.titulo), rP===null?'—':fR(rP), 'meta a definir','', dl(R(m),pa?R(ant):null,null))+
+    rd(L.sc,cores[0],escH(C.nomeNum), L.cur===null||L.cur===undefined?'—':fmtVal(L.cur,e.ind), L.meta!==null&&L.meta!==undefined&&!isNaN(L.meta)?rotMeta(e.ind,L.meta)+' '+fmtMeta(L.meta,e.ind):'sem meta', barraMeta(L,e.ind), dl(N(m),pa?N(ant):null,e.ind))+
+    rd('sem',cores[1],escH(C.nomeDen), vb.v===null?'—':fC(vb.v), 'dado bruto · '+escH(C.den[0]),'', dl(D(m),pa?D(ant):null,null));
+  return `<div class="v51-bloco"><h4 class="v51-h4">${tit}</h4><p class="v51-frase-s">${frase}</p>
+  <div class="v55-plot v60-plot"><div class="v53-col">${grupos}${svg}</div>${grade}</div>
+  <p class="v60-leg"><i style="background:${cores[0]}"></i>${escH(C.nomeNum)} <i style="background:${cores[1]}"></i>${escH(C.nomeDen)} <span>(barras, eixo da esquerda)</span> <s></s>${escH(C.titulo)} <span>(linha, eixo da direita)</span></p>
+  <div class="v55-rds"><span class="v55-rds-t">${periodoLbl(sel)}${sel.length===1&&pa?' · variação contra '+MESES[ant]:''}</span>${linhas}</div><p class="v56-nota">${escH(C.nota)}</p></div>`;
+}
+
+function htmlPainel(ents,sel){
+  const parts=ents.map(e=>({e,L:leitura(e.ind,sel)}));
+  const lidos=parts.filter(p=>p.L.sc!=='sem'), fora=lidos.filter(p=>p.L.sc!=='verde');
+  const frase = !lidos.length ? `Sem lançamento em ${periodoLbl(sel)}.`
+    : fora.length ? `${fora.length} de ${lidos.length} fora da meta em ${periodoLbl(sel)}: ${fora.map(p=>escH(tituloEnt(p.e))).join(', ')}.`
+    : `Todos os ${lidos.length} no alvo em ${periodoLbl(sel)}.`;
+  const cel=parts.map(p=>`<div class="v51-mx-c ${p.L.sc}" title="${escH(p.e.ind.label)}"><span class="v54-pn-t">${escH(tituloEnt(p.e))}</span><b>${fmtVal(p.L.cur,p.e.ind)??'aguardando'}</b><span class="v51-pill">${rotMeta(p.e.ind,p.L.meta)} ${fmtMeta(p.L.meta,p.e.ind)??'—'}</span>${barraMeta(p.L,p.e.ind)}</div>`).join('');
+  return `<div class="v51-bloco"><h4 class="v51-h4">${escH(ents[0].grupo)}</h4><p class="v51-frase-s">${frase}</p><div class="v54-pn">${cel}</div></div>`;
+}
+function htmlAreaLayout(area,ents){
+  const sel=getMesesSelecionados(), lbl=periodoLbl(sel);
+  const subs=[]; ents.forEach(e=>{ if(!subs.includes(e.subaba)) subs.push(e.subaba); });
+  const atual=subs.includes(EXT.subaba[area.id])?EXT.subaba[area.id]:subs[0];
+  // frase da área (regra)
+  const leit=ents.filter(e=>e.visual!=='composicao').map(e=>({e,L:leitura(e.ind,sel)}));
+  const lidos=leit.filter(x=>x.L.sc!=='sem'), c=k=>lidos.filter(x=>x.L.sc===k).length;
+  const uA=Math.max(-1,...ents.map(e=>{ const u=ultLanc(getData(e.ind)); return u===null?-1:u; }));
+  let frase = !lidos.length ? `Nenhum indicador com leitura em ${lbl}.`+(uA>=0?` Último lançamento: ${MESES[uA]}.`:'') : `Em ${lbl}, ${c('verde')} de ${lidos.length} indicadores no alvo, ${c('amarelo')} em atenção e ${c('vermelho')} críticos.`;
+  const piores=lidos.filter(x=>x.L.sc==='vermelho').map(x=>({...x,gap:x.L.meta!==0?(x.e.ind.invertido?x.L.cur-x.L.meta:x.L.meta-x.L.cur)/Math.abs(x.L.meta):0})).sort((a,b)=>(a.L.meta===0)-(b.L.meta===0) || b.gap-a.gap);   // v64: meta zero não vira automaticamente o maior desvio
+  if(piores.length){ const p=piores[0]; frase+=` Maior desvio: ${escH(nomeEnt(p.e))}, ${fmtVal(p.L.cur,p.e.ind)} contra ${rotMeta(p.e.ind,p.L.meta)} ${fmtMeta(p.L.meta,p.e.ind)}.`; }
+  // faixa de destaque
+  const kpis=ents.filter(e=>e.destaque).map(e=>htmlKpi(e,sel)).join('');
+  const chips=subs.map(s=>`<button type="button" class="v51-chip${s===atual?' ativo':''}" onclick="v51Subaba('${area.id}','${escH(s).replace(/'/g,"\\'")}')">${escH(s)}</button>`).join('');
+  // conteúdo da subaba
+  const noSub=ents.filter(e=>e.subaba===atual), feitos=new Set(), cardInds=[];
+  let blocos='', grade='';
+  noSub.forEach(e=>{
+    if((e.visual==='matriz'||e.visual==='composicao'||e.visual==='ranking'||e.visual==='colunas'||e.visual==='colunas_total'||e.visual==='painel'||e.visual==='razao') && e.grupo){
+      if(feitos.has(e.grupo)) return; feitos.add(e.grupo);
+      const g=noSub.filter(x=>x.grupo===e.grupo);
+      blocos+= e.visual==='matriz' ? htmlMatriz(g,sel) : e.visual==='ranking' ? htmlRanking(g,sel) : e.visual==='colunas'||e.visual==='colunas_total' ? htmlColunas(g,sel,e.visual==='colunas_total') : e.visual==='painel' ? htmlPainel(g,sel) : e.visual==='razao' ? htmlRazao(g,sel) : htmlComposicao(g,sel);
+      return;
+    }
+    grade+=`<div class="v51-slot${e.visual==='card_largo'?' v61-largo':''}">${htmlCard(e.ind,(e.grupo?e.grupo+' — ':'')+tituloEnt(e))}${htmlBrutosInd(e.ind,sel)}</div>`; cardInds.push(e.ind);
+  });
+  const corpo=(grade?`<div class="ind-grid">${grade}</div>`:'')+blocos;
+  const html=`<div class="tab-panel active"><section class="area-wrap">
+<div class="area-head">
+  <div class="area-pill">${area.num} &nbsp;·&nbsp; Área</div>
+  <h2 class="area-h2"><u>${area.label}</u></h2>
+  <div class="area-sub">Responsável: <strong>${area.responsavel}</strong> &nbsp;·&nbsp; Período: <strong>${lbl}</strong></div>
+</div>
+<p class="v51-frase">${frase}</p>
+${kpis?`<h3 class="v57-sec">Destaques</h3><div class="v51-kpis">${kpis}</div><h3 class="v57-sec">Indicadores</h3>`:''}
+${subs.length>1?`<nav class="v51-chips" aria-label="Temas da área">${chips}</nav>`:''}
+${corpo}
+</section></div>`;
+  return {html,cardInds};
+}
+function v51Subaba(areaId,nome){ EXT.subaba[areaId]=nome; renderMain(); }
+
+const _renderMainBase = renderMain;
+renderMain = function(){
+  if(ST.loading||ST.error) return _renderMainBase();
+  const root=document.getElementById('mainContent');
+  if(ST.tab==='capa'){ destroyCharts(); root.innerHTML=htmlResumo(); return; }
+  const area=AREAS.find(a=>a.id===ST.tab);
+  const ents=area && layoutDaArea(area);
+  if(!ents){
+    _renderMainBase();
+    if(area){ const sel=getMesesSelecionados();              // área sem LAYOUT: brutos entram dentro do card
+      area.indicadores.forEach(ind=>{ const c=document.getElementById('card_'+ind.id), b=htmlBrutosInd(ind,sel); if(c&&b) c.insertAdjacentHTML('beforeend',b); }); }
+    return;
+  }
+  destroyCharts();
+  const r=htmlAreaLayout(area,ents);
+  root.innerHTML=r.html;
+  setTimeout(()=>r.cardInds.forEach(ind=>buildOneChart(ind,false)),60);
+};
+
 </script>
 </body>
 </html>
