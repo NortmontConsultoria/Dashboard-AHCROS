@@ -813,6 +813,67 @@ details.v51-orig>summary{font-weight:700}
 .v66-nota{padding:8px 14px 10px;font-size:12.5px;color:#FFFFFF;border-top:1px dashed rgba(168,204,168,.35)}
 .v66-nota-t{font-weight:700;color:#A8CCA8;margin-right:4px}
 .v66-nota b{color:#FFFFFF}
+
+/* v66c: um card por linha, em formato horizontal (números à esquerda, gráfico à direita).
+   Motivo: na apresentação, com zoom, a grade de 2 colunas estreitava o card e o valor quebrava letra por letra. */
+.area-wrap .ind-grid{grid-template-columns:1fr;gap:22px}
+.area-wrap .v51-slot{container-type:inline-size;min-width:0}
+/* valor nunca quebra no meio; a sequência de meses quebra entre valores */
+.ind-card .ic-dual-cur,.ind-card .ic-value,.ind-card .ic-dual-prev,.ind-card .ic-avg-value{word-break:normal;overflow-wrap:normal;white-space:nowrap}
+.ind-card .ic-dual-nums{flex-wrap:wrap;row-gap:2px}
+@container (min-width:700px){
+  .v51-slot .ind-card:not(.expanded){display:grid;grid-template-columns:minmax(300px,44%) minmax(0,1fr);column-gap:32px;row-gap:0;align-content:start;min-height:0}
+  .v51-slot .ind-card:not(.expanded) > *{grid-column:1;margin-bottom:14px}
+  .v51-slot .ind-card:not(.expanded) > .ic-chartcap{grid-column:2;grid-row:1;margin-bottom:6px;align-self:start}
+  .v51-slot .ind-card:not(.expanded) > .ic-chart{grid-column:2;grid-row:2 / span 8;height:auto!important;min-height:230px;max-height:none;align-self:stretch;margin-bottom:0}
+  .v51-slot .ind-card:not(.expanded) > :last-child{margin-bottom:0}
+}
+
+/* v66e: os números da esquerda se ajustam à largura do próprio bloco (cqi = % da largura),
+   para "R$ 51,6mil → R$ 54,8mil" caber numa linha em qualquer zoom; o teto é o tamanho anterior */
+.ind-card .ic-dual-left{container-type:inline-size}
+.ind-card .ic-dual-nums{flex-wrap:nowrap;gap:clamp(3px,1.4cqi,6px)}
+.ind-card .ic-dual-cur{font-size:clamp(18px,8.6cqi,34px)!important;letter-spacing:-.5px}
+.ind-card .ic-dual-prev{font-size:clamp(11px,4.2cqi,17px)!important}
+.ind-card .ic-dual-arrow{font-size:clamp(10px,3.6cqi,14px)!important}
+.ind-card .ic-dual-sub{font-size:clamp(11px,3.7cqi,14px)!important}
+.v51-slot .ind-card .ic-avg-value{font-size:clamp(16px,3.4cqi,22px)}
+.v51-slot .ind-card .ic-value:not(.vazio){font-size:clamp(22px,6cqi,40px)}
+.ind-card .ic-goal + .ic-goal{margin-top:14px}
+.v67-rk-bars{display:flex;flex-direction:column;gap:5px;min-width:0}
+.v52-rk-bar.v67-cons{height:7px;opacity:.6}
+.v52-rk-p.v67-rk-c{opacity:.85}
+.v67-cl{margin-top:8px;padding-top:6px;border-top:1px dashed rgba(168,204,168,.25);width:100%}
+.v67-cl-t{display:block;font-size:12px;color:var(--text-muted);margin-bottom:2px}
+.v67-cl-t b{color:var(--fg);font-size:14px!important;font-weight:700}
+@media (max-width:640px){.v52-rk.v62-d .v67-rk-bars{grid-column:2}.v52-rk:not(.v62-d) .v67-rk-bars{grid-column:1}}
+.v67-tag{display:inline-block;font-weight:800;color:#FFFFFF;background:rgba(224,238,231,.16);border:1px solid rgba(224,238,231,.45);border-radius:6px;padding:0 7px;font-size:12.5px;letter-spacing:.3px;line-height:1.55;text-transform:none}
+.ind-card .ic-goal-lbl{color:var(--fg);font-size:12px;white-space:nowrap}
+.ind-card .ic-goal-top{flex-wrap:wrap;gap:2px 10px}
+.ind-card .ic-goal-pct{white-space:nowrap;margin-left:auto}
+.v67-cl-t{color:#FFFFFF!important;font-size:13px}
+.v67-cl-t:has(+ .v51-mb){margin-top:6px}
+.v52-rk-v{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.v67-rk-l{white-space:nowrap;font-size:12.5px;opacity:.78}
+.v67-rk-l.v67-on{opacity:1}
+.v67-rk-l b{font-size:15px;color:#FFFFFF;margin-left:2px}
+.v67-rk-l small{color:var(--text-muted);font-size:12px}
+.v52-rk-bar.v67-fina{height:7px;opacity:.6}
+.v67-ord{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 12px;font-size:13px;color:var(--text-muted)}
+.v67-ob{background:transparent;border:1px solid rgba(224,238,231,.4);color:var(--fg);font:inherit;font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;cursor:pointer}
+.v67-ob.ativo{background:#E0EEE7;color:#011E3C;border-color:#E0EEE7}
+.v52-rk-row{grid-template-columns:minmax(110px,200px) 1fr minmax(250px,auto)}
+.v52-rk.v62-d .v52-rk-row{grid-template-columns:minmax(110px,200px) minmax(120px,150px) 1fr minmax(250px,auto)}
+@media (max-width:640px){.v52-rk-row{grid-template-columns:1fr}.v52-rk.v62-d .v52-rk-row{grid-template-columns:1fr}.v67-rk-bars,.v52-rk.v62-d .v67-rk-bars,.v52-rk.v62-d .v52-rk-d{grid-column:1}.v52-rk-v{align-items:flex-start}}
+/* v67e: nome do indicador em destaque (pedido 23/10) */
+.ind-card .ic-label{font-size:15px!important;font-weight:800!important;color:#FFFFFF!important;letter-spacing:1px;border-left:4px solid #A8CCA8;padding-left:10px;line-height:1.35}
+.v51-h4{font-size:18px;font-weight:800;color:#FFFFFF;border-left:4px solid #A8CCA8;padding-left:10px}
+.v51-kpi-t{font-size:15.5px!important;font-weight:800!important;color:#FFFFFF!important}
+.v52-rk-n{font-size:14px;font-weight:700;color:#FFFFFF}
+.v51-mx-r,.v54-pn-t{font-weight:700;color:#FFFFFF}
+/* v67: consolidado do período à direita, com o período escrito embaixo */
+.ind-card .ic-avg-per{font-size:11px;font-weight:600;color:var(--text-muted);margin-top:1px;white-space:nowrap}
+.v51-vol .v51-vol-s{min-height:0}
 </style>
 </head>
 <body>
@@ -880,7 +941,7 @@ details.v51-orig>summary{font-weight:700}
 Chart.register(ChartDataLabels);
 const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 const MESES_FULL = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-const AREAS = [{"id": "recepcao", "num": "01", "label": "Recepção", "responsavel": "Carla", "indicadores": [{"id": "taxa_de_cadastros_incorretos", "label": "Taxa de cadastros incorretos (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "tempo_medio_de_espera_medico_emergencia_min", "label": "Tempo Médio de Espera — Médico (Emergência) (min)", "tipo": "Valor/Qtd", "invertido": true}, {"id": "taxa_de_confirmacao_no_1_contato", "label": "Taxa de Confirmação no 1º Contato (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_desistencia_na_fila_emergencia", "label": "Taxa de Desistência na Fila (Emergência) (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "volume_de_atendimento_turno_da_manha", "label": "Volume de Atendimento — Turno da Manhã", "tipo": "Valor/Qtd", "invertido": false}, {"id": "volume_de_atendimento_turno_da_tarde", "label": "Volume de Atendimento — Turno da Tarde", "tipo": "Valor/Qtd", "invertido": false}, {"id": "volume_de_atendimento_consultorio_externo", "label": "Volume de Atendimento — Consultório Externo", "tipo": "Valor/Qtd", "invertido": false}, {"id": "consultas_particulares_agendadas_recepcao_principal", "label": "Consultas Particulares Agendadas — Recepção Principal", "tipo": "Valor/Qtd", "invertido": false}, {"id": "n_de_exames_agendados_recepcao_centro_de_diagnostico", "label": "N° de Exames Agendados — Recepção Centro de Diagnóstico", "tipo": "Valor/Qtd", "invertido": false}, {"id": "atendimentos_por_convenio_sus", "label": "% Atendimentos por Convênio — SUS (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "atendimentos_por_convenio_particular", "label": "% Atendimentos por Convênio — Particular (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "atendimentos_por_convenio_outros_convenios", "label": "% Atendimentos por Convênio — Outros Convênios (%)", "tipo": "Taxa/%", "invertido": false}]}, {"id": "enfermagem", "num": "02", "label": "Enfermagem", "responsavel": "Jaíne", "indicadores": [{"id": "n_de_reclamacoes_formais", "label": "Nº de reclamações formais", "tipo": "Valor/Qtd", "invertido": true}, {"id": "taxa_de_erros_de_medicacao_na_internacao", "label": "Taxa de erros de medicação na internação (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "taxa_de_iras", "label": "Taxa de IRAS (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "taxa_de_lesoes_por_pressao", "label": "Taxa de lesões por pressão (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "taxa_de_quedas", "label": "Taxa de quedas (%)", "tipo": "Taxa/%", "invertido": true}]}, {"id": "sanificacao", "num": "03", "label": "Sanificação", "responsavel": "Equipe", "indicadores": [{"id": "equipe_treinada", "label": "% equipe treinada (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_nao_conformidades_ccih", "label": "Taxa de não conformidades CCIH (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "conformidade_de_periodicidade_area_critica_limpeza_concorrente", "label": "Conformidade de Periodicidade — Área Crítica / Limpeza Concorrente (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "conformidade_de_periodicidade_area_critica_limpeza_terminal", "label": "Conformidade de Periodicidade — Área Crítica / Limpeza Terminal (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "conformidade_de_periodicidade_area_semicritica_limpeza_concorrente", "label": "Conformidade de Periodicidade — Área Semicrítica / Limpeza Concorrente (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "conformidade_de_periodicidade_area_semicritica_limpeza_terminal", "label": "Conformidade de Periodicidade — Área Semicrítica / Limpeza Terminal (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "conformidade_de_periodicidade_area_nao_critica_limpeza_concorrente", "label": "Conformidade de Periodicidade — Área Não Crítica / Limpeza Concorrente (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "conformidade_de_periodicidade_area_nao_critica_limpeza_terminal", "label": "Conformidade de Periodicidade — Área Não Crítica / Limpeza Terminal (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_cumprimento_do_cronograma_de_limpezas", "label": "Taxa de Cumprimento do Cronograma de Limpezas (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "custo_por_dia_limpeza_r", "label": "Custo por Dia — Limpeza (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "custo_por_dia_lavanderia_r", "label": "Custo por Dia — Lavanderia (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "custo_por_dia_total_do_setor_higienizacao_e_lavanderia_hospitalar_r", "label": "Custo por Dia — Total do Setor Higienização e Lavanderia Hospitalar (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "custo_limpeza", "label": "% Custo Limpeza (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "custo_lavanderia", "label": "% Custo Lavanderia (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "custo_total_do_setor_de_higienizacao_e_lavanderia_hospitalar_r", "label": "Custo Total do Setor de Higienização e Lavanderia Hospitalar (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}]}, {"id": "farmacia", "num": "04", "label": "Farmácia", "responsavel": "Valquíria", "indicadores": [{"id": "itens_fora_dos_niveis", "label": "% itens fora dos níveis (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "perdas_vencimento_extravios", "label": "% perdas vencimento/extravios (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "acuracia_de_estoque", "label": "Acurácia de estoque (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "giro_de_estoque_vezes", "label": "Giro de estoque (vezes)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "taxa_ajustes_negativos", "label": "Taxa ajustes negativos (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "de_atendimentos_com_erro_no_lancamento", "label": "% de Atendimentos com erro no lançamento (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "contas_sem_divergencia", "label": "% contas sem divergência (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "perdas_por_nao_lancamentos_r", "label": "Perdas por não lançamentos (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "valor_total_estoque_r", "label": "Valor total estoque (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "valor_total_de_notas_compras_r", "label": "Valor total de notas - compras (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}]}, {"id": "faturamento", "num": "05", "label": "Faturamento", "responsavel": "Carla", "indicadores": [{"id": "metas_sus_atingidas", "label": "% metas SUS atingidas (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "faturamentos_no_prazo", "label": "% faturamentos no prazo (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_glosa_inicial", "label": "Taxa de Glosa Inicial (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "valor_financeiro_glosado_r", "label": "Valor Financeiro Glosado (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "de_aihs_canceladas", "label": "% de AIHs Canceladas (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "de_servicos_pactuados_abaixo_da_meta_leitura_trimestral", "label": "% de Serviços Pactuados Abaixo da Meta — leitura trimestral (%)", "tipo": "Taxa/%", "invertido": true}]}, {"id": "nutricao", "num": "06", "label": "Nutrição", "responsavel": "Eucléia", "indicadores": [{"id": "amostras_microbiologicas_ok", "label": "% Amostras microbiológicas OK (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "itens_vencidos_sobre_estoque", "label": "% Itens vencidos sobre estoque (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "custo_compras_nutricao_r", "label": "Custo Compras Nutrição (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "custo_por_paciente_alimentacao_r", "label": "Custo por paciente / alimentação (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "custo_de_refeicoes_sobre_compras", "label": "% Custo de Refeições sobre Compras (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "custo_por_refeicao_r", "label": "Custo por refeição (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "n_refeicoes_pacientes", "label": "Nº Refeições Pacientes", "tipo": "Valor/Qtd", "invertido": false}, {"id": "perdas_por_vencimento_r", "label": "Perdas por Vencimento (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}]}, {"id": "radiologia", "num": "07", "label": "Radiologia", "responsavel": "Daiane", "indicadores": [{"id": "laudos_dentro_do_sla", "label": "% Laudos dentro do SLA (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_retrabalho", "label": "Taxa de Retrabalho (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "tat_medio_exame_laudo_horas", "label": "TAT médio exame → laudo (horas)", "tipo": "Valor/Qtd", "invertido": true}, {"id": "horas_extras_sobre_a_folha_da_radiologia", "label": "% Horas Extras sobre a Folha da Radiologia (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "produtividade_por_equipamento_exames_equip", "label": "Produtividade por Equipamento (exames/equip.)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "receita_por_exame_ticket_medio_r", "label": "Receita por Exame — Ticket Médio (R$)", "tipo": "Valor/Qtd", "invertido": false, "moeda": true}, {"id": "taxa_de_utilizacao_da_capacidade_de_exames", "label": "Taxa de Utilização da Capacidade de Exames (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_cancelamento_por_preparo_inadequado", "label": "Taxa de Cancelamento por Preparo Inadequado (%)", "tipo": "Taxa/%", "invertido": true}]}, {"id": "rh", "num": "08", "label": "RH", "responsavel": "Andrégis", "indicadores": [{"id": "taxa_de_absenteismo", "label": "Taxa de Absenteísmo (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "custo_absenteismo_r", "label": "Custo Absenteísmo (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "n_de_admissoes", "label": "Nº de Admissões", "tipo": "Valor/Qtd", "invertido": false}, {"id": "n_de_desligamentos", "label": "Nº de Desligamentos", "tipo": "Valor/Qtd", "invertido": true}, {"id": "taxa_afastamentos_saude", "label": "Taxa Afastamentos Saúde (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "taxa_de_turnover", "label": "Taxa de Turnover (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "rotatividade_voluntaria", "label": "Rotatividade Voluntária (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "participacao_amb_indigena", "label": "% Participação — Amb. Indígena (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "participacao_dermatologia", "label": "% Participação — Dermatologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "participacao_emergencia", "label": "% Participação — Emergência (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "participacao_internacoes", "label": "% Participação — Internações (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "participacao_neurologia", "label": "% Participação — Neurologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "satisfacao_emergencia_media", "label": "Satisfação Emergência (média)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "satisfacao_internacao_media", "label": "Satisfação Internação (média)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "satisfacao_treinamentos_media_1_5", "label": "Satisfação Treinamentos (média 1-5)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "satisfacao_enfermagem_media", "label": "Satisfação Enfermagem (média)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "respondentes_enfermagem", "label": "% Respondentes — Enfermagem (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_participacao_capacitacoes", "label": "Taxa Participação Capacitações (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "satisfacao_nutricao_media", "label": "Satisfação Nutrição (média)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "nps_nutricao_prom_detr", "label": "NPS Nutrição (% prom − % detr)", "tipo": "Valor/Qtd", "invertido": false}]}, {"id": "gestao", "num": "09", "label": "Gestão", "responsavel": "Janis", "indicadores": [{"id": "projetos_aprovados", "label": "% Projetos aprovados (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "n_projetos_aprovados", "label": "Nº Projetos Aprovados", "tipo": "Valor/Qtd", "invertido": false}, {"id": "n_projetos_submetidos", "label": "Nº Projetos Submetidos", "tipo": "Valor/Qtd", "invertido": false}, {"id": "n_especialidades_medicas_ativas", "label": "Nº Especialidades Médicas Ativas", "tipo": "Valor/Qtd", "invertido": false}, {"id": "colaboradores_treinados_lgpd", "label": "% Colaboradores treinados LGPD (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "valor_investido_equipamentos_r", "label": "Valor Investido Equipamentos (R$)", "tipo": "Valor/Qtd", "invertido": false, "moeda": true}]}, {"id": "producao", "num": "10", "label": "Produção", "responsavel": "Janis", "indicadores": [{"id": "utilizacao_bloco_cirurgico", "label": "% Utilização Bloco Cirúrgico (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "participacao_regional", "label": "Participação Regional (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_no_shows", "label": "Taxa de No-Shows (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "taxa_de_ocupacao_dos_leitos", "label": "Taxa de Ocupação dos Leitos (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "tmp_dias", "label": "TMP (dias)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "tmp_internacao_geral_dias", "label": "TMP — Internação Geral (dias)", "tipo": "Valor/Qtd", "invertido": true}, {"id": "tmp_saude_mental_dias", "label": "TMP — Saúde Mental (dias)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "vidas_unicas_atendidas", "label": "Vidas Únicas Atendidas", "tipo": "Valor/Qtd", "invertido": false}, {"id": "taxa_ocupacao_agenda_cardiologia", "label": "Taxa Ocupação Agenda — Cardiologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_psicologia", "label": "Taxa Ocupação Agenda — Psicologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_dermatologia_1", "label": "Taxa Ocupação Agenda — Dermatologia 1 (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_dermatologia_2", "label": "Taxa Ocupação Agenda — Dermatologia 2 (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_vascular", "label": "Taxa Ocupação Agenda — Vascular (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_eletroneuromiografia", "label": "Taxa Ocupação Agenda — Eletroneuromiografia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_fonoaudiologia", "label": "Taxa Ocupação Agenda — Fonoaudiologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_otorrinolaringologia", "label": "Taxa Ocupação Agenda — Otorrinolaringologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_urologia", "label": "Taxa Ocupação Agenda — Urologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_reumatologia", "label": "Taxa Ocupação Agenda — Reumatologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_psiquiatria", "label": "Taxa Ocupação Agenda — Psiquiatria (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_traumatologia_1", "label": "Taxa Ocupação Agenda — Traumatologia 1 (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_traumatologia_2", "label": "Taxa Ocupação Agenda — Traumatologia 2 (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_neurologia", "label": "Taxa Ocupação Agenda — Neurologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_pediatria", "label": "Taxa Ocupação Agenda — Pediatria (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_oftalmologia", "label": "Taxa Ocupação Agenda — Oftalmologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_geriatria", "label": "Taxa Ocupação Agenda — Geriatria (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_global", "label": "Taxa Ocupação Agenda Global (%)", "tipo": "Taxa/%", "invertido": false}]}];
+const AREAS = [{"id": "recepcao", "num": "01", "label": "Recepção", "responsavel": "Carla", "indicadores": [{"id": "taxa_de_cadastros_incorretos", "label": "Taxa de cadastros incorretos (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "tempo_medio_de_espera_medico_emergencia_min", "label": "Tempo Médio de Espera — Médico (Emergência) (min)", "tipo": "Valor/Qtd", "invertido": true}, {"id": "taxa_de_confirmacao_no_1_contato", "label": "Taxa de Confirmação no 1º Contato (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_desistencia_na_fila_emergencia", "label": "Taxa de Desistência na Fila (Emergência) (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "volume_de_atendimento_turno_da_manha", "label": "Volume de Atendimento — Turno da Manhã", "tipo": "Valor/Qtd", "invertido": false}, {"id": "volume_de_atendimento_turno_da_tarde", "label": "Volume de Atendimento — Turno da Tarde", "tipo": "Valor/Qtd", "invertido": false}, {"id": "volume_de_atendimento_consultorio_externo", "label": "Volume de Atendimento — Consultório Externo", "tipo": "Valor/Qtd", "invertido": false}, {"id": "consultas_particulares_agendadas_recepcao_principal", "label": "Consultas Particulares Agendadas — Recepção Principal", "tipo": "Valor/Qtd", "invertido": false}, {"id": "n_de_exames_agendados_recepcao_centro_de_diagnostico", "label": "N° de Exames Agendados — Recepção Centro de Diagnóstico", "tipo": "Valor/Qtd", "invertido": false}, {"id": "atendimentos_por_convenio_sus", "label": "% Atendimentos por Convênio — SUS (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "atendimentos_por_convenio_particular", "label": "% Atendimentos por Convênio — Particular (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "atendimentos_por_convenio_outros_convenios", "label": "% Atendimentos por Convênio — Outros Convênios (%)", "tipo": "Taxa/%", "invertido": false}]}, {"id": "enfermagem", "num": "02", "label": "Enfermagem", "responsavel": "Jaíne", "indicadores": [{"id": "n_de_reclamacoes_formais", "label": "Nº de reclamações formais", "tipo": "Valor/Qtd", "invertido": true}, {"id": "taxa_de_erros_de_medicacao_na_internacao", "label": "Taxa de erros de medicação na internação (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "taxa_de_iras", "label": "Taxa de IRAS (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "taxa_de_lesoes_por_pressao", "label": "Taxa de lesões por pressão (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "taxa_de_quedas", "label": "Taxa de quedas (%)", "tipo": "Taxa/%", "invertido": true}]}, {"id": "sanificacao", "num": "03", "label": "Sanificação", "responsavel": "Jaíne", "indicadores": [{"id": "equipe_treinada", "label": "% equipe treinada (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_nao_conformidades_ccih", "label": "Taxa de não conformidades CCIH (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "conformidade_de_periodicidade_area_critica_limpeza_concorrente", "label": "Conformidade de Periodicidade — Área Crítica / Limpeza Concorrente (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "conformidade_de_periodicidade_area_critica_limpeza_terminal", "label": "Conformidade de Periodicidade — Área Crítica / Limpeza Terminal (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "conformidade_de_periodicidade_area_semicritica_limpeza_concorrente", "label": "Conformidade de Periodicidade — Área Semicrítica / Limpeza Concorrente (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "conformidade_de_periodicidade_area_semicritica_limpeza_terminal", "label": "Conformidade de Periodicidade — Área Semicrítica / Limpeza Terminal (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "conformidade_de_periodicidade_area_nao_critica_limpeza_concorrente", "label": "Conformidade de Periodicidade — Área Não Crítica / Limpeza Concorrente (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "conformidade_de_periodicidade_area_nao_critica_limpeza_terminal", "label": "Conformidade de Periodicidade — Área Não Crítica / Limpeza Terminal (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_cumprimento_do_cronograma_de_limpezas", "label": "Taxa de Cumprimento do Cronograma de Limpezas (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "custo_por_dia_limpeza_r", "label": "Custo por Dia — Limpeza (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "custo_por_dia_lavanderia_r", "label": "Custo por Dia — Lavanderia (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "custo_por_dia_total_do_setor_higienizacao_e_lavanderia_hospitalar_r", "label": "Custo por Dia — Total do Setor Higienização e Lavanderia Hospitalar (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "custo_limpeza", "label": "% Custo Limpeza (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "custo_lavanderia", "label": "% Custo Lavanderia (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "custo_total_do_setor_de_higienizacao_e_lavanderia_hospitalar_r", "label": "Custo Total do Setor de Higienização e Lavanderia Hospitalar (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}]}, {"id": "farmacia", "num": "04", "label": "Farmácia", "responsavel": "Walkiria", "indicadores": [{"id": "itens_fora_dos_niveis", "label": "% itens fora dos níveis (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "perdas_vencimento_extravios", "label": "% perdas vencimento/extravios (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "acuracia_de_estoque", "label": "Acurácia de estoque (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "giro_de_estoque_vezes", "label": "Giro de estoque (vezes)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "taxa_ajustes_negativos", "label": "Taxa ajustes negativos (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "de_atendimentos_com_erro_no_lancamento", "label": "% de Atendimentos com erro no lançamento (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "contas_sem_divergencia", "label": "% contas sem divergência (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "perdas_por_nao_lancamentos_r", "label": "Perdas por não lançamentos (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "valor_total_estoque_r", "label": "Valor total estoque (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "valor_total_de_notas_compras_r", "label": "Valor total de notas - compras (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "cobertura_de_estoque_meses", "label": "Cobertura de estoque (meses)", "tipo": "Valor/Qtd", "invertido": false}]}, {"id": "faturamento", "num": "05", "label": "Faturamento", "responsavel": "Carla", "indicadores": [{"id": "metas_sus_atingidas", "label": "% metas SUS atingidas (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "faturamentos_no_prazo", "label": "% faturamentos no prazo (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_glosa_inicial", "label": "Taxa de Glosa Inicial (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "valor_financeiro_glosado_r", "label": "Valor Financeiro Glosado (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "de_aihs_canceladas", "label": "% de AIHs Canceladas (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "de_servicos_pactuados_abaixo_da_meta_leitura_trimestral", "label": "% de Serviços Pactuados Abaixo da Meta — leitura trimestral (%)", "tipo": "Taxa/%", "invertido": true}]}, {"id": "nutricao", "num": "06", "label": "Nutrição", "responsavel": "Eucléia", "indicadores": [{"id": "amostras_microbiologicas_ok", "label": "% Amostras microbiológicas OK (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "itens_vencidos_sobre_estoque", "label": "% Itens vencidos sobre estoque (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "custo_compras_nutricao_r", "label": "Custo Compras Nutrição (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "custo_por_paciente_alimentacao_r", "label": "Custo por paciente / alimentação (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "custo_de_refeicoes_sobre_compras", "label": "% Custo de Refeições sobre Compras (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "custo_por_refeicao_r", "label": "Custo por refeição (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "n_refeicoes_pacientes", "label": "Nº Refeições Pacientes", "tipo": "Valor/Qtd", "invertido": false}, {"id": "perdas_por_vencimento_r", "label": "Perdas por Vencimento (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}]}, {"id": "radiologia", "num": "07", "label": "Radiologia", "responsavel": "Janis", "indicadores": [{"id": "laudos_dentro_do_sla", "label": "% Laudos dentro do SLA (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_retrabalho", "label": "Taxa de Retrabalho (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "tat_medio_exame_laudo_horas", "label": "TAT médio exame → laudo (horas)", "tipo": "Valor/Qtd", "invertido": true}, {"id": "horas_extras_sobre_a_folha_da_radiologia", "label": "% Horas Extras sobre a Folha da Radiologia (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "produtividade_por_equipamento_exames_equip", "label": "Produtividade por Equipamento (exames/equip.)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "receita_por_exame_ticket_medio_r", "label": "Receita por Exame — Ticket Médio (R$)", "tipo": "Valor/Qtd", "invertido": false, "moeda": true}, {"id": "taxa_de_utilizacao_da_capacidade_de_exames", "label": "Taxa de Utilização da Capacidade de Exames (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_de_cancelamento_por_preparo_inadequado", "label": "Taxa de Cancelamento por Preparo Inadequado (%)", "tipo": "Taxa/%", "invertido": true}]}, {"id": "rh", "num": "08", "label": "RH", "responsavel": "Andrégis", "indicadores": [{"id": "taxa_de_absenteismo", "label": "Taxa de Absenteísmo (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "custo_absenteismo_r", "label": "Custo Absenteísmo (R$)", "tipo": "Valor/Qtd", "invertido": true, "moeda": true}, {"id": "n_de_admissoes", "label": "Nº de Admissões", "tipo": "Valor/Qtd", "invertido": false}, {"id": "n_de_desligamentos", "label": "Nº de Desligamentos", "tipo": "Valor/Qtd", "invertido": true}, {"id": "taxa_afastamentos_saude", "label": "Taxa Afastamentos Saúde (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "taxa_de_turnover", "label": "Taxa de Turnover (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "rotatividade_voluntaria", "label": "Rotatividade Voluntária (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "participacao_amb_indigena", "label": "% Participação — Amb. Indígena (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "participacao_dermatologia", "label": "% Participação — Dermatologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "participacao_emergencia", "label": "% Participação — Emergência (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "participacao_internacoes", "label": "% Participação — Internações (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "participacao_neurologia", "label": "% Participação — Neurologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "satisfacao_emergencia_media", "label": "Satisfação Emergência (média)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "satisfacao_internacao_media", "label": "Satisfação Internação (média)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "satisfacao_treinamentos_media_1_5", "label": "Satisfação Treinamentos (média 1-5)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "satisfacao_enfermagem_media", "label": "Satisfação Enfermagem (média)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "respondentes_enfermagem", "label": "% Respondentes — Enfermagem (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_participacao_capacitacoes", "label": "Taxa Participação Capacitações (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "satisfacao_nutricao_media", "label": "Satisfação Nutrição (média)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "nps_nutricao_prom_detr", "label": "NPS Nutrição (% prom − % detr)", "tipo": "Valor/Qtd", "invertido": false}]}, {"id": "gestao", "num": "09", "label": "Gestão", "responsavel": "Janis", "indicadores": [{"id": "projetos_aprovados", "label": "% Projetos aprovados (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "n_projetos_aprovados", "label": "Nº Projetos Aprovados", "tipo": "Valor/Qtd", "invertido": false}, {"id": "n_projetos_submetidos", "label": "Nº Projetos Submetidos", "tipo": "Valor/Qtd", "invertido": false}, {"id": "n_especialidades_medicas_ativas", "label": "Nº Especialidades Médicas Ativas", "tipo": "Valor/Qtd", "invertido": false}, {"id": "colaboradores_treinados_lgpd", "label": "% Colaboradores treinados LGPD (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "valor_investido_equipamentos_r", "label": "Valor Investido Equipamentos (R$)", "tipo": "Valor/Qtd", "invertido": false, "moeda": true}]}, {"id": "producao", "num": "10", "label": "Produção", "responsavel": "Janis", "indicadores": [{"id": "utilizacao_bloco_cirurgico", "label": "% Utilização Bloco Cirúrgico (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "participacao_regional", "label": "Participação Regional (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "taxa_de_no_shows", "label": "Taxa de No-Shows (%)", "tipo": "Taxa/%", "invertido": true}, {"id": "taxa_de_ocupacao_dos_leitos", "label": "Taxa de Ocupação dos Leitos (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "tmp_dias", "label": "TMP (dias)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "tmp_internacao_geral_dias", "label": "TMP — Internação Geral (dias)", "tipo": "Valor/Qtd", "invertido": true}, {"id": "tmp_saude_mental_dias", "label": "TMP — Saúde Mental (dias)", "tipo": "Valor/Qtd", "invertido": false}, {"id": "vidas_unicas_atendidas", "label": "Vidas Únicas Atendidas", "tipo": "Valor/Qtd", "invertido": false}, {"id": "taxa_ocupacao_agenda_cardiologia", "label": "Taxa Ocupação Agenda — Cardiologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_psicologia", "label": "Taxa Ocupação Agenda — Psicologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_dermatologia_1", "label": "Taxa Ocupação Agenda — Dermatologia 1 (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_dermatologia_2", "label": "Taxa Ocupação Agenda — Dermatologia 2 (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_vascular", "label": "Taxa Ocupação Agenda — Vascular (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_eletroneuromiografia", "label": "Taxa Ocupação Agenda — Eletroneuromiografia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_fonoaudiologia", "label": "Taxa Ocupação Agenda — Fonoaudiologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_otorrinolaringologia", "label": "Taxa Ocupação Agenda — Otorrinolaringologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_urologia", "label": "Taxa Ocupação Agenda — Urologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_reumatologia", "label": "Taxa Ocupação Agenda — Reumatologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_psiquiatria", "label": "Taxa Ocupação Agenda — Psiquiatria (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_traumatologia_1", "label": "Taxa Ocupação Agenda — Traumatologia 1 (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_traumatologia_2", "label": "Taxa Ocupação Agenda — Traumatologia 2 (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_neurologia", "label": "Taxa Ocupação Agenda — Neurologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_pediatria", "label": "Taxa Ocupação Agenda — Pediatria (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_oftalmologia", "label": "Taxa Ocupação Agenda — Oftalmologia (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_geriatria", "label": "Taxa Ocupação Agenda — Geriatria (%)", "tipo": "Taxa/%", "invertido": false}, {"id": "taxa_ocupacao_agenda_global", "label": "Taxa Ocupação Agenda Global (%)", "tipo": "Taxa/%", "invertido": false}]}];
 
 // Colunas 0-based: D=3(meta), E=4(Jan)..P=15(Dez), Q=16(consolidado)
 const COL_META=3, COL_JAN=4, COL_DEZ=15, COL_CONS=16;
@@ -1121,6 +1182,7 @@ function htmlAreasGrid(sel){
 function switchTab(id){
   ST.tab=id;
   ST.filtroCor=null;                          // filtro de sinaleira é por aba, não persiste na navegação
+  ST.mesManual=false;                         // v67: toda aba abre no período completo dela
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
   ajustarMesAutomatico();
   renderMain(); window.scrollTo({top:0,behavior:'smooth'});
@@ -1342,26 +1404,11 @@ function corDelta(dt){
 }
 
 function ajustarMesAutomatico(){
+  // v67: cada aba abre no período completo DELA (o Faturamento lança com atraso); o card julga o último mês lançado
   if(ST.mesManual || !ST.data) return;
-  const g = ultimoMesComDado(null);
-  if(g === null) return;
-  ST.selectedMonths = [g];
-  if(ST.tab && ST.tab !== 'capa'){
-    const area = AREAS.find(a => a.id === ST.tab);
-    if(area){
-      const ids = area.indicadores.map(i => i.id);
-      let n = 0;
-      ids.forEach(id => {
-        const d = ST.data[id];
-        if(d && d.meses[g] !== null && d.meses[g] !== undefined && !isNaN(d.meses[g])) n++;
-      });
-      const temDado = n >= Math.max(1, Math.ceil(ids.length * 0.2));
-      if(!temDado){
-        const ua = ultimoMesComDado(ST.tab);
-        if(ua !== null) ST.selectedMonths = [ua];
-      }
-    }
-  }
+  const pc = periodoCompleto();
+  if(!pc) return;
+  ST.selectedMonths = pc.slice();
   if(typeof updateChips === 'function' && document.getElementById('periodChips')) updateChips();
 }
 
@@ -1526,7 +1573,7 @@ function htmlArea(area){
   const cont = {verde:0, amarelo:0, vermelho:0, sem:0};
   const comCor = area.indicadores.map(ind=>{
     const d  = getData(ind);
-    const sc = d ? (semCls(calcCurVal(d,sel), metaEfetiva(ind,d,sel), ind.invertido) || 'sem') : 'sem';
+    const sc = leitura(ind,sel).sc;
     cont[sc]++;
     return {ind, sc};
   });
@@ -1709,6 +1756,26 @@ function calcAtt(cur, meta){
   return (cur/meta)*100;
 }
 
+// v67: mês em foco = último mês da seleção com lançamento neste indicador. Sinaleira, barra de meta,
+// Resumo e blocos julgam esse mês contra a meta mensal; o consolidado do período fica como contexto.
+function focoMes(d, sel){
+  if(!d||!d.meses) return null;
+  const s=(!sel||!sel.length)?[...Array(12).keys()]:sel;
+  for(let k=s.length-1;k>=0;k--){ const v=d.meses[s[k]]; if(v!==null&&v!==undefined&&!isNaN(v)) return s[k]; }
+  return null;
+}
+function selFoco(d, sel){ const m=focoMes(d,sel); return m===null ? sel : [m]; }
+function selGrupo(ents, sel){
+  let mx=null; ents.forEach(e=>{ const m=focoMes(getData(e.ind),sel); if(m!==null&&(mx===null||m>mx)) mx=m; });
+  return mx===null ? sel : [mx];
+}
+function lblFoco(ms, sel){
+  const v=(ms||[]).filter(m=>m!==null&&m!==undefined); if(!v.length) return periodoLbl(sel);
+  const cnt={}; v.forEach(m=>{ cnt[m]=(cnt[m]||0)+1; });
+  const dom=+Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]||b-a)[0];
+  const outros=v.filter(m=>m!==dom).length;
+  return MESES[dom]+(outros?` (${outros} ${outros>1?'indicadores':'indicador'} com último lançamento em outro mês)`:'');
+}
 function calcCurVal(d, sel){
   if(!d) return null;
   if(d._estoque){ const s=(!sel||!sel.length)?[...Array(12).keys()]:sel;
@@ -1766,15 +1833,46 @@ function streakZero(d, ateIdx){
   return n;
 }
 
+// v67b: uma linha de atingimento (rótulo, % da meta/limite, barra, real × referência)
+function v67Goal(ind, cur, meta, rot, metaNota){
+  const isLimite = ind.invertido, refLbl = isLimite ? 'Limite' : 'Meta';
+  const semDado = (cur===null||cur===undefined||isNaN(cur));
+  const vF = semDado ? null : fmtVal(cur, ind);
+  const metaD = (fmtMeta(meta,ind)||String(meta)) + (metaNota ? ` <span style="opacity:.6;font-weight:400">(${metaNota})</span>` : '');
+  const foot = `<div class="ic-goal-foot"><span>Real: <strong>${vF||'&mdash;'}</strong></span><span>${refLbl}: <strong>${metaD}</strong></span></div>`;
+  const topo = (cls,txt,tip)=>`<div class="ic-goal-top"><span class="ic-goal-lbl">${rot}</span><span class="ic-goal-pct ${cls}"${tip?` title="${tip}"`:''}>${txt}</span></div>`;
+  if(meta===0){
+    const dentro = !semDado && (isLimite ? cur<=0 : cur>=0);
+    const clsZ = semDado ? 'neu' : (dentro ? 'verde' : 'vermelho');
+    const txtZ = semDado ? '&mdash;' : (dentro ? 'Sem ocorrências' : 'Acima do limite zero');
+    return `<div class="ic-goal">${topo(clsZ,txtZ,'Limite zero: não há percentual a calcular')}<div class="ic-goal-track">${semDado?'':`<div class="ic-goal-fill ${clsZ}" style="width:100%"></div>`}</div>${foot}</div>`;
+  }
+  const att = calcAtt(cur, meta);
+  if(att===null) return `<div class="ic-goal">${topo('neu','&mdash;')}<div class="ic-goal-track"><div class="ic-goal-mark" style="left:76.9%"></div></div>${foot}</div>`;
+  const MAX=130, markPos=100/MAX*100, attV=Math.min(att,MAX), fillBase=Math.min(att,100)/MAX*100;
+  const over = attV>100 ? (attV-100)/MAX*100 : 0;
+  const cls = semCls(cur,meta,isLimite)||'neu', overCls = isLimite ? 'bad' : 'good';
+  const attR = Math.round(att*10)/10;
+  const attTxt = isLimite
+    ? (attR <= 100 ? fmtNum(att)+'% do limite' : 'Ultrapassou o limite em '+fmtNum(att-100)+'%')
+    : (attR >  100 ? 'Superou a meta em '+fmtNum(att-100)+'%' : (attR === 100 ? 'Meta atingida' : fmtNum(att)+'% da meta'));
+  return `<div class="ic-goal">${topo(cls,attTxt)}<div class="ic-goal-track">
+    <div class="ic-goal-fill ${cls}" style="width:${fillBase}%"></div>
+    ${over>0?`<div class="ic-goal-over ${overCls}" style="left:${markPos}%;width:${over}%"></div>`:''}
+    <div class="ic-goal-mark" style="left:${markPos}%"></div></div>${foot}</div>`;
+}
+
 function htmlCard(ind, titulo){          // v64: titulo = título do LAYOUT, como no destaque
   const d = getData(ind);
   const sel = getMesesSelecionados();
   const realCount = d ? d.meses.filter(v=>v!==null && v!==undefined && !isNaN(v)).length : 0;
-  let cur=null, prev=null, meta=null, metaMes=null;
+  let cur=null, prev=null, meta=null, metaMes=null, perV=null, mF=null;
   if(d){
     metaMes = d.meta;                     // meta mensal — é a do gráfico e da tracejada
-    meta    = metaEfetiva(ind, d, sel);   // meta do período — é a da barra e da sinaleira
-    cur = calcCurVal(d, sel);
+    mF = focoMes(d, sel); const sF = mF===null ? sel : [mF];
+    meta    = metaEfetiva(ind, d, sF);    // v67: sinaleira e barra julgam o mês em foco contra a meta mensal
+    cur = mF===null ? null : calcCurVal(d, sF);
+    perV = calcCurVal(d, sel);            // consolidado do período: contexto, à direita
     // prev: mês anterior ao primeiro selecionado (só quando 1 mês)
     if(sel && sel.length===1 && sel[0]>0) prev = d.meses[sel[0]-1];
   }
@@ -1816,7 +1914,7 @@ function htmlCard(ind, titulo){          // v64: titulo = título do LAYOUT, com
   //   Ano completo (12)      → mantém o número único + selo ANO (não existe ano anterior na planilha)
   let dualH = '';
   let labelStyleAttr = '';
-  if(d && sel && sel.length !== 12 && cur !== null){
+  if(d && sel && cur !== null){
     const mintStyle = 'color:var(--fg);font-weight:500;';
     labelStyleAttr = ` style="${mintStyle}"`;
     const contiguo = sel.every((v,i)=>i===0||v===sel[i-1]+1);
@@ -1844,8 +1942,10 @@ function htmlCard(ind, titulo){          // v64: titulo = título do LAYOUT, com
         dualNums = `<span class="ic-dual-cur vazio">&mdash;</span>`;
         dualSub  = contiguo ? MESES[sel[0]]+' → '+MESES[sel[sel.length-1]] : sel.length+' meses';
       } else {
-        // acima de 6 pontos a progressão não cabe no card fechado: primeiro … último
-        const vis = pts.length<=6 ? pts : [pts[0], null, pts[pts.length-1]];
+        // v66d: o topo mostra só o mês anterior → o último mês, qualquer que seja o tamanho do período.
+        //   A série inteira está no gráfico; o consolidado do período fica à direita e a variação do período, no rodapé.
+        //   Assim o card tem a mesma largura com 2 ou com 12 meses lançados.
+        const vis = pts.slice(-2);
         const partes = vis.map((i,k)=>{
           if(i===null) return `<span class="ic-dual-arrow">…</span>`;
           const f = fmtVal(d.meses[i], ind);
@@ -1857,14 +1957,14 @@ function htmlCard(ind, titulo){          // v64: titulo = título do LAYOUT, com
         // A variação do período inteiro ficou no rodapé, para o card não repetir a mesma conta.
         const iAnt = pts.length>=2 ? pts[pts.length-2] : null;
         const dtP = iAnt===null ? null : deltaTxt(d.meses[iAnt], d.meses[pts[pts.length-1]], ind);
-        const nomes = (pts.length<=6 ? pts.map(i=>MESES[i])
-                                     : [MESES[pts[0]], '…', MESES[pts[pts.length-1]]]).join(' → ');
+        const nomes = vis.map(i=>MESES[i]).join(' → ');
         dualSub = nomes +
-          (dtP ? ` <span class="ic-dual-delta" style="color:${corDelta(dtP)}">${dtP.arrow} ${dtP.txt} vs. ${MESES[iAnt]}</span>` : '');
+          (dtP ? ` <span class="ic-dual-delta" style="color:${corDelta(dtP)}">${dtP.arrow} ${dtP.txt}</span>` : '');
       }
       avgH = `<div class="ic-dual-avg">
       <div class="ic-avg-label" style="${mintStyle}">${d&&d._estoque?'último mês':cobreTudo(d,sel)?'consolidado':'média'}</div>
-      <div class="ic-avg-value">${vFmt||'&mdash;'}</div>
+      <div class="ic-avg-value">${fmtVal(perV,ind)||'&mdash;'}</div>
+      <div class="ic-avg-per">${periodoLbl(sel)}</div>
     </div>`;
     }
 
@@ -1892,7 +1992,7 @@ function htmlCard(ind, titulo){          // v64: titulo = título do LAYOUT, com
   let insightH = '';
   if(meta===0 && d && sel && sel.length){
     // Meta zero: a leitura de evolução é SEQUÊNCIA, não proporção.
-    const ult = sel[sel.length-1];
+    const ult = mF!==null ? mF : sel[sel.length-1];
     const vUlt = d.meses[ult];
     if(vUlt!==null && vUlt!==undefined && !isNaN(vUlt)){
       const cls = vUlt<=0 ? 'verde' : 'vermelho';
@@ -1916,7 +2016,7 @@ function htmlCard(ind, titulo){          // v64: titulo = título do LAYOUT, com
     if(!dt || dt.diff===0){ txt=`${mesAtual} manteve-se estável vs. ${mesAnt}`; }
     else { txt=`${mesAtual} ${dt.diff>0?'cresceu':'caiu'} <strong>${dt.txt}</strong> vs. ${mesAnt}`; }
     insightH=`<div class="ic-insight ${cls}">${txt}</div>`;
-  } else if(d && sel && sel.length>=2){
+  } else if(false && d && sel && sel.length>=2){   // v67: o card mostra só a variação mês anterior → mês atual (pedido 23/10)
     // v50: o rodapé passou a carregar o PERÍODO INTEIRO (primeiro → último mês lançado da
     // seleção), porque o topo agora mostra mês contra mês anterior.
     const ptsF = sel.filter(i => d.meses[i]!==null && d.meses[i]!==undefined && !isNaN(d.meses[i]));
@@ -1937,56 +2037,17 @@ function htmlCard(ind, titulo){          // v64: titulo = título do LAYOUT, com
   const isLimite = ind.invertido;                 // invertido = limite/teto (menor é melhor)
   const refLbl   = isLimite ? 'Limite' : 'Meta';
   const compLbl  = refLbl;   // 'Meta' / 'Limite' — a frase completa vai no lado direito
+  // v67b: duas linhas contra a meta - último mês e consolidado do período (pedido 23/10: eles não trocam o período)
+  const nPer = d ? sel.filter(i=>d.meses[i]!==null&&d.meses[i]!==undefined&&!isNaN(d.meses[i])).length : 0;
   let goalH;
   if(meta===null){
     goalH = `<div class="ic-meta">${refLbl}: <strong>&mdash;</strong></div>`;
-  } else if(meta===0){
-    // META ZERO (evento que não deve acontecer): real ÷ 0 não existe. Sem barra de atingimento —
-    // estado binário: dentro do limite zero (verde) ou acima dele (vermelho). Nunca inventa um %.
-    const semDado = (cur===null||cur===undefined||isNaN(cur));
-    const dentro  = !semDado && (ind.invertido ? cur<=0 : cur>=0);
-    const clsZ    = semDado ? 'neu' : (dentro ? 'verde' : 'vermelho');
-    const txtZ    = semDado ? '&mdash;' : (dentro ? 'Sem ocorrências' : 'Acima do limite zero');
-    const tipZ    = 'Limite zero: não há percentual a calcular — o card mostra se o período ficou em zero ou não';
-    goalH = `<div class="ic-goal">
-      <div class="ic-goal-top"><span class="ic-goal-lbl">${refLbl} zero</span><span class="ic-goal-pct ${clsZ}" title="${tipZ}">${txtZ}</span></div>
-      <div class="ic-goal-track">${semDado?'':`<div class="ic-goal-fill ${clsZ}" style="width:100%"></div>`}</div>
-      <div class="ic-goal-foot"><span>Real: <strong>${vFmt||'&mdash;'}</strong></span><span>${refLbl}: <strong>${metaFootD}</strong></span></div>
-    </div>`;
   } else {
-    const att = calcAtt(cur, meta);
-    if(att===null){
-      goalH = `<div class="ic-goal">
-      <div class="ic-goal-top"><span class="ic-goal-lbl">${compLbl}</span><span class="ic-goal-pct neu">&mdash;</span></div>
-      <div class="ic-goal-track"><div class="ic-goal-mark" style="left:76.9%"></div></div>
-      <div class="ic-goal-foot"><span>Real: <strong>${vFmt||'&mdash;'}</strong></span><span>${refLbl}: <strong>${metaFootD}</strong></span></div>
-    </div>`;
-    } else {
-      const MAX=130;                          // escala fixa: referência=100%, teto visual +30%
-      const markPos = 100/MAX*100;            // linha da referência fixa (~76,9%)
-      const attV = Math.min(att, MAX);        // preenchimento satura em 130% (rótulo mostra o real)
-      const fillBase = Math.min(att,100)/MAX*100;
-      const over = attV>100 ? (attV-100)/MAX*100 : 0;
-      const cls = semCls(cur,meta,ind.invertido)||'neu';
-      const overCls = isLimite ? 'bad' : 'good';   // passar da meta = bom; passar do limite = ruim
-      const attR   = Math.round(att*10)/10;       // v64: uma casa, o mesmo número do destaque
-      const attTxt = isLimite
-        ? (attR <= 100 ? fmtNum(att)+'% do limite' : 'Ultrapassou o limite em '+fmtNum(att-100)+'%')
-        : (attR >  100 ? 'Superou a meta em '+fmtNum(att-100)+'%'
-                       : (attR === 100 ? 'Meta atingida' : fmtNum(att)+'% da meta'));
-      const tip = isLimite
-        ? 'Real ÷ Limite — abaixo de 100% está dentro do limite (bom); acima ultrapassa o limite (ruim)'
-        : 'Real ÷ Meta — 100% atinge a meta; acima supera a meta (bom)';
-      const markTip = isLimite ? 'Limite (100%)' : 'Meta (100%)';
-      goalH = `<div class="ic-goal">
-      <div class="ic-goal-top"><span class="ic-goal-lbl">${compLbl}</span><span class="ic-goal-pct ${cls}" title="${tip}">${attTxt}</span></div>
-      <div class="ic-goal-track">
-        <div class="ic-goal-fill ${cls}" style="width:${fillBase}%"></div>
-        ${over>0?`<div class="ic-goal-over ${overCls}" style="left:${markPos}%;width:${over}%"></div>`:''}
-        <div class="ic-goal-mark" style="left:${markPos}%" title="${markTip}"></div>
-      </div>
-      <div class="ic-goal-foot"><span>Real: <strong>${vFmt||'&mdash;'}</strong></span><span>${refLbl}: <strong>${metaFootD}</strong></span></div>
-    </div>`;
+    goalH = v67Goal(ind, cur, meta, '<span class="v67-tag">'+(mF!==null?MESES[mF]:'Mês')+'</span>', null);
+    if(sel.length>1 && nPer>1){
+      const mP = metaEfetiva(ind, d, sel);
+      const nA = (mP!==null && metaMes) ? Math.round(mP/metaMes) : 1;
+      goalH += v67Goal(ind, perV, mP, '<span class="v67-tag">Consolidado '+periodoLbl(sel)+'</span>', nA>1 ? fmtMeta(metaMes,ind)+'/mês × '+nA : null);
     }
   }
 
@@ -1994,7 +2055,7 @@ function htmlCard(ind, titulo){          // v64: titulo = título do LAYOUT, com
   <div class="ic-head">
     <div class="ic-label"${labelStyleAttr}>${titulo?escH(titulo):ind.label}</div>
     <div style="display:flex;align-items:center;gap:6px;">
-      ${(d && sel.length>1 && cobreTudo(d,sel)) ? '<span class="cons-badge" title="'+consTip+'">'+(sel.length===12?'ANO':'PERÍODO')+'</span>' : ''}
+      ${false ? '<span class="cons-badge" title="'+consTip+'">'+(sel.length===12?'ANO':'PERÍODO')+'</span>' : ''}
       <div class="semaforo ${sc}" title="${sc||'sem meta'}"></div>
     </div>
   </div>
@@ -2061,9 +2122,17 @@ function buildOneChart(ind, expanded){
   if(type==='line' && popIdx.length<=2) type='bar';
   const labels = popIdx.map(i=>MESES[i]);
   const vals = popIdx.map(i=>allVals[i]);
-  const bgColors = popIdx.map(i=> isSelIdx(i)?col:colFade);   // barras
-  const ptRadius = popIdx.map(i=> isSelIdx(i)?4.5:2);         // pontos (linha)
-  const ptColors = popIdx.map(i=> isSelIdx(i)?'#E0EEE7':col);   // v66-C3: ponto selecionado navy cheio    // cor do ponto
+  const mFc = d ? focoMes(d, sel) : null;                     // v67: mês em foco
+  const bgColors = popIdx.map(i=> i===mFc?col:(isSelIdx(i)?'rgba(143,178,240,0.62)':colFade));   // barras
+  const ptRadius = popIdx.map(i=> i===mFc?6:(isSelIdx(i)?3.5:2));   // pontos (linha)
+  const ptColors = popIdx.map(i=> i===mFc?'#E0EEE7':col);
+  // v67: rótulo em todos os pontos. Com muitos meses e pouca largura (zoom), os rótulos dos meses
+  // fora de foco ficam deitados dentro da coluna (barras) ou alternam acima/abaixo (linha), e o R$ sai do texto.
+  const nPts = popIdx.length;
+  const lblTxt = (v,k)=>{ let t=fmtVal(v,ind)||''; if(ind.moeda && popIdx[k]!==mFc && nPts>6) t=t.replace(/R\$ /,''); return t; };
+  const crowd = (c)=>{ const a=c.chart.chartArea; if(!a) return nPts>8; const fs=nPts>8?11:12;
+    const w=Math.max(...vals.map((v,k)=>lblTxt(v,k).length))*fs*0.62; return a.width/nPts < w+6; };
+  const deitado = (c)=> type==='bar' && popIdx[c.dataIndex]!==mFc && crowd(c);
 
   // Rótulos nos pontos/barras: sempre visíveis
   const showLabels = true;
@@ -2132,13 +2201,15 @@ function buildOneChart(ind, expanded){
         spanGaps:true,
         clip: false,
         datalabels: {
-          display:(ctx)=> (isSelIdx(popIdx[ctx.dataIndex]) && (sel.length<=4 || sel.length===12)) ? 'auto' : false,
-          color:'#E0EEE7',
-          font:{size:expanded?16:14,weight:'800',family:'Montserrat'},
+          display:true,                                    // v67: valor em cima de todos os pontos e colunas
+          color:(c)=> deitado(c)?'#FFFFFF':'#E0EEE7',
+          clamp:true,
+          rotation:(c)=> deitado(c)?-90:0,
+          font:(c)=>{ const f=popIdx[c.dataIndex]===mFc; return {size:f?(expanded?16:14):(popIdx.length>8?11:(expanded?14:12)),weight:f?'800':'600',family:'Montserrat'}; },
           anchor:type==='bar'?'end':'top',
-          align:'top',
-          offset:6,
-          formatter:(v)=>v!==null?fmtVal(v,ind):'',
+          align:(c)=> deitado(c) ? 'start' : (type==='line' && popIdx[c.dataIndex]!==mFc && crowd(c) && (nPts-1-c.dataIndex)%2 ? 'bottom' : 'top'),
+          offset:(c)=> deitado(c)?4:6,
+          formatter:(v,c)=>v!==null?lblTxt(v,c.dataIndex):'',
         }
       }, ...metaDataset]
     },
@@ -2180,8 +2251,9 @@ function buildOneChart(ind, expanded){
           grid:{display:false},
           ticks:{
             color:'#E0EEE7',
-            font:{size:13,weight:'600',family:'Montserrat'},
-            maxRotation:0
+            // v66d: com muitos meses a fonte do eixo diminui um pouco para caber Jan…Dez sem pular mês
+            font:(c)=>({size:(c.chart.data.labels||[]).length>8?11:13,weight:'600',family:'Montserrat'}),
+            maxRotation:0, autoSkipPadding:2
           },
           border:{display:false}
         },
@@ -2213,7 +2285,7 @@ const LOGO_AHCROS = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAABgCAMAA
 // Dados brutos vêm da aba BRUTOS (gerada pelo brutosLayout_v63.gs). A Página1 (contrato A–Q) não muda.
 const LAYOUT_RANGE = 'LAYOUT!A1:I400';
 const BRUTOS_RANGE = 'BRUTOS!A1:R900';
-const LAYOUT_PADRAO = [["BRUTO", "Recepção", "N° de Exames Agendados — Recepção Centro de Diagnóstico", "Exames agendados (Centro de Diagnóstico)", "RESUMO", "1", "volume", "", ""], ["BRUTO", "Produção", "Contagem distinta de pacientes únicos atendidos no mês", "Vidas únicas", "RESUMO", "2", "volume", "", ""], ["BRUTO", "Produção", "Nº de saídas hospitalares", "Saídas hospitalares (altas, óbitos e transferências)", "RESUMO", "3", "volume", "", ""], ["BRUTO", "Produção", "Pacientes-dia no período", "Pacientes-dia", "RESUMO", "4", "volume", "", ""], ["BRUTO", "Produção", "Nº total de agendamentos", "Consultas agendadas", "RESUMO", "5", "volume", "", ""], ["INDICADOR", "Sanificação", "Taxa de Cumprimento do Cronograma de Limpezas (%)", "Cumprimento do cronograma", "Qualidade", "10", "card", "SIM", ""], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Crítica / Limpeza Concorrente (%)", "", "Qualidade", "20", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Crítica / Limpeza Terminal (%)", "", "Qualidade", "21", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Semicrítica / Limpeza Concorrente (%)", "", "Qualidade", "22", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Semicrítica / Limpeza Terminal (%)", "", "Qualidade", "23", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Não Crítica / Limpeza Concorrente (%)", "", "Qualidade", "24", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Não Crítica / Limpeza Terminal (%)", "", "Qualidade", "25", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Taxa de não conformidades CCIH (%)", "Não conformidades CCIH", "Qualidade", "30", "card", "SIM", ""], ["INDICADOR", "Sanificação", "% equipe treinada (%)", "Equipe treinada", "Equipe", "40", "card", "SIM", ""], ["INDICADOR", "Sanificação", "Custo por Dia — Total do Setor Higienização e Lavanderia Hospitalar (R$)", "Total do setor", "Custo", "50", "colunas", "SIM", "Custo por dia"], ["INDICADOR", "Sanificação", "Custo por Dia — Limpeza (R$)", "Limpeza", "Custo", "51", "colunas", "", "Custo por dia"], ["INDICADOR", "Sanificação", "Custo por Dia — Lavanderia (R$)", "Lavanderia", "Custo", "52", "colunas", "", "Custo por dia"], ["INDICADOR", "Sanificação", "% Custo Limpeza (%)", "Limpeza", "Custo", "60", "composicao", "", "Divisão do custo do setor"], ["INDICADOR", "Sanificação", "% Custo Lavanderia (%)", "Lavanderia", "Custo", "61", "composicao", "", "Divisão do custo do setor"], ["INDICADOR", "Sanificação", "Custo Total do Setor de Higienização e Lavanderia Hospitalar (R$)", "Total do setor", "Custo", "45", "colunas", "", "Custo total do setor"], ["INDICADOR", "Recepção", "Taxa de cadastros incorretos (%)", "Cadastros incorretos", "Atendimento", "10", "card", "", ""], ["INDICADOR", "Recepção", "Tempo Médio de Espera — Médico (Emergência) (min)", "Tempo de espera — médico (emergência)", "Atendimento", "20", "card", "SIM", ""], ["INDICADOR", "Recepção", "Taxa de Desistência na Fila (Emergência) (%)", "Desistência na fila (emergência)", "Atendimento", "30", "card", "SIM", ""], ["INDICADOR", "Recepção", "Taxa de Confirmação no 1º Contato (%)", "Confirmação no 1º contato", "Atendimento", "40", "card", "", ""], ["INDICADOR", "Recepção", "Volume de Atendimento — Turno da Manhã", "Manhã", "Volume", "50", "colunas_total", "", "Atendimentos por turno"], ["INDICADOR", "Recepção", "Volume de Atendimento — Turno da Tarde", "Tarde", "Volume", "60", "colunas_total", "", "Atendimentos por turno"], ["INDICADOR", "Recepção", "Volume de Atendimento — Consultório Externo", "Atendimentos — consultório externo", "Volume", "70", "card", "", ""], ["INDICADOR", "Recepção", "Consultas Particulares Agendadas — Recepção Principal", "Consultas particulares agendadas", "Volume", "80", "card", "", ""], ["INDICADOR", "Recepção", "N° de Exames Agendados — Recepção Centro de Diagnóstico", "Exames agendados — centro de diagnóstico", "Volume", "90", "card", "", ""], ["INDICADOR", "Recepção", "% Atendimentos por Convênio — SUS (%)", "SUS", "Convênios", "100", "composicao", "", "Atendimentos por convênio"], ["INDICADOR", "Recepção", "% Atendimentos por Convênio — Particular (%)", "Particular", "Convênios", "110", "composicao", "", "Atendimentos por convênio"], ["INDICADOR", "Recepção", "% Atendimentos por Convênio — Outros Convênios (%)", "Outros convênios", "Convênios", "120", "composicao", "", "Atendimentos por convênio"], ["INDICADOR", "Enfermagem", "Taxa de erros de medicação na internação (%)", "Erros de medicação", "Indicadores", "10", "card", "SIM", ""], ["INDICADOR", "Enfermagem", "Taxa de IRAS (%)", "IRAS", "Indicadores", "20", "card", "SIM", ""], ["INDICADOR", "Enfermagem", "Taxa de quedas (%)", "Quedas", "Indicadores", "30", "card", "", ""], ["INDICADOR", "Enfermagem", "Taxa de lesões por pressão (%)", "Lesões por pressão", "Indicadores", "40", "card", "", ""], ["INDICADOR", "Enfermagem", "Nº de reclamações formais", "Reclamações formais", "Indicadores", "50", "card", "", ""], ["INDICADOR", "Farmácia", "Acurácia de estoque (%)", "Acurácia de estoque", "Controle do estoque", "10", "card", "SIM", ""], ["INDICADOR", "Farmácia", "% itens fora dos níveis (%)", "Itens fora dos níveis", "Controle do estoque", "20", "card", "", ""], ["INDICADOR", "Farmácia", "Giro de estoque (vezes)", "Giro de estoque", "Valor e giro", "30", "card", "", ""], ["INDICADOR", "Farmácia", "Taxa ajustes negativos (%)", "Ajustes negativos", "Controle do estoque", "40", "card", "", ""], ["INDICADOR", "Farmácia", "% perdas vencimento/extravios (%)", "Perdas por vencimento/extravio", "Controle do estoque", "50", "card", "", ""], ["INDICADOR", "Farmácia", "Valor total estoque (R$)", "Valor total do estoque", "Valor e giro", "60", "card", "", ""], ["INDICADOR", "Farmácia", "Valor total de notas - compras (R$)", "Compras (notas fiscais)", "Valor e giro", "70", "card", "", ""], ["INDICADOR", "Farmácia", "% contas sem divergência (%)", "Contas sem divergência", "Lançamento e contas", "80", "card", "SIM", ""], ["INDICADOR", "Farmácia", "% de Atendimentos com erro no lançamento (%)", "Atendimentos com erro no lançamento", "Lançamento e contas", "90", "card", "", ""], ["INDICADOR", "Farmácia", "Perdas por não lançamentos (R$)", "Perdas por não lançamento", "Lançamento e contas", "100", "card", "SIM", ""], ["INDICADOR", "Faturamento", "Taxa de Glosa Inicial (%)", "Glosa inicial", "Glosa", "10", "card", "SIM", ""], ["INDICADOR", "Faturamento", "% metas SUS atingidas (%)", "Metas SUS atingidas", "Faturamento e SUS", "20", "card", "SIM", ""], ["INDICADOR", "Faturamento", "Valor Financeiro Glosado (R$)", "Valor glosado", "Glosa", "30", "card", "", ""], ["INDICADOR", "Faturamento", "% faturamentos no prazo (%)", "Faturamentos no prazo", "Faturamento e SUS", "40", "card", "", ""], ["INDICADOR", "Faturamento", "% de AIHs Canceladas (%)", "AIHs canceladas", "Faturamento e SUS", "50", "card", "", ""], ["INDICADOR", "Faturamento", "% de Serviços Pactuados Abaixo da Meta — leitura trimestral (%)", "Serviços pactuados abaixo da meta (trimestral)", "Faturamento e SUS", "60", "card", "", ""], ["INDICADOR", "Nutrição", "% Amostras microbiológicas OK (%)", "Amostras microbiológicas OK", "Qualidade e perdas", "10", "card", "", ""], ["INDICADOR", "Nutrição", "% Itens vencidos sobre estoque (%)", "Itens vencidos sobre o estoque", "Qualidade e perdas", "20", "card", "", ""], ["INDICADOR", "Nutrição", "Perdas por Vencimento (R$)", "Perdas por vencimento", "Qualidade e perdas", "30", "card", "", ""], ["INDICADOR", "Nutrição", "Custo por refeição (R$)", "Custo por refeição", "Custo e volume", "40", "card", "SIM", ""], ["INDICADOR", "Nutrição", "Custo por paciente / alimentação (R$)", "Custo por paciente (alimentação)", "Custo e volume", "50", "card", "SIM", ""], ["INDICADOR", "Nutrição", "% Custo de Refeições sobre Compras (%)", "Custo de refeições sobre compras", "Custo e volume", "60", "card", "", ""], ["INDICADOR", "Nutrição", "Custo Compras Nutrição (R$)", "Compras da nutrição", "Custo e volume", "70", "card", "", ""], ["INDICADOR", "Nutrição", "Nº Refeições Pacientes", "Refeições servidas", "Custo e volume", "80", "razao", "", "Refeições por paciente-dia"], ["INDICADOR", "Radiologia", "% Laudos dentro do SLA (%)", "Laudos dentro do SLA", "Qualidade", "10", "card", "SIM", ""], ["INDICADOR", "Radiologia", "TAT médio exame → laudo (horas)", "Tempo exame → laudo", "Qualidade", "20", "card", "SIM", ""], ["INDICADOR", "Radiologia", "Taxa de Retrabalho (%)", "Retrabalho", "Qualidade", "30", "card", "", ""], ["INDICADOR", "Radiologia", "Taxa de Cancelamento por Preparo Inadequado (%)", "Cancelamento por preparo inadequado", "Qualidade", "40", "card", "", ""], ["INDICADOR", "Radiologia", "Taxa de Utilização da Capacidade de Exames (%)", "Utilização da capacidade", "Capacidade e custo", "50", "card", "SIM", ""], ["INDICADOR", "Radiologia", "Produtividade por Equipamento (exames/equip.)", "Exames por equipamento", "Capacidade e custo", "60", "card", "", ""], ["INDICADOR", "Radiologia", "Receita por Exame — Ticket Médio (R$)", "Ticket médio por exame", "Capacidade e custo", "70", "card", "", ""], ["INDICADOR", "Radiologia", "% Horas Extras sobre a Folha da Radiologia (%)", "Horas extras sobre a folha", "Capacidade e custo", "80", "card", "", ""], ["INDICADOR", "RH", "Taxa de Absenteísmo (%)", "Absenteísmo", "Pessoas", "10", "card", "SIM", ""], ["INDICADOR", "RH", "Custo Absenteísmo (R$)", "Custo do absenteísmo", "Pessoas", "20", "card", "", ""], ["INDICADOR", "RH", "Taxa de Turnover (%)", "Turnover", "Pessoas", "30", "card", "SIM", ""], ["INDICADOR", "RH", "Rotatividade Voluntária (%)", "Rotatividade voluntária", "Pessoas", "40", "card", "", ""], ["INDICADOR", "RH", "Nº de Admissões", "Admissões", "Pessoas", "50", "colunas", "", "Admissões e desligamentos"], ["INDICADOR", "RH", "Nº de Desligamentos", "Desligamentos", "Pessoas", "60", "colunas", "", "Admissões e desligamentos"], ["INDICADOR", "RH", "Taxa Afastamentos Saúde (%)", "Afastamentos por saúde", "Pessoas", "70", "card", "", ""], ["INDICADOR", "RH", "Taxa Participação Capacitações (%)", "Participação em capacitações", "Capacitação", "80", "card", "SIM", ""], ["INDICADOR", "RH", "Satisfação Treinamentos (média 1-5)", "Satisfação com treinamentos", "Capacitação", "90", "card", "", ""], ["INDICADOR", "RH", "Satisfação Emergência (média)", "Emergência", "Pesquisa de satisfação", "100", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "Satisfação Internação (média)", "Internação", "Pesquisa de satisfação", "110", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "Satisfação Enfermagem (média)", "Enfermagem", "Pesquisa de satisfação", "120", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "Satisfação Nutrição (média)", "Nutrição", "Pesquisa de satisfação", "130", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "NPS Nutrição (% prom − % detr)", "NPS nutrição", "Pesquisa de satisfação", "140", "card", "", ""], ["INDICADOR", "RH", "% Respondentes — Enfermagem (%)", "Respondentes — enfermagem", "Pesquisa de satisfação", "150", "card", "", ""], ["INDICADOR", "RH", "% Participação — Amb. Indígena (%)", "Amb. Indígena", "Pesquisa de satisfação", "160", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Dermatologia (%)", "Dermatologia", "Pesquisa de satisfação", "170", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Emergência (%)", "Emergência", "Pesquisa de satisfação", "180", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Internações (%)", "Internações", "Pesquisa de satisfação", "190", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Neurologia (%)", "Neurologia", "Pesquisa de satisfação", "200", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "Gestão", "% Projetos aprovados (%)", "Projetos aprovados", "Indicadores", "10", "card", "SIM", ""], ["INDICADOR", "Gestão", "Nº Projetos Submetidos", "Submetidos", "Indicadores", "20", "colunas", "", "Projetos submetidos e aprovados"], ["INDICADOR", "Gestão", "Nº Projetos Aprovados", "Aprovados", "Indicadores", "30", "colunas", "", "Projetos submetidos e aprovados"], ["INDICADOR", "Gestão", "Nº Especialidades Médicas Ativas", "Especialidades médicas ativas", "Indicadores", "40", "card", "", ""], ["INDICADOR", "Gestão", "% Colaboradores treinados LGPD (%)", "Colaboradores treinados em LGPD", "Indicadores", "50", "oculto", "", ""], ["INDICADOR", "Gestão", "Valor Investido Equipamentos (R$)", "Investimento em equipamentos", "Indicadores", "60", "card", "", ""], ["INDICADOR", "Produção", "Taxa de Ocupação dos Leitos (%)", "Ocupação dos leitos", "Internação", "10", "card", "SIM", ""], ["INDICADOR", "Produção", "TMP (dias)", "Tempo médio de permanência", "Internação", "20", "oculto", "", ""], ["INDICADOR", "Produção", "TMP — Internação Geral (dias)", "Tempo médio de permanência — internação geral", "Internação", "21", "card", "", ""], ["INDICADOR", "Produção", "TMP — Saúde Mental (dias)", "Tempo médio de permanência — saúde mental", "Internação", "22", "card", "", ""], ["INDICADOR", "Produção", "% Utilização Bloco Cirúrgico (%)", "Utilização do bloco cirúrgico", "Internação", "30", "card", "", ""], ["INDICADOR", "Produção", "Taxa de No-Shows (%)", "Faltas às consultas (no-show)", "Agendas", "75", "card_largo", "SIM", ""], ["INDICADOR", "Produção", "Participação Regional (%)", "Participação regional", "Abrangência", "50", "card", "", ""], ["INDICADOR", "Produção", "Vidas Únicas Atendidas", "Vidas únicas atendidas", "Abrangência", "60", "card", "", ""], ["INDICADOR", "Produção", "Taxa Ocupação Agenda Global (%)", "Ocupação global das agendas", "Agendas", "70", "card_largo", "SIM", ""], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Cardiologia (%)", "Cardiologia", "Agendas", "80", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Psicologia (%)", "Psicologia", "Agendas", "90", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Dermatologia 1 (%)", "Dermatologia 1", "Agendas", "100", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Dermatologia 2 (%)", "Dermatologia 2", "Agendas", "110", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Vascular (%)", "Vascular", "Agendas", "120", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Eletroneuromiografia (%)", "Eletroneuromiografia", "Agendas", "130", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Fonoaudiologia (%)", "Fonoaudiologia", "Agendas", "140", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Otorrinolaringologia (%)", "Otorrinolaringologia", "Agendas", "150", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Urologia (%)", "Urologia", "Agendas", "160", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Reumatologia (%)", "Reumatologia", "Agendas", "170", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Psiquiatria (%)", "Psiquiatria", "Agendas", "180", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Traumatologia 1 (%)", "Traumatologia 1", "Agendas", "190", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Traumatologia 2 (%)", "Traumatologia 2", "Agendas", "200", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Neurologia (%)", "Neurologia", "Agendas", "210", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Pediatria (%)", "Pediatria", "Agendas", "220", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Oftalmologia (%)", "Oftalmologia", "Agendas", "230", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Geriatria (%)", "Geriatria", "Agendas", "240", "ranking", "", "Ocupação das agendas por especialidade"]];
+const LAYOUT_PADRAO = [["BRUTO", "Recepção", "N° de Exames Agendados — Recepção Centro de Diagnóstico", "Exames agendados (Centro de Diagnóstico)", "RESUMO", "1", "volume", "", ""], ["BRUTO", "Produção", "Contagem distinta de pacientes únicos atendidos no mês", "Vidas únicas", "RESUMO", "2", "volume", "", ""], ["BRUTO", "Produção", "Nº de saídas hospitalares", "Saídas hospitalares (altas, óbitos e transferências)", "RESUMO", "3", "volume", "", ""], ["BRUTO", "Produção", "Pacientes-dia no período", "Pacientes-dia", "RESUMO", "4", "volume", "", ""], ["BRUTO", "Produção", "Nº total de agendamentos", "Consultas agendadas", "RESUMO", "5", "volume", "", ""], ["INDICADOR", "Sanificação", "Taxa de Cumprimento do Cronograma de Limpezas (%)", "Cumprimento do cronograma", "Qualidade", "10", "card", "SIM", ""], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Crítica / Limpeza Concorrente (%)", "", "Qualidade", "20", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Crítica / Limpeza Terminal (%)", "", "Qualidade", "21", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Semicrítica / Limpeza Concorrente (%)", "", "Qualidade", "22", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Semicrítica / Limpeza Terminal (%)", "", "Qualidade", "23", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Não Crítica / Limpeza Concorrente (%)", "", "Qualidade", "24", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Conformidade de Periodicidade — Área Não Crítica / Limpeza Terminal (%)", "", "Qualidade", "25", "matriz", "", "Conformidade de periodicidade"], ["INDICADOR", "Sanificação", "Taxa de não conformidades CCIH (%)", "Não conformidades CCIH", "Qualidade", "30", "card", "SIM", ""], ["INDICADOR", "Sanificação", "% equipe treinada (%)", "Equipe treinada", "Equipe", "40", "card", "SIM", ""], ["INDICADOR", "Sanificação", "Custo por Dia — Total do Setor Higienização e Lavanderia Hospitalar (R$)", "Total do setor", "Custo", "50", "colunas", "SIM", "Custo por dia"], ["INDICADOR", "Sanificação", "Custo por Dia — Limpeza (R$)", "Limpeza", "Custo", "51", "colunas", "", "Custo por dia"], ["INDICADOR", "Sanificação", "Custo por Dia — Lavanderia (R$)", "Lavanderia", "Custo", "52", "colunas", "", "Custo por dia"], ["INDICADOR", "Sanificação", "% Custo Limpeza (%)", "Limpeza", "Custo", "60", "composicao", "", "Divisão do custo do setor"], ["INDICADOR", "Sanificação", "% Custo Lavanderia (%)", "Lavanderia", "Custo", "61", "composicao", "", "Divisão do custo do setor"], ["INDICADOR", "Sanificação", "Custo Total do Setor de Higienização e Lavanderia Hospitalar (R$)", "Total do setor", "Custo", "45", "colunas", "", "Custo total do setor"], ["INDICADOR", "Recepção", "Taxa de cadastros incorretos (%)", "Cadastros incorretos", "Atendimento", "10", "card", "", ""], ["INDICADOR", "Recepção", "Tempo Médio de Espera — Médico (Emergência) (min)", "Tempo de espera — médico (emergência)", "Atendimento", "20", "card", "SIM", ""], ["INDICADOR", "Recepção", "Taxa de Desistência na Fila (Emergência) (%)", "Desistência na fila (emergência)", "Atendimento", "30", "card", "SIM", ""], ["INDICADOR", "Recepção", "Taxa de Confirmação no 1º Contato (%)", "Confirmação no 1º contato", "Atendimento", "40", "card", "", ""], ["INDICADOR", "Recepção", "Volume de Atendimento — Turno da Manhã", "Manhã", "Volume", "50", "colunas_total", "", "Atendimentos por turno"], ["INDICADOR", "Recepção", "Volume de Atendimento — Turno da Tarde", "Tarde", "Volume", "60", "colunas_total", "", "Atendimentos por turno"], ["INDICADOR", "Recepção", "Volume de Atendimento — Consultório Externo", "Atendimentos — consultório externo", "Volume", "70", "card", "", ""], ["INDICADOR", "Recepção", "Consultas Particulares Agendadas — Recepção Principal", "Consultas particulares agendadas", "Volume", "80", "card", "", ""], ["INDICADOR", "Recepção", "N° de Exames Agendados — Recepção Centro de Diagnóstico", "Exames agendados — centro de diagnóstico", "Volume", "90", "card", "", ""], ["INDICADOR", "Recepção", "% Atendimentos por Convênio — SUS (%)", "SUS", "Convênios", "100", "composicao", "", "Atendimentos por convênio"], ["INDICADOR", "Recepção", "% Atendimentos por Convênio — Particular (%)", "Particular", "Convênios", "110", "composicao", "", "Atendimentos por convênio"], ["INDICADOR", "Recepção", "% Atendimentos por Convênio — Outros Convênios (%)", "Outros convênios", "Convênios", "120", "composicao", "", "Atendimentos por convênio"], ["INDICADOR", "Enfermagem", "Taxa de erros de medicação na internação (%)", "Erros de medicação", "Indicadores", "10", "card", "SIM", ""], ["INDICADOR", "Enfermagem", "Taxa de IRAS (%)", "IRAS", "Indicadores", "20", "card", "SIM", ""], ["INDICADOR", "Enfermagem", "Taxa de quedas (%)", "Quedas", "Indicadores", "30", "card", "", ""], ["INDICADOR", "Enfermagem", "Taxa de lesões por pressão (%)", "Lesões por pressão", "Indicadores", "40", "card", "", ""], ["INDICADOR", "Enfermagem", "Nº de reclamações formais", "Reclamações formais", "Indicadores", "50", "card", "", ""], ["INDICADOR", "Farmácia", "Acurácia de estoque (%)", "Acurácia de estoque", "Controle do estoque", "10", "card", "SIM", ""], ["INDICADOR", "Farmácia", "% itens fora dos níveis (%)", "Itens fora dos níveis", "Controle do estoque", "20", "card", "", ""], ["INDICADOR", "Farmácia", "Giro de estoque (vezes)", "Giro de estoque", "Valor e giro", "30", "card", "", ""], ["INDICADOR", "Farmácia", "Cobertura de estoque (meses)", "Cobertura de estoque", "Valor e giro", "25", "card", "SIM", ""], ["INDICADOR", "Farmácia", "Taxa ajustes negativos (%)", "Ajustes negativos", "Controle do estoque", "40", "card", "", ""], ["INDICADOR", "Farmácia", "% perdas vencimento/extravios (%)", "Perdas por vencimento/extravio", "Controle do estoque", "50", "card", "", ""], ["INDICADOR", "Farmácia", "Valor total estoque (R$)", "Valor total do estoque", "Valor e giro", "60", "card", "", ""], ["INDICADOR", "Farmácia", "Valor total de notas - compras (R$)", "Compras (notas fiscais)", "Valor e giro", "70", "card", "", ""], ["INDICADOR", "Farmácia", "% contas sem divergência (%)", "Contas sem divergência", "Lançamento e contas", "80", "card", "SIM", ""], ["INDICADOR", "Farmácia", "% de Atendimentos com erro no lançamento (%)", "Atendimentos com erro no lançamento", "Lançamento e contas", "90", "card", "", ""], ["INDICADOR", "Farmácia", "Perdas por não lançamentos (R$)", "Perdas por não lançamento", "Lançamento e contas", "100", "card", "SIM", ""], ["INDICADOR", "Faturamento", "Taxa de Glosa Inicial (%)", "Glosa inicial", "Glosa", "10", "card", "SIM", ""], ["INDICADOR", "Faturamento", "% metas SUS atingidas (%)", "Metas SUS atingidas", "Faturamento e SUS", "20", "card", "SIM", ""], ["INDICADOR", "Faturamento", "Valor Financeiro Glosado (R$)", "Valor glosado", "Glosa", "30", "card", "", ""], ["INDICADOR", "Faturamento", "% faturamentos no prazo (%)", "Faturamentos no prazo", "Faturamento e SUS", "40", "card", "", ""], ["INDICADOR", "Faturamento", "% de AIHs Canceladas (%)", "AIHs canceladas", "Faturamento e SUS", "50", "card", "", ""], ["INDICADOR", "Faturamento", "% de Serviços Pactuados Abaixo da Meta — leitura trimestral (%)", "Serviços pactuados abaixo da meta (trimestral)", "Faturamento e SUS", "60", "card", "", ""], ["INDICADOR", "Nutrição", "% Amostras microbiológicas OK (%)", "Amostras microbiológicas OK", "Qualidade e perdas", "10", "card", "", ""], ["INDICADOR", "Nutrição", "% Itens vencidos sobre estoque (%)", "Itens vencidos sobre o estoque", "Qualidade e perdas", "20", "card", "", ""], ["INDICADOR", "Nutrição", "Perdas por Vencimento (R$)", "Perdas por vencimento", "Qualidade e perdas", "30", "card", "", ""], ["INDICADOR", "Nutrição", "Custo por refeição (R$)", "Custo por refeição", "Custo e volume", "40", "card", "SIM", ""], ["INDICADOR", "Nutrição", "Custo por paciente / alimentação (R$)", "Custo por paciente (alimentação)", "Custo e volume", "50", "card", "SIM", ""], ["INDICADOR", "Nutrição", "% Custo de Refeições sobre Compras (%)", "Custo de refeições sobre compras", "Custo e volume", "60", "card", "", ""], ["INDICADOR", "Nutrição", "Custo Compras Nutrição (R$)", "Compras da nutrição", "Custo e volume", "70", "card", "", ""], ["INDICADOR", "Nutrição", "Nº Refeições Pacientes", "Refeições servidas", "Custo e volume", "80", "razao", "", "Refeições por paciente-dia"], ["INDICADOR", "Radiologia", "% Laudos dentro do SLA (%)", "Laudos dentro do SLA", "Qualidade", "10", "card", "SIM", ""], ["INDICADOR", "Radiologia", "TAT médio exame → laudo (horas)", "Tempo exame → laudo", "Qualidade", "20", "card", "SIM", ""], ["INDICADOR", "Radiologia", "Taxa de Retrabalho (%)", "Retrabalho", "Qualidade", "30", "card", "", ""], ["INDICADOR", "Radiologia", "Taxa de Cancelamento por Preparo Inadequado (%)", "Cancelamento por preparo inadequado", "Qualidade", "40", "card", "", ""], ["INDICADOR", "Radiologia", "Taxa de Utilização da Capacidade de Exames (%)", "Utilização da capacidade", "Capacidade e custo", "50", "card", "SIM", ""], ["INDICADOR", "Radiologia", "Produtividade por Equipamento (exames/equip.)", "Exames por equipamento", "Capacidade e custo", "60", "card", "", ""], ["INDICADOR", "Radiologia", "Receita por Exame — Ticket Médio (R$)", "Ticket médio por exame", "Capacidade e custo", "70", "card", "", ""], ["INDICADOR", "Radiologia", "% Horas Extras sobre a Folha da Radiologia (%)", "Horas extras sobre a folha", "Capacidade e custo", "80", "card", "", ""], ["INDICADOR", "RH", "Taxa de Absenteísmo (%)", "Absenteísmo", "Pessoas", "10", "card", "SIM", ""], ["INDICADOR", "RH", "Custo Absenteísmo (R$)", "Custo do absenteísmo", "Pessoas", "20", "card", "", ""], ["INDICADOR", "RH", "Taxa de Turnover (%)", "Turnover", "Pessoas", "30", "card", "SIM", ""], ["INDICADOR", "RH", "Rotatividade Voluntária (%)", "Rotatividade voluntária", "Pessoas", "40", "card", "", ""], ["INDICADOR", "RH", "Nº de Admissões", "Admissões", "Pessoas", "50", "colunas", "", "Admissões e desligamentos"], ["INDICADOR", "RH", "Nº de Desligamentos", "Desligamentos", "Pessoas", "60", "colunas", "", "Admissões e desligamentos"], ["INDICADOR", "RH", "Taxa Afastamentos Saúde (%)", "Afastamentos por saúde", "Pessoas", "70", "card", "", ""], ["INDICADOR", "RH", "Taxa Participação Capacitações (%)", "Participação em capacitações", "Capacitação", "80", "card", "SIM", ""], ["INDICADOR", "RH", "Satisfação Treinamentos (média 1-5)", "Satisfação com treinamentos", "Capacitação", "90", "card", "", ""], ["INDICADOR", "RH", "Satisfação Emergência (média)", "Emergência", "Pesquisa de satisfação", "100", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "Satisfação Internação (média)", "Internação", "Pesquisa de satisfação", "110", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "Satisfação Enfermagem (média)", "Enfermagem", "Pesquisa de satisfação", "120", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "Satisfação Nutrição (média)", "Nutrição", "Pesquisa de satisfação", "130", "painel", "", "Satisfação dos pacientes (0 a 10)"], ["INDICADOR", "RH", "NPS Nutrição (% prom − % detr)", "NPS nutrição", "Pesquisa de satisfação", "140", "card", "", ""], ["INDICADOR", "RH", "% Respondentes — Enfermagem (%)", "Respondentes — enfermagem", "Pesquisa de satisfação", "150", "card", "", ""], ["INDICADOR", "RH", "% Participação — Amb. Indígena (%)", "Amb. Indígena", "Pesquisa de satisfação", "160", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Dermatologia (%)", "Dermatologia", "Pesquisa de satisfação", "170", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Emergência (%)", "Emergência", "Pesquisa de satisfação", "180", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Internações (%)", "Internações", "Pesquisa de satisfação", "190", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "RH", "% Participação — Neurologia (%)", "Neurologia", "Pesquisa de satisfação", "200", "ranking", "", "Participação na pesquisa por serviço"], ["INDICADOR", "Gestão", "% Projetos aprovados (%)", "Projetos aprovados", "Indicadores", "10", "card", "SIM", ""], ["INDICADOR", "Gestão", "Nº Projetos Submetidos", "Submetidos", "Indicadores", "20", "colunas", "", "Projetos submetidos e aprovados"], ["INDICADOR", "Gestão", "Nº Projetos Aprovados", "Aprovados", "Indicadores", "30", "colunas", "", "Projetos submetidos e aprovados"], ["INDICADOR", "Gestão", "Nº Especialidades Médicas Ativas", "Especialidades médicas ativas", "Indicadores", "40", "card", "", ""], ["INDICADOR", "Gestão", "% Colaboradores treinados LGPD (%)", "Colaboradores treinados em LGPD", "Indicadores", "50", "oculto", "", ""], ["INDICADOR", "Gestão", "Valor Investido Equipamentos (R$)", "Investimento em equipamentos", "Indicadores", "60", "card", "", ""], ["INDICADOR", "Produção", "Taxa de Ocupação dos Leitos (%)", "Ocupação dos leitos", "Internação", "10", "card", "SIM", ""], ["INDICADOR", "Produção", "TMP (dias)", "Tempo médio de permanência", "Internação", "20", "oculto", "", ""], ["INDICADOR", "Produção", "TMP — Internação Geral (dias)", "Tempo médio de permanência — internação geral", "Internação", "21", "card", "", ""], ["INDICADOR", "Produção", "TMP — Saúde Mental (dias)", "Tempo médio de permanência — saúde mental", "Internação", "22", "card", "", ""], ["INDICADOR", "Produção", "% Utilização Bloco Cirúrgico (%)", "Utilização do bloco cirúrgico", "Internação", "30", "card", "", ""], ["INDICADOR", "Produção", "Taxa de No-Shows (%)", "Faltas às consultas (no-show)", "Agendas", "75", "card_largo", "SIM", ""], ["INDICADOR", "Produção", "Participação Regional (%)", "Participação regional", "Abrangência", "50", "card", "", ""], ["INDICADOR", "Produção", "Vidas Únicas Atendidas", "Vidas únicas atendidas", "Abrangência", "60", "card", "", ""], ["INDICADOR", "Produção", "Taxa Ocupação Agenda Global (%)", "Ocupação global das agendas", "Agendas", "70", "card_largo", "SIM", ""], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Cardiologia (%)", "Cardiologia", "Agendas", "80", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Psicologia (%)", "Psicologia", "Agendas", "90", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Dermatologia 1 (%)", "Dermatologia 1", "Agendas", "100", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Dermatologia 2 (%)", "Dermatologia 2", "Agendas", "110", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Vascular (%)", "Vascular", "Agendas", "120", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Eletroneuromiografia (%)", "Eletroneuromiografia", "Agendas", "130", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Fonoaudiologia (%)", "Fonoaudiologia", "Agendas", "140", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Otorrinolaringologia (%)", "Otorrinolaringologia", "Agendas", "150", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Urologia (%)", "Urologia", "Agendas", "160", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Reumatologia (%)", "Reumatologia", "Agendas", "170", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Psiquiatria (%)", "Psiquiatria", "Agendas", "180", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Traumatologia 1 (%)", "Traumatologia 1", "Agendas", "190", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Traumatologia 2 (%)", "Traumatologia 2", "Agendas", "200", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Neurologia (%)", "Neurologia", "Agendas", "210", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Pediatria (%)", "Pediatria", "Agendas", "220", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Oftalmologia (%)", "Oftalmologia", "Agendas", "230", "ranking", "", "Ocupação das agendas por especialidade"], ["INDICADOR", "Produção", "Taxa Ocupação Agenda — Geriatria (%)", "Geriatria", "Agendas", "240", "ranking", "", "Ocupação das agendas por especialidade"]];
 document.querySelectorAll('img[data-logo]').forEach(i=>{ i.src=LOGO_AHCROS; });
 const EXT = { layout:null, layoutOrigem:'', brutos:[], brutosOrigem:'', subaba:{}, notas:[], notasOrigem:'' };
 
@@ -2316,9 +2388,10 @@ function periodoLbl(sel){
   return contiguo ? MESES[sel[0]]+'–'+MESES[sel[sel.length-1]] : sel.length+' meses';
 }
 function leitura(ind,sel){
-  const d=getData(ind); if(!d) return {d:null,cur:null,meta:null,sc:'sem'};
-  const cur=calcCurVal(d,sel), meta=metaEfetiva(ind,d,sel);
-  return { d, cur, meta, sc: semCls(cur,meta,ind.invertido)||'sem' };
+  const d=getData(ind); if(!d) return {d:null,cur:null,meta:null,sc:'sem',m:null};
+  const m=focoMes(d,sel), sf=m===null?sel:[m];
+  const cur=m===null?null:calcCurVal(d,sf), meta=metaEfetiva(ind,d,sf);
+  return { d, cur, meta, m, sc: semCls(cur,meta,ind.invertido)||'sem' };
 }
 function valBruto(b,sel){
   const vs=sel.map(i=>b.meses[i]).filter(v=>v!==null&&v!==undefined&&!isNaN(v));
@@ -2354,19 +2427,23 @@ function htmlResumo(){
   const sel=getMesesSelecionados(), lbl=periodoLbl(sel), mUlt=sel[sel.length-1];
   // Volume do mês
   const vols=(EXT.layout||[]).filter(e=>e.fonte==='BRUTO'&&e.subaba.toUpperCase()==='RESUMO').sort((a,b)=>a.ordem-b.ordem);
-  const volTit=e=>{ const t=e.titulo||e.rotulo; return sel.length>1 ? t.replace(/\s+no m[eê]s$/i,'') : t; };   // período: "Atendimentos", não "no mês"
+  const volTit=e=>{ const t=e.titulo||e.rotulo; return t.replace(/\s+no m[eê]s$/i,''); };   // período: "Atendimentos", não "no mês"
   const volH=vols.map(e=>{
     const b=brutoPor(e.area,e.rotulo);
     if(!b) return `<div class="v51-vol vazio"><div class="v51-vol-t">${escH(volTit(e))}</div><div class="v51-vol-v">—</div><div class="v51-vol-s">aguardando aba BRUTOS</div></div>`;
-    const {v,rot}=valBruto(b,sel);
-    const pv= sel.length===1&&mUlt>0 ? b.meses[mUlt-1] : null;
+    // v67: o número grande é o último mês lançado; a soma do período fica embaixo, escrita como soma
+    const mB=focoMes(b,sel), v= mB===null?null:b.meses[mB];
+    let pI=null; if(mB!==null) for(let i=mB-1;i>=0;i--){ const x=b.meses[i]; if(x!==null&&x!==undefined&&!isNaN(x)){ pI=i; break; } }
+    const pv= pI===null ? null : b.meses[pI];
     let dl='';
-    if(v!==null&&pv!==null&&pv!==undefined&&!isNaN(pv)){
+    if(v!==null&&pv!==null){
       const df=v-pv, rel=pv!==0?Math.abs(df/pv*100):null;
-      dl = df===0 ? `<span class="v51-vd igual">= ${MESES[mUlt-1]}</span>`
-         : `<span class="v51-vd ${df>0?'sobe':'cai'}">${df>0?'▲':'▼'} ${rel===null?nf(Math.abs(df),0):nf(rel,1)+'%'} vs ${MESES[mUlt-1]}</span>`;
+      dl = df===0 ? `<span class="v51-vd igual">= ${MESES[pI]}</span>`
+         : `<span class="v51-vd ${df>0?'sobe':'cai'}">${df>0?'▲':'▼'} ${rel===null?nf(Math.abs(df),0):nf(rel,1)+'%'} vs ${MESES[pI]}</span>`;
     }
-    return `<div class="v51-vol"><div class="v51-vol-t">${escH(volTit(e))}</div><div class="v51-vol-v">${v===null?'—':nf(v,0)}</div>${dl||`<span class="v51-vd igual">${v===null?'sem lançamento':(rot||'')}</span>`}</div>`;
+    const per = sel.length>1 ? valBruto(b,sel) : null;
+    const perH = per&&per.v!==null&&per.v!==undefined ? `<span class="v51-vol-s">${periodoLbl(sel)}: ${per.rot==='soma'?'soma de ':''}${nf(per.v,0)}${per.rot&&per.rot!=='soma'?' ('+per.rot+')':''}</span>` : '';
+    return `<div class="v51-vol"><div class="v51-vol-t">${escH(volTit(e))}</div><div class="v51-vol-v">${v===null?'—':nf(v,0)}</div><span class="v51-vol-s">${mB===null?'sem lançamento':MESES[mB]}</span>${dl}${perH}</div>`;
   }).join('');
   const avisos=CHECAGENS.map(c=>{
     const a=brutoPor(...c.a), b=brutoPor(...c.b); if(!a||!b) return '';
@@ -2375,12 +2452,12 @@ function htmlResumo(){
   }).join('');
 
   // Semáforo por área e desvios
-  let tv=0,ta=0,tr=0,tl=0; const desvios=[]; const porArea=[];
+  let tv=0,ta=0,tr=0,tl=0; const desvios=[]; const porArea=[]; const focos=[];
   AREAS.forEach(area=>{
     const c={verde:0,amarelo:0,vermelho:0,sem:0};
     area.indicadores.forEach(ind=>{
       if(ehComposicao(ind)) return;                       // composição não tem direção
-      const L=leitura(ind,sel); c[L.sc]++;
+      const L=leitura(ind,sel); c[L.sc]++; if(L.sc!=='sem') focos.push(L.m);
       if(L.sc==='vermelho'){
         const gap = L.meta!==0 ? (ind.invertido?(L.cur-L.meta):(L.meta-L.cur))/Math.abs(L.meta) : 1;
         desvios.push({area,ind,cur:L.cur,meta:L.meta,gap});
@@ -2391,8 +2468,9 @@ function htmlResumo(){
   });
   desvios.sort((a,b)=>(a.meta===0)-(b.meta===0) || b.gap-a.gap);
   const piorArea=porArea.slice().sort((a,b)=>b.c.vermelho-a.c.vermelho)[0];
+  const lblF=lblFoco(focos,sel);
   let frase = tl===0 ? `Nenhum indicador com leitura em ${lbl}.`
-    : `Em ${lbl}, ${tv} de ${tl} indicadores com leitura estão no alvo, ${ta} em atenção e ${tr} críticos.`;
+    : `Em ${lblF}, ${tv} de ${tl} indicadores com leitura estão no alvo, ${ta} em atenção e ${tr} críticos.`;
   if(tr>0 && piorArea) frase+=` A maior concentração de críticos está em ${piorArea.area.label} (${piorArea.c.vermelho}).`;
 
   const areasH=porArea.map(({area,c})=>{
@@ -2410,10 +2488,10 @@ function htmlResumo(){
   <header class="v51-rhead">
     <span class="v51-selo v51-selo-g"><img src="${LOGO_AHCROS}" alt="AHCROS"></span>
     <div><h2 class="v51-h2">Resumo executivo</h2>
-    <p class="v51-sub">Leitura de ${lbl}</p></div>
+    <p class="v51-sub">Leitura do último mês lançado · período ${lbl}</p></div>
   </header>
   <p class="v51-frase">${frase}</p>
-  <h3 class="v51-h3">Volume de ${sel.length===1?MESES[mUlt]:lbl}</h3>
+  <h3 class="v51-h3">Volume do último mês</h3>
   <div class="v51-vols">${volH||'<p class="v51-nota">Nenhum dado bruto marcado para o Resumo na aba LAYOUT.</p>'}</div>
   ${avisos}
   <div class="v51-cols">
@@ -2468,7 +2546,19 @@ function htmlKpi(e,sel){
     if(v<=0){ const n=streakZero(d,m); seq= n>1?`${n} meses seguidos sem ocorrência`:`Sem ocorrência em ${MESES[m]}`; }
     else { const a=m>0?streakZero(d,m-1):0; seq= streakPos(d,m)>1 ? `${streakPos(d,m)}º mês seguido com ocorrência` : `Ocorrência em ${MESES[m]}`+(a>0?`, após ${a} ${a>1?'meses':'mês'} em zero`:''); } }
   return `<div class="v51-kpi ${L.sc}"><div class="v51-kpi-t">${escH((e.grupo?e.grupo+' — ':'')+tituloEnt(e))}</div><div class="v51-kpi-v">${fmtVal(L.cur,e.ind)??'aguardando'}</div>
-  <div class="v51-kpi-s"><span class="v51-pill">${R} ${fmtMeta(L.meta,e.ind)??'—'}</span>${dl}</div>${barraMeta(L,e.ind)}${seq?`<div class="v56-kpi-seq">${seq}</div>`:''}</div>`;
+  <div class="v51-kpi-s"><span class="v51-pill">${R} ${fmtMeta(L.meta,e.ind)??'—'}</span>${dl}</div>${v67MesBarra(L,e.ind)}${v67ConsLinha(leituraPer(e.ind),e.ind)}${seq?`<div class="v56-kpi-seq">${seq}</div>`:''}</div>`;
+}
+// v67c: leitura do consolidado do período selecionado (2ª linha contra a meta nos blocos e destaques)
+function v67MesBarra(L,ind,m){ const mi=(m!==undefined&&m!==null)?m:L.m; return (mi!==null&&mi!==undefined?`<span class="v67-cl-t"><span class="v67-tag">${MESES[mi]}</span></span>`:'')+barraMeta(L,ind); }
+function leituraPer(ind){
+  const sel=getMesesSelecionados(), d=getData(ind); if(!d||sel.length<2) return null;
+  const n=sel.filter(i=>d.meses[i]!==null&&d.meses[i]!==undefined&&!isNaN(d.meses[i])).length; if(n<2) return null;
+  const cur=calcCurVal(d,sel), meta=metaEfetiva(ind,d,sel);
+  return {d,cur,meta,sc:semCls(cur,meta,ind.invertido)||'sem',lbl:periodoLbl(sel)};
+}
+function v67ConsLinha(P,ind,fv){
+  if(!P||P.cur===null||P.cur===undefined) return '';
+  return `<div class="v67-cl"><span class="v67-cl-t"><span class="v67-tag">Consolidado ${P.lbl}</span> <b>${fv?fv(P.cur):fmtVal(P.cur,ind)}</b></span>${barraMeta(P,ind)}</div>`;
 }
 function htmlMatriz(ents,sel){
   const parts=ents.map(e=>{ const m=e.ind.label.replace(/\s*\(%\)\s*$/,'').split(' — ').pop().split(' / ');
@@ -2483,7 +2573,7 @@ function htmlMatriz(ents,sel){
   lins.forEach(l=>{ h+=`<span class="v51-mx-r">${escH(l)}</span>`;
     cols.forEach(c=>{ const p=parts.find(x=>x.lin===l&&x.col===c);
       if(!p){ h+='<span></span>'; return; }
-      h+=`<div class="v51-mx-c ${p.L.sc}" title="${escH(p.e.ind.label)}"><b>${fmtVal(p.L.cur,p.e.ind)??'—'}</b><span class="v51-pill">${rotMeta(p.e.ind,p.L.meta)} ${fmtMeta(p.L.meta,p.e.ind)??'—'}</span>${barraMeta(p.L,p.e.ind)}</div>`; }); });
+      h+=`<div class="v51-mx-c ${p.L.sc}" title="${escH(p.e.ind.label)}"><b>${fmtVal(p.L.cur,p.e.ind)??'—'}</b><span class="v51-pill">${rotMeta(p.e.ind,p.L.meta)} ${fmtMeta(p.L.meta,p.e.ind)??'—'}</span>${v67MesBarra(p.L,p.e.ind)}${v67ConsLinha(leituraPer(p.e.ind),p.e.ind)}</div>`; }); });
   return h+'</div></div>';
 }
 function htmlComposicao(ents,sel){
@@ -2586,27 +2676,40 @@ function htmlNotasInd(ind,sel){
 }
 
 function htmlRanking(ents,sel){
-  const parts=ents.map(e=>({e,L:leitura(e.ind,sel)}));
-  const ok=p=>p.L.cur!==null&&p.L.cur!==undefined&&!isNaN(p.L.cur);
-  const lidos=parts.filter(ok).sort((a,b)=>b.L.cur-a.L.cur), sem=parts.filter(p=>!ok(p));
-  const abaixo=lidos.filter(p=>p.L.sc!=='verde'&&p.L.sc!=='sem');
-  const frase = !lidos.length ? `Sem lançamento em ${periodoLbl(sel)}.`
-    : abaixo.length ? `${abaixo.length} de ${lidos.length} fora da meta em ${periodoLbl(sel)}: ${abaixo.map(p=>escH(tituloEnt(p.e))).join(', ')}.`
-    : `Todos os ${lidos.length} no alvo em ${periodoLbl(sel)}.`;
-  const topo=Math.max(...lidos.map(p=>p.L.cur), ...lidos.map(p=>p.L.meta).filter(m=>m!==null&&m!==undefined&&!isNaN(m)), 0) || 1;
+  // v67d: duas leituras por linha (mês e consolidado), cada uma numa linha só; ordenação pelo mês ou pelo consolidado
+  const selT=getMesesSelecionados(), temPer=selT.length>1;
+  const ordPer = temPer && EXT.rkOrdem==='per';
+  const parts=ents.map(e=>{ const L=leitura(e.ind,sel), P=leituraPer(e.ind); return {e,L,P}; });
+  const okv=v=>v!==null&&v!==undefined&&!isNaN(v);
+  const chave=p=> ordPer ? (p.P?p.P.cur:null) : p.L.cur;
+  const lidos=parts.filter(p=>okv(chave(p))).sort((a,b)=>chave(b)-chave(a)), sem=parts.filter(p=>!okv(chave(p)));
+  const lidosM=parts.filter(p=>okv(p.L.cur)), abaixo=lidosM.filter(p=>p.L.sc!=='verde'&&p.L.sc!=='sem');
+  const lblM=periodoLbl(sel), lblP=periodoLbl(selT);
+  const lidosP=parts.filter(p=>p.P&&okv(p.P.cur)), abaixoP=lidosP.filter(p=>p.P.sc!=='verde'&&p.P.sc!=='sem');
+  let frase = !lidosM.length ? `Sem lançamento em ${lblM}.`
+    : abaixo.length ? `${lblM}: ${abaixo.length} de ${lidosM.length} fora da meta (${abaixo.map(p=>escH(tituloEnt(p.e))).join(', ')}).`
+    : `${lblM}: todos os ${lidosM.length} no alvo.`;
+  if(temPer && lidosP.length) frase += abaixoP.length ? ` Consolidado ${lblP}: ${abaixoP.length} de ${lidosP.length} fora da meta.` : ` Consolidado ${lblP}: todos no alvo.`;
+  const topo=Math.max(...parts.flatMap(p=>[p.L.cur,p.L.meta,p.P&&p.P.cur,p.P&&p.P.meta]).filter(okv), 0) || 1;
   const pct=v=>Math.max(0,Math.min(100,v/topo*100)).toFixed(2);
-  // v62: com 1 mês selecionado, coluna de variação contra o mês anterior lançado, logo após o nome
-  const um=sel.length===1, mesAnt=p=>{ const d=p.L.d; if(!um||!d) return null; for(let i=sel[0]-1;i>=0;i--){ const v=d.meses[i]; if(v!==null&&v!==undefined&&!isNaN(v)) return i; } return null; };
-  const comAnt=um?lidos.map(mesAnt).filter(i=>i!==null):[], mAntLbl=comAnt.length?MESES[Math.max(...comAnt)]:null;
-  const linha=p=>{ const tem=ok(p), m=p.L.meta, temM=m!==null&&m!==undefined&&!isNaN(m), ia=tem?mesAnt(p):null;
-    const dlt=um ? `<span class="v52-rk-d">${ia!==null?deltaHtml(p.L.cur,p.L.d.meses[ia],p.e.ind)+(MESES[ia]!==mAntLbl?` <small>vs ${MESES[ia]}</small>`:''):''}</span>` : '';
-    return `<div class="v52-rk-row" title="${escH(p.e.ind.label)}"><span class="v52-rk-n">${escH(tituloEnt(p.e))}</span>${dlt}
-      <span class="v52-rk-bar">${tem?`<i class="${p.L.sc}" style="width:${pct(p.L.cur)}%"></i>`:''}${temM?`<u style="left:${pct(m)}%"></u>`:''}</span>
-      <span class="v52-rk-v"><b>${tem?fmtVal(p.L.cur,p.e.ind):'aguardando'}</b>${temM?` <small>${rotMeta(p.e.ind,m)} ${fmtMeta(m,p.e.ind)}</small>`:''}${tem&&temM&&m!==0?`<small class="v52-rk-p">${nf(p.L.cur/m*100,1)}% ${rotMeta(p.e.ind,m)==='limite'?'do limite':'da meta'}</small>`:''}</span></div>`; };
-  return `<div class="v51-bloco"><h4 class="v51-h4">${escH(ents[0].grupo)}</h4><p class="v51-frase-s">${frase}</p>
+  const um=sel.length===1, mesAnt=p=>{ const d=p.L.d; if(!um||!d) return null; for(let i=sel[0]-1;i>=0;i--){ const v=d.meses[i]; if(okv(v)) return i; } return null; };
+  const comAnt=um?lidosM.map(mesAnt).filter(i=>i!==null):[], mAntLbl=comAnt.length?MESES[Math.max(...comAnt)]:null;
+  const att=(v,m,ind)=> okv(v)&&okv(m)&&m!==0 ? ' · '+nf(v/m*100,1)+(rotMeta(ind,m)==='limite'?'% do limite':'% da meta') : '';
+  const linha=p=>{ const ind=p.e.ind, L=p.L, P=p.P, temM=okv(L.meta), temP=!!(P&&okv(P.cur)), ia=okv(L.cur)?mesAnt(p):null;
+    const dlt=um ? `<span class="v52-rk-d">${ia!==null?deltaHtml(L.cur,L.d.meses[ia],ind)+(MESES[ia]!==mAntLbl?` <small>vs ${MESES[ia]}</small>`:''):''}</span>` : '';
+    const barM=`<span class="v52-rk-bar${ordPer?' v67-fina':''}" title="${lblM}">${okv(L.cur)?`<i class="${L.sc}" style="width:${pct(L.cur)}%"></i>`:''}${temM?`<u style="left:${pct(L.meta)}%"></u>`:''}</span>`;
+    const barP=temP?`<span class="v52-rk-bar${ordPer?'':' v67-fina'}" title="Consolidado ${lblP}"><i class="${P.sc}" style="width:${pct(P.cur)}%"></i>${okv(P.meta)?`<u style="left:${pct(P.meta)}%"></u>`:''}</span>`:'';
+    const txtM=`<span class="v67-rk-l${ordPer?'':' v67-on'}"><span class="v67-tag">${lblM}</span> <b>${okv(L.cur)?fmtVal(L.cur,ind):'aguardando'}</b><small>${att(L.cur,L.meta,ind)}${temM?' · '+rotMeta(ind,L.meta)+' '+fmtMeta(L.meta,ind):''}</small></span>`;
+    const txtP=temP?`<span class="v67-rk-l${ordPer?' v67-on':''}"><span class="v67-tag">${lblP}</span> <b>${fmtVal(P.cur,ind)}</b><small>${att(P.cur,P.meta,ind)}</small></span>`:'';
+    return `<div class="v52-rk-row" title="${escH(ind.label)}"><span class="v52-rk-n">${escH(tituloEnt(p.e))}</span>${dlt}
+      <span class="v67-rk-bars">${ordPer?barP+barM:barM+barP}</span>
+      <span class="v52-rk-v">${ordPer?txtP+txtM:txtM+txtP}</span></div>`; };
+  const ordH = temPer ? `<div class="v67-ord">Ordenar por: <button type="button" class="v67-ob${ordPer?'':' ativo'}" onclick="v67Ordem('mes')">${lblM}</button><button type="button" class="v67-ob${ordPer?' ativo':''}" onclick="v67Ordem('per')">Consolidado ${lblP}</button></div>` : '';
+  return `<div class="v51-bloco"><h4 class="v51-h4">${escH(ents[0].grupo)}</h4><p class="v51-frase-s">${frase}</p>${ordH}
   <div class="v52-rk${um&&mAntLbl?' v62-d':''}">${lidos.map(linha).join('')}${sem.map(linha).join('')}</div>
-  <p class="v52-rk-leg"><u></u> meta · barras em ordem decrescente do valor de ${periodoLbl(sel)}${um&&mAntLbl?' · variação contra '+mAntLbl:''}</p></div>`;
+  <p class="v52-rk-leg"><u></u> meta · barra grossa = ${ordPer?'consolidado '+lblP:lblM}${temPer?' · barra fina = '+(ordPer?lblM:'consolidado '+lblP):''} · ordem decrescente de ${ordPer?'consolidado '+lblP:lblM}${um&&mAntLbl?' · variação contra '+mAntLbl:''}</p></div>`;
 }
+function v67Ordem(o){ EXT.rkOrdem=o; renderMain(); }
 
 function niceTop(mx){ if(!(mx>0)) return 1; const n=Math.pow(10,Math.floor(Math.log10(mx))); return [1,2,2.5,5,10].map(k=>k*n).find(t=>t>=mx); }
 // v56 — Partes em R$ derivadas de dois valores reais do mesmo mês: total × participação %.
@@ -2674,13 +2777,17 @@ function htmlColunas(ents,sel,somar){
       return `<span class="v53-col-b" title="${escH(s.nome)} · ${MESES[i]}: ${v===null?'sem lançamento':fv(v,s)}" style="height:${v===null?0:(v/top*100).toFixed(2)}%;background:${cores[q%3]}"><em>${v===null?'':fv(v,s)}</em></span>`; }).join('')}</div><span class="v53-col-m">${MESES[i]}</span></div>`).join('');
   // Leitura por série, como nos cards: valor do período, meta, atingimento, variação contra o mês anterior
   const ant=meses[k-1];
+  const Ps=ser.map(s=> s.tipo==='real' ? leituraPer(s.ind) : null);
+  if(somar){ const pr=Ps.filter((p,q)=>ser[q].tipo==='real'); const iS=ser.length-1;
+    if(pr.length&&pr.every(p=>p&&p.cur!==null&&p.cur!==undefined)){ const cur=pr.reduce((a,p)=>a+p.cur,0), meta=pr.every(p=>temMeta(p.meta))?pr.reduce((a,p)=>a+p.meta,0):null;
+      Ps[iS]={cur,meta,sc:indTot?(semCls(cur,meta,indTot.invertido)||'sem'):'sem',lbl:pr[0].lbl}; } }
   const linhas=ser.map((s,q)=>{ const L=Ls[q];
     const prev=ant!==undefined?s.vals[k-1]:null, cur=s.vals[k];
     const dl=(sel.length===1&&cur!==null&&prev!==null)?deltaHtml(cur,prev,s.tipo==='soma'?indTot:s.ind):'';
     return `<div class="v55-rd ${L.sc}"><span class="v55-rd-n"><i style="background:${cores[q%3]}"></i>${escH(s.nome)}</span>
       <b>${L.cur===null||L.cur===undefined?'—':fv(L.cur,s)}</b>
       <span class="v51-pill">${temMeta(L.meta)?rotMeta(s.ind,L.meta)+' '+fvM(L.meta,s):'sem meta'}</span>
-      <span class="v55-rd-mb">${barraMeta(L,s.ind)}</span><span class="v55-rd-d">${dl}</span></div>`; }).join('');
+      <span class="v55-rd-mb">${v67MesBarra(L,s.ind,m)}${v67ConsLinha(Ps[q],s.ind,v=>fv(v,s))}</span><span class="v55-rd-d">${dl}</span></div>`; }).join('');
   return `<div class="v51-bloco"><h4 class="v51-h4">${escH(ents[0].grupo)}</h4><p class="v51-frase-s">${frase}</p>
   <div class="v55-plot"><div class="v53-col">${grupos}</div>${grade}${metas}</div>
   <div class="v55-rds"><span class="v55-rds-t">${periodoLbl(sel)}${sel.length===1&&ant!==undefined?' · variação contra '+MESES[ant]:''}</span>${linhas}</div>${nota?`<p class="v56-nota">${escH(nota)}</p>`:''}</div>`;
@@ -2755,7 +2862,7 @@ function htmlPainel(ents,sel){
   const frase = !lidos.length ? `Sem lançamento em ${periodoLbl(sel)}.`
     : fora.length ? `${fora.length} de ${lidos.length} fora da meta em ${periodoLbl(sel)}: ${fora.map(p=>escH(tituloEnt(p.e))).join(', ')}.`
     : `Todos os ${lidos.length} no alvo em ${periodoLbl(sel)}.`;
-  const cel=parts.map(p=>`<div class="v51-mx-c ${p.L.sc}" title="${escH(p.e.ind.label)}"><span class="v54-pn-t">${escH(tituloEnt(p.e))}</span><b>${fmtVal(p.L.cur,p.e.ind)??'aguardando'}</b><span class="v51-pill">${rotMeta(p.e.ind,p.L.meta)} ${fmtMeta(p.L.meta,p.e.ind)??'—'}</span>${barraMeta(p.L,p.e.ind)}</div>`).join('');
+  const cel=parts.map(p=>`<div class="v51-mx-c ${p.L.sc}" title="${escH(p.e.ind.label)}"><span class="v54-pn-t">${escH(tituloEnt(p.e))}</span><b>${fmtVal(p.L.cur,p.e.ind)??'aguardando'}</b><span class="v51-pill">${rotMeta(p.e.ind,p.L.meta)} ${fmtMeta(p.L.meta,p.e.ind)??'—'}</span>${v67MesBarra(p.L,p.e.ind)}${v67ConsLinha(leituraPer(p.e.ind),p.e.ind)}</div>`).join('');
   return `<div class="v51-bloco"><h4 class="v51-h4">${escH(ents[0].grupo)}</h4><p class="v51-frase-s">${frase}</p><div class="v54-pn">${cel}</div></div>`;
 }
 function htmlAreaLayout(area,ents){
@@ -2766,7 +2873,8 @@ function htmlAreaLayout(area,ents){
   const leit=ents.filter(e=>e.visual!=='composicao').map(e=>({e,L:leitura(e.ind,sel)}));
   const lidos=leit.filter(x=>x.L.sc!=='sem'), c=k=>lidos.filter(x=>x.L.sc===k).length;
   const uA=Math.max(-1,...ents.map(e=>{ const u=ultLanc(getData(e.ind)); return u===null?-1:u; }));
-  let frase = !lidos.length ? `Nenhum indicador com leitura em ${lbl}.`+(uA>=0?` Último lançamento: ${MESES[uA]}.`:'') : `Em ${lbl}, ${c('verde')} de ${lidos.length} indicadores no alvo, ${c('amarelo')} em atenção e ${c('vermelho')} críticos.`;
+  const lblF=lblFoco(lidos.map(x=>x.L.m),sel);
+  let frase = !lidos.length ? `Nenhum indicador com leitura em ${lbl}.`+(uA>=0?` Último lançamento: ${MESES[uA]}.`:'') : `Em ${lblF}, ${c('verde')} de ${lidos.length} indicadores no alvo, ${c('amarelo')} em atenção e ${c('vermelho')} críticos.`;
   const piores=lidos.filter(x=>x.L.sc==='vermelho').map(x=>({...x,gap:x.L.meta!==0?(x.e.ind.invertido?x.L.cur-x.L.meta:x.L.meta-x.L.cur)/Math.abs(x.L.meta):0})).sort((a,b)=>(a.L.meta===0)-(b.L.meta===0) || b.gap-a.gap);   // v64: meta zero não vira automaticamente o maior desvio
   if(piores.length){ const p=piores[0]; frase+=` Maior desvio: ${escH(nomeEnt(p.e))}, ${fmtVal(p.L.cur,p.e.ind)} contra ${rotMeta(p.e.ind,p.L.meta)} ${fmtMeta(p.L.meta,p.e.ind)}.`; }
   // faixa de destaque
@@ -2779,11 +2887,12 @@ function htmlAreaLayout(area,ents){
     if((e.visual==='matriz'||e.visual==='composicao'||e.visual==='ranking'||e.visual==='colunas'||e.visual==='colunas_total'||e.visual==='painel'||e.visual==='razao') && e.grupo){
       if(feitos.has(e.grupo)) return; feitos.add(e.grupo);
       const g=noSub.filter(x=>x.grupo===e.grupo);
-      const _b= e.visual==='matriz' ? htmlMatriz(g,sel) : e.visual==='ranking' ? htmlRanking(g,sel) : e.visual==='colunas'||e.visual==='colunas_total' ? htmlColunas(g,sel,e.visual==='colunas_total') : e.visual==='painel' ? htmlPainel(g,sel) : e.visual==='razao' ? htmlRazao(g,sel) : htmlComposicao(g,sel);
-      { const _o=g.map(x=>htmlNotasInd(x.ind,sel)).join('')+htmlBrutosGrupo(g,sel,e.visual); blocos+= _o ? _b.replace(/<\/div>\s*$/,_o+'</div>') : _b; }
+      const sg=selGrupo(g,sel);   // v67: o bloco julga o último mês lançado do grupo
+      const _b= e.visual==='matriz' ? htmlMatriz(g,sg) : e.visual==='ranking' ? htmlRanking(g,sg) : e.visual==='colunas'||e.visual==='colunas_total' ? htmlColunas(g,sg,e.visual==='colunas_total') : e.visual==='painel' ? htmlPainel(g,sg) : e.visual==='razao' ? htmlRazao(g,sg) : htmlComposicao(g,sg);
+      { const _o=g.map(x=>htmlNotasInd(x.ind,sel)).join('')+htmlBrutosGrupo(g,sg,e.visual); blocos+= _o ? _b.replace(/<\/div>\s*$/,_o+'</div>') : _b; }
       return;
     }
-    grade+=`<div class="v51-slot${e.visual==='card_largo'?' v61-largo':''}">${htmlCard(e.ind,(e.grupo?e.grupo+' — ':'')+tituloEnt(e))}${htmlNotasInd(e.ind,sel)}${htmlBrutosInd(e.ind,sel)}</div>`; cardInds.push(e.ind);
+    grade+=`<div class="v51-slot${e.visual==='card_largo'?' v61-largo':''}">${htmlCard(e.ind,(e.grupo?e.grupo+' — ':'')+tituloEnt(e))}${htmlNotasInd(e.ind,sel)}${htmlBrutosInd(e.ind,selFoco(getData(e.ind),sel))}</div>`; cardInds.push(e.ind);
   });
   const corpo=(grade?`<div class="ind-grid">${grade}</div>`:'')+blocos;
   const html=`<div class="tab-panel active"><section class="area-wrap">
@@ -2811,7 +2920,7 @@ renderMain = function(){
   if(!ents){
     _renderMainBase();
     if(area){ const sel=getMesesSelecionados();              // área sem LAYOUT: brutos entram dentro do card
-      area.indicadores.forEach(ind=>{ const c=document.getElementById('card_'+ind.id), b=htmlNotasInd(ind,sel)+htmlBrutosInd(ind,sel); if(c&&b) c.insertAdjacentHTML('beforeend',b); }); }
+      area.indicadores.forEach(ind=>{ const c=document.getElementById('card_'+ind.id), b=htmlNotasInd(ind,sel)+htmlBrutosInd(ind,selFoco(getData(ind),sel)); if(c&&b) c.insertAdjacentHTML('beforeend',b); }); }
     return;
   }
   destroyCharts();
@@ -2820,6 +2929,17 @@ renderMain = function(){
   setTimeout(()=>r.cardInds.forEach(ind=>buildOneChart(ind,false)),60);
 };
 
+// v67b: na tela, travessão vira hífen (pedido 23/10). Só no texto exibido: os rótulos da central seguem com travessão para a ligação por nome.
+function v67Traco(root){
+  if(!root) return;
+  const w=document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n;
+  while((n=w.nextNode())) if(/[—–]/.test(n.nodeValue)) n.nodeValue=n.nodeValue.replace(/[—–]/g,'-');
+  root.querySelectorAll('[title]').forEach(e=>{ const t=e.getAttribute('title'); if(/[—–]/.test(t)) e.setAttribute('title',t.replace(/[—–]/g,'-')); });
+}
+const _renderMainV67 = renderMain;
+renderMain = function(){ _renderMainV67.apply(this, arguments); v67Traco(document.getElementById('mainContent')); };
+const _updateChipsV67 = updateChips;
+updateChips = function(){ _updateChipsV67.apply(this, arguments); v67Traco(document.querySelector('.topo-fixo')); document.title=document.title.replace(/[—–]/g,'-'); };
 </script>
 </body>
 </html>
